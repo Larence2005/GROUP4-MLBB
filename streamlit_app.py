@@ -92,10 +92,6 @@ elif st.session_state.page_selection == 'dataset':
     st.header("Dataset")
     st.write("Here is a preview of the dataset used in this analysis.")
     st.write(df)
-    missing_count = df.isnull().sum()
-    missing_count
-    infos = df.info()
-    infos
     describe = df.describe()
     describe
 
