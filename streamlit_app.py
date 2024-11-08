@@ -22,11 +22,10 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 
 
+#====================================DON'T CHANGE THIS====================================
+
 # Load dataset
 df = pd.read_csv("Mlbb_Heroes.csv")
-
-# Title
-st.title("MLBB Dashboard")
 
 # Initialize session state to store the selected page if not already set
 if 'page_selection' not in st.session_state:
@@ -40,10 +39,7 @@ def set_page_selection(page):
 with st.sidebar:
 
     # Sidebar Title (Change this with your project's title)
-    st.title('Dashboard Template')
-
-    # Page Button Navigation
-    st.subheader("Pages")
+    st.title('MLBB Dashboard')
 
     # Create buttons for each page
     if st.button("About", use_container_width=True, on_click=set_page_selection, args=('about',)):
@@ -71,6 +67,13 @@ with st.sidebar:
     st.subheader("Members")
     st.markdown("1. Edelle Lumabi\n2. John Larence Lusaya\n3. Nick Pastiu\n4. Sophia Vitug\n 5. Daniel Santillan")
 
+
+
+
+
+
+#======================DON'T CHANGE THE FUNCTIONS, JUST ADD THE CODES INSIDE THE FUNCTIONS======================
+
 # Content based on sidebar selection
 if st.session_state.page_selection == 'about':
     st.header("About")
@@ -80,27 +83,41 @@ if st.session_state.page_selection == 'about':
     techniques to enhance gameplay strategies.
     """)
 
+
 elif st.session_state.page_selection == 'dataset':
     st.header("Dataset")
     st.write("Here is a preview of the dataset used in this analysis.")
     st.write(df)
 
+
+
 elif st.session_state.page_selection == 'eda':
     st.header("Exploratory Data Analysis (EDA)")
     st.write("Here, we explore the dataset through various visualizations.")
+
+
 
 elif st.session_state.page_selection == 'data_cleaning':
     st.header("Data Cleaning / Pre-processing")
     st.write("This section covers the data cleaning and pre-processing steps.")
 
+
+
 elif st.session_state.page_selection == 'machine_learning':
     st.header("Machine Learning")
     st.write("This section applies machine learning models to the dataset.")
+
+
 
 elif st.session_state.page_selection == 'prediction':
     st.header("Prediction")
     st.write("This section provides the prediction models and their results.")
 
+
+
 elif st.session_state.page_selection == 'conclusion':
     st.header("Conclusion")
     st.write("This section concludes the analysis with key findings.")
+
+
+
