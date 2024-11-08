@@ -20,14 +20,21 @@ from sklearn.semi_supervised import LabelPropagation
 from sklearn.impute import SimpleImputer
 from sklearn.feature_extraction.text import TfidfVectorizer
 
+
+
 # Load dataset
 df = pd.read_csv("Mlbb_Heroes.csv")
 
 # Title
 st.title("MLBB Dashboard")
 
-# Button Navigation
-if st.button('About'):
+
+# Sidebar for navigation
+sidebar_options = ['About', 'Dataset', 'Value Counts', 'EDA', 'Machine Learning', 'Conclusion', 'Members']
+selection = st.sidebar.radio("Go to", sidebar_options)
+
+# Content based on sidebar selection
+if selection == 'About':
     st.header("About")
     st.write("""
     Welcome to the MLBB (Mobile Legends: Bang Bang) Dashboard. This dashboard provides insights and 
@@ -35,34 +42,29 @@ if st.button('About'):
     techniques to enhance gameplay strategies.
     """)
 
-elif st.button('Dataset'):
+elif selection == 'Dataset':
     st.header("Dataset")
     st.write("Here is a preview of the dataset used in this analysis.")
     st.dataframe(df.head())
 
 
-elif st.button('Value Counts'):
+elif selection == 'Value Counts':
     st.header("Value Counts")
     column = st.selectbox("Select a column to view value counts:", df.columns)
     st.write(f"Value counts for {column}:")
     st.write(df[column].value_counts())
-    
 
-elif st.button('EDA'):
+
+elif selection == 'EDA':
     st.header("Exploratory Data Analysis (EDA)")
     st.write("Here, we explore the dataset through various visualizations.")
 
 
-elif st.button('Machine Learning'):
+elif selection == 'Machine Learning':
     st.header("Machine Learning")
     st.write("This section applies machine learning models to the dataset.")
 
 
-elif st.button('Conclusion'):
+elif selection == 'Conclusion':
     st.header("Conclusion")
-    st.write("""
-    This concludes our analysis of MLBB hero statistics. The insights and model predictions here can 
-    aid in better understanding hero characteristics and strategic choices in gameplay.
-    """)
-
 
