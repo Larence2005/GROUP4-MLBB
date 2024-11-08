@@ -100,13 +100,7 @@ elif st.session_state.page_selection == 'dataset':
 elif st.session_state.page_selection == 'eda':
     st.header("Exploratory Data Analysis (EDA)")
     st.write("Here, we explore the dataset through various visualizations.")
-    #PIE CHART
-    plt.figure(figsize=(8, 6))
-    plt.pie(df['Count'], labels=df['Primary_Role'], autopct = '%1.1f%%', colors = ['blue', 'green', 'red', 'purple', 'orange', 'pink'], startangle=90)
-    plt.title('Distribution of Primary Roles of Heroes in MLBB')
-    plt.axis('equal')
-    plt.show()
-    data = {
+        data = {
     'Primary_Role': ['Fighter', 'Mage', 'Marksman', 'Tank', 'Assassin', 'Support'],
     'Count': [33, 25, 18, 16, 13, 9]
     }
@@ -122,6 +116,12 @@ elif st.session_state.page_selection == 'eda':
     
     print("\nFrequency Distrubution by Role:")
     print(df)
+    #PIE CHART
+    plt.figure(figsize=(8, 6))
+    plt.pie(df['Count'], labels=df['Primary_Role'], autopct = '%1.1f%%', colors = ['blue', 'green', 'red', 'purple', 'orange', 'pink'], startangle=90)
+    plt.title('Distribution of Primary Roles of Heroes in MLBB')
+    plt.axis('equal')
+    plt.show()
 
 
 
