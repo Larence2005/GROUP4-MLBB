@@ -57,9 +57,6 @@ with st.sidebar:
     if st.button("Machine Learning", use_container_width=True, on_click=set_page_selection, args=('machine_learning',)): 
         st.session_state.page_selection = "machine_learning"
 
-    if st.button("Prediction", use_container_width=True, on_click=set_page_selection, args=('prediction',)): 
-        st.session_state.page_selection = "prediction"
-
     if st.button("Conclusion", use_container_width=True, on_click=set_page_selection, args=('conclusion',)):
         st.session_state.page_selection = "conclusion"
 
@@ -147,12 +144,6 @@ elif st.session_state.page_selection == 'data_cleaning':
 elif st.session_state.page_selection == 'machine_learning':
     st.header("Machine Learning")
     st.write("This section applies machine learning models to the dataset.")
-
-
-
-elif st.session_state.page_selection == 'prediction':
-    st.header("Prediction")
-    st.write("This section provides the prediction models and their results.")
 
 
 
