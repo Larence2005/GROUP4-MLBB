@@ -82,7 +82,13 @@ if st.session_state.page_selection == 'about':
     analytics on the statistics of various MLBB heroes, exploring key trends and applying machine learning 
     techniques to enhance gameplay strategies.
     """)
-    st.image("MLBB.jpg", caption="Mobile Legends: Bang Bang", use_column_width=True)
+    
+    image_path = "MLBB.jpg"  # Make sure this path is correct
+
+    # Check if image file exists before trying to display it
+    if os.path.exists(image_path):
+        st.image(image_path, caption="Mobile Legends: Bang Bang", use_column_width=True)
+
 
 
 elif st.session_state.page_selection == 'dataset':
