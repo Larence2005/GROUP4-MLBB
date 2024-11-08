@@ -19,5 +19,8 @@ from sklearn.semi_supervised import LabelPropagation
 from sklearn.impute import SimpleImputer
 from sklearn.feature_extraction.text import TfidfVectorizer
 
+
+st.title('MACHINE LEARNING - Mobile Legends: Bang Bang E-sports Heroes Stats')
+
 df = pd.read_csv("Mlbb_Heroes.csv")
 df
