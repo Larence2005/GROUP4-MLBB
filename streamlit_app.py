@@ -28,7 +28,7 @@ selected_section = st.sidebar.radio("Go to", sections)
 
 # About Section
 if selected_section == "About":
-    st.title('MACHINE LEARNING - Mobile Legends: Bang Bang E-sports Heroes Stats'))
+    st.title('MACHINE LEARNING - Mobile Legends: Bang Bang E-sports Heroes Stats')
     st.write("""
     Welcome to the MLBB (Mobile Legends: Bang Bang) Dashboard. This dashboard provides insights and 
     analytics on the statistics of various MLBB heroes, exploring key trends and applying machine learning 
