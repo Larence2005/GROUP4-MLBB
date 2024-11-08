@@ -133,6 +133,8 @@ elif st.session_state.page_selection == 'eda':
     
     # Show the pie chart in Streamlit
     st.pyplot(fig)
+    st.write("Primary_Role: Exploratory Data Analysis")
+    st.write('As displayed in this exploratory data analysis, it reveals that the Fighter role has the highest count with 33 heroes, while Support has the least with 9 heroes, out of the total of 114 heroes. The summary statistics show a mean of 19 heroes per role, with a standard deviation of 8.69, indicating moderate variability in the distrubution of heroes across each role. In addition, the pie chart provided visualizes the proportional distrubution of the heroes of Mobile Legends: Bang Bang based on the dataset chosen for this project.')
 
 
 
