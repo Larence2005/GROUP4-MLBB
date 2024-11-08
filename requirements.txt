@@ -1,9 +1,10 @@
-streamlit
 matplotlib
 numpy
+networkx
 pandas
 seaborn
 altair
 wordcloud
-mpl_toolkits
+google-colab
+mpl_toolkits.mplot3d
 scikit-learn
