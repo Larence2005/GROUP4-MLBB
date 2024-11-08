@@ -28,10 +28,11 @@ df = pd.read_csv("Mlbb_Heroes.csv")
 # Title
 st.title("MLBB Dashboard")
 
-
-# Sidebar for navigation
-sidebar_options = ['About', 'Dataset', 'Value Counts', 'EDA', 'Machine Learning', 'Conclusion', 'Members']
-selection = st.sidebar.radio("Go to", sidebar_options)
+# Sidebar for navigation (left side)
+with st.sidebar:
+    st.header('Navigation')
+    sidebar_options = ['About', 'Dataset', 'Value Counts', 'EDA', 'Machine Learning', 'Conclusion', 'Members']
+    selection = st.selectbox("Choose a section", sidebar_options)
 
 # Content based on sidebar selection
 if selection == 'About':
@@ -45,15 +46,14 @@ if selection == 'About':
 elif selection == 'Dataset':
     st.header("Dataset")
     st.write("Here is a preview of the dataset used in this analysis.")
-    st.dataframe(df.head())
-
+    df
 
 elif selection == 'Value Counts':
     st.header("Value Counts")
     column = st.selectbox("Select a column to view value counts:", df.columns)
     st.write(f"Value counts for {column}:")
     st.write(df[column].value_counts())
-
+    
 
 elif selection == 'EDA':
     st.header("Exploratory Data Analysis (EDA)")
@@ -67,4 +67,3 @@ elif selection == 'Machine Learning':
 
 elif selection == 'Conclusion':
     st.header("Conclusion")
-
