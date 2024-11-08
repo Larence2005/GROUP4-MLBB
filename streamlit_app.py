@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import networkx as nx
 import pandas as pd
 import seaborn as sns
 import altair as alt
