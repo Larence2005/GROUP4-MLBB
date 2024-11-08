@@ -6,4 +6,3 @@ pandas
 seaborn
 altair
 wordcloud
-google-colab
