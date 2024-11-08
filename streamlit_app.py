@@ -28,19 +28,23 @@ df = pd.read_csv("Mlbb_Heroes.csv")
 # Title
 st.title("MLBB Dashboard")
 
+# Initialize session state to store the selected option
+if 'selected_option' not in st.session_state:
+    st.session_state.selected_option = None
+
 # Sidebar for navigation (left side)
 with st.sidebar:
     st.header('Navigation')
     sidebar_options = ['About', 'Dataset', 'Value Counts', 'EDA', 'Machine Learning', 'Conclusion', 'Members']
     
     # Create buttons for each option
-    selected_option = None
     for option in sidebar_options:
         if st.button(option):
-            selected_option = option
-            break
+            st.session_state.selected_option = option
 
 # Content based on sidebar selection
+selected_option = st.session_state.selected_option
+
 if selected_option == 'About':
     st.header("About")
     st.write("""
