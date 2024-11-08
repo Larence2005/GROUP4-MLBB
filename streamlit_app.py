@@ -100,28 +100,39 @@ elif st.session_state.page_selection == 'dataset':
 elif st.session_state.page_selection == 'eda':
     st.header("Exploratory Data Analysis (EDA)")
     st.write("Here, we explore the dataset through various visualizations.")
+    # Data for Primary Roles and Counts
     data = {
-    'Primary_Role': ['Fighter', 'Mage', 'Marksman', 'Tank', 'Assassin', 'Support'],
-    'Count': [33, 25, 18, 16, 13, 9]
+        'Primary_Role': ['Fighter', 'Mage', 'Marksman', 'Tank', 'Assassin', 'Support'],
+        'Count': [33, 25, 18, 16, 13, 9]
     }
     
+    # Create DataFrame
     df = pd.DataFrame(data)
     
-    #EDA
-    print("Summary Statistics: ")
-    print(df.describe())
+    # Title of the page
+    st.title("MLBB Hero Roles EDA")
     
+    # Display the Summary Statistics
+    st.subheader("Summary Statistics:")
+    st.write(df.describe())
+    
+    # Calculate and display total number of heroes
     total_heroes = df['Count'].sum()
-    print("\nTotal number of heroes:", total_heroes)
+    st.write(f"**Total number of heroes:** {total_heroes}")
     
-    print("\nFrequency Distrubution by Role:")
-    print(df)
-    #PIE CHART
-    plt.figure(figsize=(8, 6))
-    plt.pie(df['Count'], labels=df['Primary_Role'], autopct = '%1.1f%%', colors = ['blue', 'green', 'red', 'purple', 'orange', 'pink'], startangle=90)
-    plt.title('Distribution of Primary Roles of Heroes in MLBB')
-    plt.axis('equal')
-    plt.show()
+    # Display Frequency Distribution by Role
+    st.subheader("Frequency Distribution by Role:")
+    st.write(df)
+    
+    # Pie Chart Visualization
+    st.subheader("Distribution of Primary Roles of Heroes in MLBB")
+    fig, ax = plt.subplots(figsize=(8, 6))
+    ax.pie(df['Count'], labels=df['Primary_Role'], autopct='%1.1f%%', colors=['blue', 'green', 'red', 'purple', 'orange', 'pink'], startangle=90)
+    ax.set_title('Distribution of Primary Roles of Heroes in MLBB')
+    ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+    
+    # Show the pie chart in Streamlit
+    st.pyplot(fig)
 
 
 
