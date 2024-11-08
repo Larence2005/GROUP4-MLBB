@@ -84,7 +84,7 @@ if st.session_state.page_selection == 'about':
     """)
     
     image_path = "MLBB.jpg"
-    st.image(image_path, caption="Mobile Legends: Bang Bang", use_column_width=True)
+    st.image(image_path, use_column_width=True)
 
 
 
