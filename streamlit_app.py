@@ -28,9 +28,13 @@ df = pd.read_csv("Mlbb_Heroes.csv")
 # Title
 st.title("MLBB Dashboard")
 
-# Initialize session state to store the selected option
-if 'selected_option' not in st.session_state:
-    st.session_state.selected_option = 'About'
+# Initialize session state to store the selected page if not already set
+if 'page_selection' not in st.session_state:
+    st.session_state.page_selection = 'about'  # Default to 'About' page
+
+# Function to set the page selection
+def set_page_selection(page):
+    st.session_state.page_selection = page
 
 # Sidebar for navigation (left side)
 with st.sidebar:
@@ -41,9 +45,10 @@ with st.sidebar:
     # Page Button Navigation
     st.subheader("Pages")
 
+    # Create buttons for each page
     if st.button("About", use_container_width=True, on_click=set_page_selection, args=('about',)):
         st.session_state.page_selection = 'about'
-    
+
     if st.button("Dataset", use_container_width=True, on_click=set_page_selection, args=('dataset',)):
         st.session_state.page_selection = 'dataset'
 
@@ -64,12 +69,10 @@ with st.sidebar:
 
     # Project Members
     st.subheader("Members")
-    st.markdown("1. Elon Musk\n2. Jeff Bezos\n3. Sam Altman\n4. Mark Zuckerberg")
+    st.markdown("1. Edelle Lumabi\n2. John Larence Lusaya\n3. Nick Pastiu\n4. Sophia Vitug\n 5. Daniel Santillan")
 
 # Content based on sidebar selection
-selected_option = st.session_state.selected_option
-
-if selected_option == 'About':
+if st.session_state.page_selection == 'about':
     st.header("About")
     st.write("""
     Welcome to the MLBB (Mobile Legends: Bang Bang) Dashboard. This dashboard provides insights and 
@@ -77,25 +80,27 @@ if selected_option == 'About':
     techniques to enhance gameplay strategies.
     """)
 
-elif selected_option == 'Dataset':
+elif st.session_state.page_selection == 'dataset':
     st.header("Dataset")
     st.write("Here is a preview of the dataset used in this analysis.")
     st.write(df)
 
-elif selected_option == 'Value Counts':
-    st.header("Value Counts")
-    column = st.selectbox("Select a column to view value counts:", df.columns)
-    st.write(f"Value counts for {column}:")
-    st.write(df[column].value_counts())
-
-elif selected_option == 'EDA':
+elif st.session_state.page_selection == 'eda':
     st.header("Exploratory Data Analysis (EDA)")
     st.write("Here, we explore the dataset through various visualizations.")
 
-elif selected_option == 'Machine Learning':
+elif st.session_state.page_selection == 'data_cleaning':
+    st.header("Data Cleaning / Pre-processing")
+    st.write("This section covers the data cleaning and pre-processing steps.")
+
+elif st.session_state.page_selection == 'machine_learning':
     st.header("Machine Learning")
     st.write("This section applies machine learning models to the dataset.")
 
-elif selected_option == 'Conclusion':
+elif st.session_state.page_selection == 'prediction':
+    st.header("Prediction")
+    st.write("This section provides the prediction models and their results.")
+
+elif st.session_state.page_selection == 'conclusion':
     st.header("Conclusion")
     st.write("This section concludes the analysis with key findings.")
