@@ -69,7 +69,7 @@ with st.sidebar:
 
 
 
-#======================DON'T CHANGE THE FUNCTIONS, JUST ADD THE CODES INSIDE THE FUNCTIONS======================
+#======================DON'T CHANGE THE ITERATION STATEMENTS, JUST ADD THE CODES INSIDE THE LOOPS======================
 
 # Content based on sidebar selection
 if st.session_state.page_selection == 'about':
