@@ -35,12 +35,28 @@ if 'selected_option' not in st.session_state:
 # Sidebar for navigation (left side)
 with st.sidebar:
     st.header('Navigation')
-    sidebar_options = ['About', 'Dataset', 'Value Counts', 'EDA', 'Machine Learning', 'Conclusion', 'Members']
+
+    # Custom CSS for centering buttons and setting equal width
+    st.markdown("""
+        <style>
+        .sidebar .sidebar-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .sidebar button {
+            width: 100%;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+    
+    sidebar_options = ['About', 'Dataset', 'Value Counts', 'EDA', 'Machine Learning', 'Conclusion']
     
     # Create buttons for each option
     for option in sidebar_options:
-        if st.button(option):
+        if st.button(option, key=option):  # Adding a unique key for each button
             st.session_state.selected_option = option
+
 
 # Content based on sidebar selection
 selected_option = st.session_state.selected_option
