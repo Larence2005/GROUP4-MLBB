@@ -83,11 +83,8 @@ if st.session_state.page_selection == 'about':
     techniques to enhance gameplay strategies.
     """)
     
-    image_path = "MLBB.jpg"  # Make sure this path is correct
-
-    # Check if image file exists before trying to display it
-    if os.path.exists(image_path):
-        st.image(image_path, caption="Mobile Legends: Bang Bang", use_column_width=True)
+    image_path = "MLBB.jpg"
+    st.image(image_path, caption="Mobile Legends: Bang Bang", use_column_width=True)
 
 
 
