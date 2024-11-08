@@ -20,66 +20,49 @@ from sklearn.semi_supervised import LabelPropagation
 from sklearn.impute import SimpleImputer
 from sklearn.feature_extraction.text import TfidfVectorizer
 
+# Load dataset
+df = pd.read_csv("Mlbb_Heroes.csv")
 
-# Sidebar for navigation
-st.sidebar.title("Navigation")
-sections = ["About", "Dataset", "Value Counts", "EDA", "Machine Learning", "Conclusion", "Members"]
-selected_section = st.sidebar.radio("Go to", sections)
+# Title
+st.title("MLBB Dashboard")
 
-# About Section
-if selected_section == "About":
-    st.title('MACHINE LEARNING - Mobile Legends: Bang Bang E-sports Heroes Stats')
+# Button Navigation
+if st.button('About'):
+    st.header("About")
     st.write("""
     Welcome to the MLBB (Mobile Legends: Bang Bang) Dashboard. This dashboard provides insights and 
     analytics on the statistics of various MLBB heroes, exploring key trends and applying machine learning 
     techniques to enhance gameplay strategies.
     """)
 
-# Dataset Section
-elif selected_section == "Dataset":
+elif st.button('Dataset'):
     st.header("Dataset")
     st.write("Here is a preview of the dataset used in this analysis.")
-    df = pd.read_csv("Mlbb_Heroes.csv")
-    df
     st.dataframe(df.head())
 
-# Value Counts Section
-elif selected_section == "Value Counts":
+
+elif st.button('Value Counts'):
     st.header("Value Counts")
     column = st.selectbox("Select a column to view value counts:", df.columns)
     st.write(f"Value counts for {column}:")
     st.write(df[column].value_counts())
+    
 
-# Exploratory Data Analysis (EDA) Section
-elif selected_section == "EDA":
+elif st.button('EDA'):
     st.header("Exploratory Data Analysis (EDA)")
     st.write("Here, we explore the dataset through various visualizations.")
 
-    # Example Visualization - Distribution of a numerical column
-    numeric_column = st.selectbox("Select a numerical column to plot:", df.select_dtypes(include=['float', 'int']).columns)
-    st.write(f"Distribution of {numeric_column}:")
-    fig, ax = plt.subplots()
-    sns.histplot(df[numeric_column], kde=True, ax=ax)
-    st.pyplot(fig)
 
-    # Scatter Plot
-    st.write("Scatter Plot of two variables")
-    col1, col2 = st.columns(2)
-    x_col = col1.selectbox("Select X-axis:", df.select_dtypes(include=['float', 'int']).columns)
-    y_col = col2.selectbox("Select Y-axis:", df.select_dtypes(include=['float', 'int']).columns)
-    fig, ax = plt.subplots()
-    sns.scatterplot(x=df[x_col], y=df[y_col], ax=ax)
-    st.pyplot(fig)
-
-# Machine Learning Section
-elif selected_section == "Machine Learning":
+elif st.button('Machine Learning'):
     st.header("Machine Learning")
     st.write("This section applies machine learning models to the dataset.")
 
-# Conclusion Section
-elif selected_section == "Conclusion":
+
+elif st.button('Conclusion'):
     st.header("Conclusion")
-
-
+    st.write("""
+    This concludes our analysis of MLBB hero statistics. The insights and model predictions here can 
+    aid in better understanding hero characteristics and strategic choices in gameplay.
+    """)
 
 
