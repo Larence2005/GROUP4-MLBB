@@ -5,6 +5,5 @@ pandas
 seaborn
 altair
 wordcloud
-networkx
 mpl_toolkits
 scikit-learn
