@@ -30,7 +30,7 @@ st.title("MLBB Dashboard")
 
 # Initialize session state to store the selected option
 if 'selected_option' not in st.session_state:
-    st.session_state.selected_option = None
+    st.session_state.selected_option = 'About'
 
 # Sidebar for navigation (left side)
 with st.sidebar:
