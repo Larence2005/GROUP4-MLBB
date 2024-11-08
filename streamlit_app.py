@@ -27,21 +27,16 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 # Load dataset
 df = pd.read_csv("Mlbb_Heroes.csv")
 
-# Initialize session state to store the selected page if not already set
 if 'page_selection' not in st.session_state:
-    st.session_state.page_selection = 'about'  # Default to 'About' page
+    st.session_state.page_selection = 'about'
 
-# Function to set the page selection
 def set_page_selection(page):
     st.session_state.page_selection = page
 
-# Sidebar for navigation (left side)
 with st.sidebar:
 
-    # Sidebar Title (Change this with your project's title)
     st.title('MLBB Dashboard')
 
-    # Create buttons for each page
     if st.button("About", use_container_width=True, on_click=set_page_selection, args=('about',)):
         st.session_state.page_selection = 'about'
 
@@ -60,7 +55,6 @@ with st.sidebar:
     if st.button("Conclusion", use_container_width=True, on_click=set_page_selection, args=('conclusion',)):
         st.session_state.page_selection = "conclusion"
 
-    # Project Members
     st.subheader("Members")
     st.markdown("1. Edelle Lumabi\n2. John Larence Lusaya\n3. Nick Pastiu\n4. Sophia Vitug\n 5. Daniel Santillan")
 
@@ -97,38 +91,29 @@ elif st.session_state.page_selection == 'dataset':
 elif st.session_state.page_selection == 'eda':
     st.header("Exploratory Data Analysis (EDA)")
     st.write("Here, we explore the dataset through various visualizations.")
-    # Data for Primary Roles and Counts
     data = {
         'Primary_Role': ['Fighter', 'Mage', 'Marksman', 'Tank', 'Assassin', 'Support'],
         'Count': [33, 25, 18, 16, 13, 9]
     }
-    
-    # Create DataFrame
+
     df = pd.DataFrame(data)
-    
-    # Title of the page
+
     st.title("MLBB Hero Roles EDA")
-    
-    # Display the Summary Statistics
+
     st.subheader("Summary Statistics:")
     st.write(df.describe())
-    
-    # Calculate and display total number of heroes
+
     total_heroes = df['Count'].sum()
     st.write(f"**Total number of heroes:** {total_heroes}")
     
-    # Display Frequency Distribution by Role
     st.subheader("Frequency Distribution by Role:")
     st.write(df)
     
-    # Pie Chart Visualization
     st.subheader("Distribution of Primary Roles of Heroes in MLBB")
     fig, ax = plt.subplots(figsize=(8, 6))
     ax.pie(df['Count'], labels=df['Primary_Role'], autopct='%1.1f%%', colors=['blue', 'green', 'red', 'purple', 'orange', 'pink'], startangle=90)
     ax.set_title('Distribution of Primary Roles of Heroes in MLBB')
-    ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-    
-    # Show the pie chart in Streamlit
+    ax.axis('equal')  
     st.pyplot(fig)
     st.write("Primary_Role: Exploratory Data Analysis")
     st.write('As displayed in this exploratory data analysis, it reveals that the Fighter role has the highest count with 33 heroes, while Support has the least with 9 heroes, out of the total of 114 heroes. The summary statistics show a mean of 19 heroes per role, with a standard deviation of 8.69, indicating moderate variability in the distrubution of heroes across each role. In addition, the pie chart provided visualizes the proportional distrubution of the heroes of Mobile Legends: Bang Bang based on the dataset chosen for this project.')
