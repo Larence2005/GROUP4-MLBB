@@ -32,10 +32,16 @@ st.title("MLBB Dashboard")
 with st.sidebar:
     st.header('Navigation')
     sidebar_options = ['About', 'Dataset', 'Value Counts', 'EDA', 'Machine Learning', 'Conclusion', 'Members']
-    selection = st.selectbox("Choose a section", sidebar_options)
+    
+    # Create buttons for each option
+    selected_option = None
+    for option in sidebar_options:
+        if st.button(option):
+            selected_option = option
+            break
 
 # Content based on sidebar selection
-if selection == 'About':
+if selected_option == 'About':
     st.header("About")
     st.write("""
     Welcome to the MLBB (Mobile Legends: Bang Bang) Dashboard. This dashboard provides insights and 
@@ -43,27 +49,25 @@ if selection == 'About':
     techniques to enhance gameplay strategies.
     """)
 
-elif selection == 'Dataset':
+elif selected_option == 'Dataset':
     st.header("Dataset")
     st.write("Here is a preview of the dataset used in this analysis.")
-    df
+    st.write(df)
 
-elif selection == 'Value Counts':
+elif selected_option == 'Value Counts':
     st.header("Value Counts")
     column = st.selectbox("Select a column to view value counts:", df.columns)
     st.write(f"Value counts for {column}:")
     st.write(df[column].value_counts())
-    
 
-elif selection == 'EDA':
+elif selected_option == 'EDA':
     st.header("Exploratory Data Analysis (EDA)")
     st.write("Here, we explore the dataset through various visualizations.")
 
-
-elif selection == 'Machine Learning':
+elif selected_option == 'Machine Learning':
     st.header("Machine Learning")
     st.write("This section applies machine learning models to the dataset.")
 
-
-elif selection == 'Conclusion':
+elif selected_option == 'Conclusion':
     st.header("Conclusion")
+    st.write("This section concludes the analysis with key findings.")
