@@ -94,8 +94,10 @@ elif st.session_state.page_selection == 'dataset':
     st.write(df)
     missing_count = df.isnull().sum()
     missing_count
-    print(df.info())
-    df.describe()
+    infos = df.info()
+    infos
+    describe = df.describe()
+    describe
 
 
 
