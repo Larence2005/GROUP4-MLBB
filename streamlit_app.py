@@ -100,7 +100,7 @@ elif st.session_state.page_selection == 'dataset':
 elif st.session_state.page_selection == 'eda':
     st.header("Exploratory Data Analysis (EDA)")
     st.write("Here, we explore the dataset through various visualizations.")
-        data = {
+    data = {
     'Primary_Role': ['Fighter', 'Mage', 'Marksman', 'Tank', 'Assassin', 'Support'],
     'Count': [33, 25, 18, 16, 13, 9]
     }
