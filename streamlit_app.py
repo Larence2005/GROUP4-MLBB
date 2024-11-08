@@ -34,29 +34,37 @@ if 'selected_option' not in st.session_state:
 
 # Sidebar for navigation (left side)
 with st.sidebar:
-    st.header('Navigation')
 
-    # Custom CSS for centering buttons and setting equal width
-    st.markdown("""
-        <style>
-        .sidebar .sidebar-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .sidebar button {
-            width: 100%;
-        }
-        </style>
-    """, unsafe_allow_html=True)
-    
-    sidebar_options = ['About', 'Dataset', 'Value Counts', 'EDA', 'Machine Learning', 'Conclusion']
-    
-    # Create buttons for each option
-    for option in sidebar_options:
-        if st.button(option, key=option):  # Adding a unique key for each button
-            st.session_state.selected_option = option
+    # Sidebar Title (Change this with your project's title)
+    st.title('Dashboard Template')
 
+    # Page Button Navigation
+    st.subheader("Pages")
+
+    if st.button("About", use_container_width=True, on_click=set_page_selection, args=('about',)):
+        st.session_state.page_selection = 'about'
+    
+    if st.button("Dataset", use_container_width=True, on_click=set_page_selection, args=('dataset',)):
+        st.session_state.page_selection = 'dataset'
+
+    if st.button("EDA", use_container_width=True, on_click=set_page_selection, args=('eda',)):
+        st.session_state.page_selection = "eda"
+
+    if st.button("Data Cleaning / Pre-processing", use_container_width=True, on_click=set_page_selection, args=('data_cleaning',)):
+        st.session_state.page_selection = "data_cleaning"
+
+    if st.button("Machine Learning", use_container_width=True, on_click=set_page_selection, args=('machine_learning',)): 
+        st.session_state.page_selection = "machine_learning"
+
+    if st.button("Prediction", use_container_width=True, on_click=set_page_selection, args=('prediction',)): 
+        st.session_state.page_selection = "prediction"
+
+    if st.button("Conclusion", use_container_width=True, on_click=set_page_selection, args=('conclusion',)):
+        st.session_state.page_selection = "conclusion"
+
+    # Project Members
+    st.subheader("Members")
+    st.markdown("1. Elon Musk\n2. Jeff Bezos\n3. Sam Altman\n4. Mark Zuckerberg")
 
 # Content based on sidebar selection
 selected_option = st.session_state.selected_option
