@@ -5,7 +5,6 @@ import pandas as pd
 import seaborn as sns
 import altair as alt
 from wordcloud import WordCloud
-from google.colab import files
 from mpl_toolkits.mplot3d import Axes3D
 from pandas.plotting import scatter_matrix
 from sklearn.preprocessing import LabelEncoder
