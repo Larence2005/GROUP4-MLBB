@@ -20,5 +20,15 @@ from sklearn.semi_supervised import LabelPropagation
 from sklearn.impute import SimpleImputer
 from sklearn.feature_extraction.text import TfidfVectorizer
 
+import subprocess
+import sys
+
+try:
+    import networkx
+except ModuleNotFoundError:
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "networkx"])
+    import networkx as nx
+
+
 df = pd.read_csv("Mlbb_Heroes.csv")
 df
