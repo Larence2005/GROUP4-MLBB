@@ -66,6 +66,8 @@ with st.sidebar:
 #======================DON'T CHANGE THE ITERATION STATEMENTS, JUST ADD THE CODES INSIDE THE LOOPS======================
 
 # Content based on sidebar selection
+
+#ABOUT
 if st.session_state.page_selection == 'about':
     st.header("About")
     st.write("""
@@ -77,7 +79,19 @@ if st.session_state.page_selection == 'about':
     image_path = "MLBB.jpg"
     st.image(image_path, use_column_width=True)
 
+    st.markdown("""
 
+    #### Pages
+    1. `Dataset` - Brief description of the Iris Flower dataset used in this dashboard. 
+    2. `EDA` - Exploratory Data Analysis of the Iris Flower dataset. Highlighting the distribution of Iris species and the relationship between the features. Includes graphs such as Pie Chart, Scatter Plots, and Pairwise Scatter Plot Matrix.
+    3. `Data Cleaning / Pre-processing` - Data cleaning and pre-processing steps such as encoding the species column and splitting the dataset into training and testing sets.
+    4. `Machine Learning` - Training two supervised classification models: Decision Tree Classifier and Random Forest Regressor. Includes model evaluation, feature importance, and tree plot.
+    5. `Prediction` - Prediction page where users can input values to predict the Iris species using the trained models.
+    6. `Conclusion` - Summary of the insights and observations from the EDA and model training.
+
+
+    """)
+#DATASET
 
 elif st.session_state.page_selection == 'dataset':
     st.header("Dataset")
@@ -86,7 +100,7 @@ elif st.session_state.page_selection == 'dataset':
     describe = df.describe()
     describe
 
-
+#EDA
 
 elif st.session_state.page_selection == 'eda':
     st.header("Exploratory Data Analysis (EDA)")
@@ -118,19 +132,19 @@ elif st.session_state.page_selection == 'eda':
     st.write("Primary_Role: Exploratory Data Analysis")
     st.write('As displayed in this exploratory data analysis, it reveals that the Fighter role has the highest count with 33 heroes, while Support has the least with 9 heroes, out of the total of 114 heroes. The summary statistics show a mean of 19 heroes per role, with a standard deviation of 8.69, indicating moderate variability in the distrubution of heroes across each role. In addition, the pie chart provided visualizes the proportional distrubution of the heroes of Mobile Legends: Bang Bang based on the dataset chosen for this project.')
 
-
+#dATA_CLEANING
 
 elif st.session_state.page_selection == 'data_cleaning':
     st.header("Data Cleaning / Pre-processing")
     st.write("This section covers the data cleaning and pre-processing steps.")
 
-
+#MACHINE LEARNING
 
 elif st.session_state.page_selection == 'machine_learning':
     st.header("Machine Learning")
     st.write("This section applies machine learning models to the dataset.")
 
-
+#CONCLUSION
 
 elif st.session_state.page_selection == 'conclusion':
     st.header("Conclusion")
