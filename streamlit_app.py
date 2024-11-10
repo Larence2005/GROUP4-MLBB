@@ -82,11 +82,11 @@ if st.session_state.page_selection == 'about':
     st.markdown("""
 
     #### Pages
-    1. `Dataset` - Brief description of the Iris Flower dataset used in this dashboard. 
-    2. `EDA` - Exploratory Data Analysis of the Iris Flower dataset. Highlighting the distribution of Iris species and the relationship between the features. Includes graphs such as Pie Chart, Scatter Plots, and Pairwise Scatter Plot Matrix.
-    3. `Data Cleaning / Pre-processing` - Data cleaning and pre-processing steps such as encoding the species column and splitting the dataset into training and testing sets.
-    4. `Machine Learning` - Training two supervised classification models: Decision Tree Classifier and Random Forest Regressor. Includes model evaluation, feature importance, and tree plot.
-    5. `Prediction` - Prediction page where users can input values to predict the Iris species using the trained models.
+    1. `Dataset` - Brief description of the Mobile Legends: Bang Bang (MLBB) dataset used in this dashboard. 
+    2. `EDA` - Exploratory Data Analysis of MLBB dataset. Highlighting the distribution of Primary and Secondary Roles, HP, and Physical Damage. It also highlights the frequency of primary roles. Includes graphs such as Pie Chart, Histograms, Bar Graphs, Heatmaps, and Boxplots
+    3. `Data Cleaning / Pre-processing` - Data cleaning and pre-processing steps such as replacing null values in the Secondary Roles column into strings.
+    4. `Machine Learning` - Training two supervised classification models: Supervised Learning and Random Forest Regressor.
+    5. `Prediction` - Prediction page where users can input values to predict the the primary role of the hero based on the input features using the trained models.
     6. `Conclusion` - Summary of the insights and observations from the EDA and model training.
 
 
@@ -94,45 +94,120 @@ if st.session_state.page_selection == 'about':
 #DATASET
 
 elif st.session_state.page_selection == 'dataset':
-    st.header("Dataset")
-    st.write("Here is a preview of the dataset used in this analysis.")
+    st.header("📊 Dataset")
+    st.write("Here is a preview of the dataset used in this analysis. The Dataset contains the Stats of heroes until Mobile Legends Version Patch 1.7.20 September 20, 2022.")
+    st.markdown("""**Content**  
+    The dataset has **114** rows containing **_ primary attributes** that are related to MLBB heroes, the columns are as follows: .
+
+    `Link:` https://www.kaggle.com/datasets/kishan9044/mobile-legends-bang-bang         
+    """)
     st.write(df)
     describe = df.describe()
     describe
+
+    st.markdown("""
+
+    The results from `df.describe()` highlights the descriptive statistics about the dataset. First the **sepal length** averages *5.84 cm* with a standard deviation of *0.83* which indicates moderate variation around the mean. **Sepal width** on the other hand has a lower mean of *3.05* cm and shows less spread with a standard deviation of *0.43*, this indicates that the values of sepal width are generally more consistent. Moving on with **petal length** and **petal width**, these columns show greater variability with means of *3.76 cm* and *1.20 cm* and standard deviation of *1.76* and *0.76*. This suggests that these dimansions vary more significantly across the species.  
+
+    Speaking of minimum and maximum values, petal length ranges from *1.0 cm* up to *6.9 cm*, petal width from *0.1 cm* to *2.5 cm* suggesting that there's a distinct difference between the species.  
+
+    The 25th, 50th, and 75th percentiles on the other hand reveals a gradual increase across all features indicating that the dataset offers a promising potential to be used for classification techniques.
+                
+    """)
 
 #EDA
 
 elif st.session_state.page_selection == 'eda':
     st.header("Exploratory Data Analysis (EDA)")
     st.write("Here, we explore the dataset through various visualizations.")
-    data = {
+
+    #---------PRIMARY AND SECONDARY ROLE--------
+    
+    # Data for Primary Role
+    primary_data = {
         'Primary_Role': ['Fighter', 'Mage', 'Marksman', 'Tank', 'Assassin', 'Support'],
         'Count': [33, 25, 18, 16, 13, 9]
     }
-
-    df = pd.DataFrame(data)
-
-    st.title("MLBB Hero Roles EDA")
-
-    st.subheader("Summary Statistics:")
-    st.write(df.describe())
-
-    total_heroes = df['Count'].sum()
-    st.write(f"**Total number of heroes:** {total_heroes}")
+    primary_df = pd.DataFrame(primary_data)
     
-    st.subheader("Frequency Distribution by Role:")
-    st.write(df)
+    # Data for Secondary Role
+    secondary_data = {
+        'Secondary_Role': ['No Second Role', 'Support', 'Tank', 'Assassin', 'Mage', 'Fighter', 'Marksman'],
+        'Count': [84, 7, 6, 6, 5, 3, 3]
+    }
+    secondary_df = pd.DataFrame(secondary_data)
     
+    # Title
+    st.title("MLBB Heroes Role Analysis")
+    
+    # Primary Role Analysis
+    st.header("Primary Role Analysis")
+    
+    # EDA for Primary Role
+    st.subheader("Summary Statistics for Primary Roles")
+    st.write(primary_df.describe())
+    
+    # Total heroes for Primary Role
+    total_primary_heroes = primary_df['Count'].sum()
+    st.write(f"**Total number of heroes:** {total_primary_heroes}")
+    
+    # Frequency distribution for Primary Role
+    st.subheader("Frequency Distribution by Primary Role")
+    st.write(primary_df)
+    
+    # Pie chart for Primary Role
     st.subheader("Distribution of Primary Roles of Heroes in MLBB")
-    fig, ax = plt.subplots(figsize=(8, 6))
-    ax.pie(df['Count'], labels=df['Primary_Role'], autopct='%1.1f%%', colors=['blue', 'green', 'red', 'purple', 'orange', 'pink'], startangle=90)
-    ax.set_title('Distribution of Primary Roles of Heroes in MLBB')
-    ax.axis('equal')  
-    st.pyplot(fig)
-    st.write("Primary_Role: Exploratory Data Analysis")
-    st.write('As displayed in this exploratory data analysis, it reveals that the Fighter role has the highest count with 33 heroes, while Support has the least with 9 heroes, out of the total of 114 heroes. The summary statistics show a mean of 19 heroes per role, with a standard deviation of 8.69, indicating moderate variability in the distrubution of heroes across each role. In addition, the pie chart provided visualizes the proportional distrubution of the heroes of Mobile Legends: Bang Bang based on the dataset chosen for this project.')
+    fig1, ax1 = plt.subplots(figsize=(8, 6))
+    ax1.pie(primary_df['Count'], labels=primary_df['Primary_Role'], autopct='%1.1f%%',
+            colors=['blue', 'green', 'red', 'purple', 'orange', 'pink'], startangle=90)
+    ax1.set_title("Distribution of Primary Roles of Heroes in MLBB")
+    ax1.axis('equal')
+    st.pyplot(fig1)
+    
+    # Secondary Role Analysis
+    st.header("Secondary Role Analysis")
+    
+    # EDA for Secondary Role
+    st.subheader("Summary Statistics for Secondary Roles")
+    st.write(secondary_df.describe())
+    
+    # Total heroes for Secondary Role
+    total_secondary_heroes = secondary_df['Count'].sum()
+    st.write(f"**Total number of heroes with secondary roles:** {total_secondary_heroes}")
+    
+    # Frequency distribution for Secondary Role
+    st.subheader("Frequency Distribution by Secondary Role")
+    st.write(secondary_df)
+    
+    # Pie chart for Secondary Role
+    st.subheader("Distribution of Secondary Roles of Heroes in MLBB")
+    fig2, ax2 = plt.subplots(figsize=(8, 6))
+    ax2.pie(secondary_df['Count'], labels=secondary_df['Secondary_Role'], autopct='%1.1f%%',
+            colors=['pink', 'purple', 'orange', 'green', 'blue', 'red'], startangle=90)
+    ax2.set_title("Distribution of Secondary Roles of Heroes in MLBB")
+    ax2.axis('equal')
+    st.pyplot(fig2)
 
-#dATA_CLEANING
+    #---------DISTRIBUTION OF HP-----------
+    
+    hp_data = {
+    'Hp': [45, 60, 78, 90, 55, 65, 80, 77, 89, 90, 100, 105, 60, 78, 88] 
+    }
+    df = pd.DataFrame(data)
+    
+    # Title
+    st.title("Distribution of Hp")
+    
+    # Histogram with KDE
+    st.subheader("Hp Distribution Histogram")
+    fig, ax = plt.subplots(figsize=(10, 5))
+    sns.histplot(df['Hp'], kde=True, bins=10, color='blue', ax=ax)
+    ax.set_title('Distribution of Hp')
+    ax.set_xlabel('Hp')
+    ax.set_ylabel('Frequency')
+    st.pyplot(fig)
+
+#DATA_CLEANING
 
 elif st.session_state.page_selection == 'data_cleaning':
     st.header("Data Cleaning / Pre-processing")
