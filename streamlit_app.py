@@ -190,10 +190,7 @@ elif st.session_state.page_selection == 'eda':
 
     #---------DISTRIBUTION OF HP-----------
     
-    hp_data = {
-    'Hp': [45, 60, 78, 90, 55, 65, 80, 77, 89, 90, 100, 105, 60, 78, 88] 
-    }
-    df = pd.DataFrame(data)
+    df = pd.read_csv("Mlbb_Heroes.csv")
     
     # Title
     st.title("Distribution of Hp")
@@ -206,6 +203,20 @@ elif st.session_state.page_selection == 'eda':
     ax.set_xlabel('Hp')
     ax.set_ylabel('Frequency')
     st.pyplot(fig)
+
+    #-----------PHYSICAL DAMAGE ANALYSIS-----------
+  
+
+    #-------------PRIMARY ROLE DISTRIBUTION---------
+    
+    #----------CORRELATION HEATMAP-------------
+
+
+    #----------BOXPLOT HP WIN/LOSS-----------
+   
+
+    #-----------BOXPLOT PHYS DMG WIN/LOSS--------
+   
 
 #DATA_CLEANING
 
