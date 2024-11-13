@@ -235,8 +235,35 @@ elif st.session_state.page_selection == 'eda':
 
     #-----------PHYSICAL DAMAGE ANALYSIS-----------
   
+    # Title
+    st.title("Physical Damage Analysis")
+    
+    # Create histogram with KDE
+    st.subheader("Physical Damage Distribution")
+    fig, ax = plt.subplots(figsize=(10, 5))
+    sns.histplot(df['Phy_Damage'], kde=True, bins=10, color='green', ax=ax)
+    ax.set_title('Distribution of Physical Damage')
+    ax.set_xlabel('Physical Damage')
+    ax.set_ylabel('Frequency')
+    st.pyplot(fig)
+
 
     #-------------PRIMARY ROLE DISTRIBUTION---------
+
+    # Title
+    st.title("Primary Role Distribution")
+    
+    # Create countplot
+    st.subheader("Distribution of Primary Roles")
+    fig, ax = plt.subplots(figsize=(8, 5))
+    sns.countplot(x='Primary_Role', data=df, palette='Set2', ax=ax)
+    ax.set_title('Distribution of Primary Roles')
+    ax.set_ylabel('Count')
+    ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
+    
+    # Use st.pyplot() to display the plot
+    st.pyplot(fig)
+
     
     #----------CORRELATION HEATMAP-------------
 
