@@ -163,6 +163,15 @@ elif st.session_state.page_selection == 'eda':
     ax1.set_title("Distribution of Primary Roles of Heroes in MLBB")
     ax1.axis('equal')
     st.pyplot(fig1)
+
+    st.markdown("""
+
+    As displayed in this exploratory data analysis, it reveals that the **Fighter** role has the highest count with 33 heroes, 
+    while **Support** has the least with 9 heroes, out of the total of 114 heroes. The summary statistics show a mean of **19 heroes per  role**, 
+    with **a standard deviation of 8.69**, indicating moderate variability in the distrubution of heroes across each role. In addition, the pie chart provided visualizes the 
+    **proportional distrubution of the heroes** of **Mobile Legends: Bang Bang** based on the dataset chosen for this project.
+                
+    """)
     
     # Secondary Role Analysis
     st.header("Secondary Role Analysis")
@@ -188,6 +197,16 @@ elif st.session_state.page_selection == 'eda':
     ax2.axis('equal')
     st.pyplot(fig2)
 
+    st.markdown("""
+
+   Based on this exploratory data analysis, it illustrates the distrubution of heroes based on their secondary roles in 
+   **Mobile Legends: Bang Bang (MLBB**). It gives vital statistical results such as the mean and standard deviation of the
+   number of heroes per role, revealing that **"Support"** has the most (7), while **"Fighter"** and **"Marksmen"** have the fewest 
+   (3 each). The overall number of heroes throughout all secondary roles is 30, 
+   and the data is represented by a pie chart, which helps in illustrating the proportionate distribution of each role.
+   
+    """)
+
     #---------DISTRIBUTION OF HP-----------
     
     df = pd.read_csv("Mlbb_Heroes.csv")
@@ -203,6 +222,16 @@ elif st.session_state.page_selection == 'eda':
     ax.set_xlabel('Hp')
     ax.set_ylabel('Frequency')
     st.pyplot(fig)
+
+    st.markdown("""
+
+    This histogram plots the distribution of HP values with a superimposed kernel density estimate (the blue line) to give 
+    a representation of the data's frequency. The distribution is right-skewed, meaning it has a longer tail on the higher end of the 
+    HP scale. Note most values cluster between 2,250 and 3,000. It shows an apparent peak around 2,500–2,750. Characters that have very low HP, 
+    about 1,000–1,250 are relatively few. Thus, there seems to be a 
+    pattern where the game or system design does keep most characters' HP in some kind of "sweet spot" near 2,500, while higher or lower values seem less common.
+                
+    """)
 
     #-----------PHYSICAL DAMAGE ANALYSIS-----------
   
