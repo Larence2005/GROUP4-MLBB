@@ -264,8 +264,16 @@ elif st.session_state.page_selection == 'eda':
     # Use st.pyplot() to display the plot
     st.pyplot(fig)
 
-    
     #----------CORRELATION HEATMAP-------------
+    st.title("Correlation Analysis of Game Stats")
+
+    st.subheader("Correlation Heatmap for Numerical Variables")
+    fig, ax = plt.subplots(figsize=(12, 8))
+    correlation = df[['Hp', 'Mana', 'Phy_Damage', 'Mag_Damage', 'Phy_Defence', 'Mag_Defence', 'Mov_Speed']].cor()
+    sns.heatmap(correlation, annot=True, cmap="coolwarm", linewidths=0.5, ax=ax)
+    ax.set_title('Correlation Heatmap for Numerical Variables')
+    st.pyplot(fig)
+
 
 
     #----------BOXPLOT HP WIN/LOSS-----------
