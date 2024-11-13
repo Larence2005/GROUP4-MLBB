@@ -265,7 +265,7 @@ elif st.session_state.page_selection == 'eda':
     st.pyplot(fig)
 
     #----------CORRELATION HEATMAP-------------
-    st.title("Hero Statistics Correlation Analysis")
+    st.title("Correlation Analysis of Game Stats")
 
     st.subheader("Correlation Heatmap for Numerical Variables")
     fig, ax = plt.subplots(figsize=(12, 8))
@@ -274,9 +274,7 @@ elif st.session_state.page_selection == 'eda':
     ax.set_title('Correlation Heatmap for Numerical Variables')
     st.pyplot(fig)
 
-    st.markdown("""
-The heatmap of correlations between different numerical variables features positive correlations as ranges of red and negative correlations as shades of blue. The most important observations include "Physical Defence" and "Movement Speed" with a correlation of 0.42, "Mana" and "Movement Speed" with -0.41, and "HP" with "Physical Defence" correlated with 0.31. Almost all the remaining connections are weak. Thus, a minimal number of linear dependencies between those variable pairs appear to exist.
-    """)
+
 
     #----------BOXPLOT HP WIN/LOSS-----------
    
