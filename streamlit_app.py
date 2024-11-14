@@ -359,7 +359,7 @@ elif st.session_state.page_selection == 'prediction':
     
 #MACHINE LEARNING
 
-elif st.session_state.page_selection == 'machine_learning':
+if st.session_state.page_selection == 'machine_learning':
     st.header("Machine Learning")
     st.write("This section applies machine learning models to the dataset.")
     #PRIMARY ROLES OF MLBB HEROES CLASSIFICATION USING RANDOM FOREST MODEL
