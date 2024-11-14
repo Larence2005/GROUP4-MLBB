@@ -377,8 +377,22 @@ The heatmap of correlations between different numerical variables features posit
 #DATA_CLEANING
 
 elif st.session_state.page_selection == 'data_cleaning':
-    st.title("Data Cleaning / Pre-processing")
+    st.title("🧼 Data Cleaning / Pre-processing")
     st.write("This section covers the data cleaning and pre-processing steps.")
+
+    st.header("Fixing null values")
+    st.subheader("Checking for missing values")
+    missing_count = df.isnull().sum()
+    st.write(missing_count)
+
+    st.subheader("Replacing null values in Secondary_Role")
+    st.code("""
+    df['Secondary_Role'].fillna('No Secondary Role', inplace=True)
+    """)
+
+    st.subheader("Checking for missing values after cleaning")
+    missing_count = df.isnull().sum()
+    st.write(missing_count)
 
 #PREDICTION
 elif st.session_state.page_selection == 'prediction':
