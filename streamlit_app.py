@@ -555,7 +555,62 @@ st.pyplot(fig)
 st.subheader("Feature Importance Percentages")
 for feature, importance in zip(importance_df['Feature'], importance_df['Importance']):
     st.write(f"{feature}: {importance * 100:.2f}%")
-    
+
+
+
+# Streamlit Title
+st.title("Supervised Learning for Secondary Role Distribution")
+
+# Sidebar for adjusting test size
+test_size = st.sidebar.slider("Test Size", min_value=0.1, max_value=0.5, value=0.2, step=0.05)
+
+# Define role data
+data = {
+    'Secondary_Role': ['Support', 'Tank', 'Assassin', 'Mage', 'Fighter', 'Marksman'],
+    'Count': [7, 6, 6, 5, 3, 3]
+}
+
+# Display role distribution as a table
+st.subheader("Role Distribution")
+df = pd.DataFrame(data)
+st.table(df)
+
+# Repeat roles based on count
+roles = []
+for role, count in zip(df['Secondary_Role'], df['Count']):
+    roles.extend([role] * count)
+
+df_repeated = pd.DataFrame({'Secondary_Role': roles})
+
+# Display repeated roles count
+st.subheader("Repeated Roles Count")
+st.write(df_repeated['Secondary_Role'].value_counts())
+
+# Feature extraction with TF-IDF
+vectorizer = TfidfVectorizer()
+X = vectorizer.fit_transform(df_repeated['Secondary_Role'])
+
+# Encode labels
+label_encoder = LabelEncoder()
+y = label_encoder.fit_transform(df_repeated['Secondary_Role'])
+
+# Split data
+x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=42)
+
+# Train Naive Bayes model
+clf = MultinomialNB()
+clf.fit(x_train, y_train)
+
+# Make predictions and evaluate
+y_pred = clf.predict(x_test)
+accuracy = accuracy_score(y_test, y_pred)
+report = classification_report(y_test, y_pred, target_names=label_encoder.classes_)
+
+# Display accuracy and classification report
+st.subheader("Model Performance")
+st.write(f"Accuracy: {accuracy:.3f}")
+st.text("Classification Report")
+st.text(report)
 
 
 #CONCLUSION
