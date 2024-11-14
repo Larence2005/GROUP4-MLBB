@@ -361,214 +361,206 @@ elif st.session_state.page_selection == 'prediction':
     st.write("This section covers the prediction.")
 
 
-
-#MACHINE LEARNING
-if st.session_state.page_selection == 'machine_learning':
+# MACHINE LEARNING
+elif st.session_state.page_selection == 'machine_learning':
     st.header("Machine Learning")
     st.write("This section applies machine learning models to the dataset.")
-    #PRIMARY ROLES OF MLBB HEROES CLASSIFICATION USING RANDOM FOREST MODEL
 
-# Title and description
-st.title("Primary Roles of MLBB Heroes Classification using Random Forest Model")
-st.write("This uses a Random Forest model to classify MLBB heroes primary roles based on selected features.")
+    # PRIMARY ROLES OF MLBB HEROES CLASSIFICATION USING RANDOM FOREST MODEL
+    # Title and description
+    st.title("Primary Roles of MLBB Heroes Classification using Random Forest Model")
+    st.write("This uses a Random Forest model to classify MLBB heroes' primary roles based on selected features.")
 
-# Feature selection
-selected_features = [
-    'Hp', 'Hp_Regen', 'Mana', 'Mana_Regen',
-    'Phy_Damage', 'Mag_Damage', 'Phy_Defence', 'Mag_Defence',
-    'Mov_Speed', 'Esport_Wins', 'Esport_Loss'
-]
+    # Feature selection
+    selected_features = [
+        'Hp', 'Hp_Regen', 'Mana', 'Mana_Regen',
+        'Phy_Damage', 'Mag_Damage', 'Phy_Defence', 'Mag_Defence',
+        'Mov_Speed', 'Esport_Wins', 'Esport_Loss'
+    ]
 
-# Data preparation
-X = df[selected_features]
-y = df['Primary_Role']
+    # Data preparation
+    X = df[selected_features]
+    y = df['Primary_Role']
 
-# Scaling
-scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)
-X_scaled = pd.DataFrame(X_scaled, columns=selected_features)
+    # Scaling
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+    X_scaled = pd.DataFrame(X_scaled, columns=selected_features)
 
-# Splitting the data
-X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+    # Splitting the data
+    X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
 
-# Model creation and training
-model = RandomForestClassifier(
-    n_estimators=100,
-    random_state=42,
-    max_depth=10,
-    min_samples_split=5
-)
-model.fit(X_train, y_train)
+    # Model creation and training
+    model = RandomForestClassifier(
+        n_estimators=100,
+        random_state=42,
+        max_depth=10,
+        min_samples_split=5
+    )
+    model.fit(X_train, y_train)
 
-# Make predictions
-y_pred = model.predict(X_test)
+    # Make predictions
+    y_pred = model.predict(X_test)
 
-# Display model accuracy
-accuracy = accuracy_score(y_test, y_pred)
-st.write(f"Model Accuracy: {accuracy:.3f}")
+    # Display model accuracy
+    accuracy = accuracy_score(y_test, y_pred)
+    st.write(f"Model Accuracy: {accuracy:.3f}")
 
-# Generate classification report with output_dict=True
-report = classification_report(y_test, y_pred, output_dict=True)
+    # Generate classification report with output_dict=True
+    report = classification_report(y_test, y_pred, output_dict=True)
 
-# Convert the classification report to a DataFrame
-report_df = pd.DataFrame(report).transpose()
+    # Convert the classification report to a DataFrame
+    report_df = pd.DataFrame(report).transpose()
 
-# Display the classification report as a table in Streamlit
-st.subheader("Classification Report")
-st.dataframe(report_df)
+    # Display the classification report as a table in Streamlit
+    st.subheader("Classification Report")
+    st.dataframe(report_df)
 
-# Feature importance visualization
-feature_importance = pd.DataFrame({
-    'Feature': selected_features,
-    'Importance': model.feature_importances_
-}).sort_values('Importance', ascending=True)
+    # Feature importance visualization
+    feature_importance = pd.DataFrame({
+        'Feature': selected_features,
+        'Importance': model.feature_importances_
+    }).sort_values('Importance', ascending=True)
 
-# Plot feature importance
-st.subheader("Feature Importance in Predicting MLBB Hero Primary Role")
-fig, ax = plt.subplots(figsize=(12, 8))
-bars = ax.barh(feature_importance['Feature'], feature_importance['Importance'])
+    # Plot feature importance
+    st.subheader("Feature Importance in Predicting MLBB Hero Primary Role")
+    fig, ax = plt.subplots(figsize=(12, 8))
+    bars = ax.barh(feature_importance['Feature'], feature_importance['Importance'])
 
-# Add labels to bars
-for bar in bars:
-    width = bar.get_width()
-    ax.text(width, bar.get_y() + bar.get_height()/2,
-            f'{width*100:.1f}%', ha='left', va='center')
+    # Add labels to bars
+    for bar in bars:
+        width = bar.get_width()
+        ax.text(width, bar.get_y() + bar.get_height()/2,
+                f'{width*100:.1f}%', ha='left', va='center')
 
-ax.set_xlabel('Feature Importance (%)')
-ax.set_title('Feature Importance in Predicting MLBB Hero Primary Role')
-st.pyplot(fig)
+    ax.set_xlabel('Feature Importance (%)')
+    ax.set_title('Feature Importance in Predicting MLBB Hero Primary Role')
+    st.pyplot(fig)
 
-# Display feature importance percentages
-st.subheader("Feature Importance Percentages")
-for feature, importance in zip(feature_importance['Feature'], feature_importance['Importance']):
-    st.write(f"{feature}: {importance * 100:.2f}%")
+    # Display feature importance percentages
+    st.subheader("Feature Importance Percentages")
+    for feature, importance in zip(feature_importance['Feature'], feature_importance['Importance']):
+        st.write(f"{feature}: {importance * 100:.2f}%")
 
+    st.write("\n")
+    st.write("On the other hand, the data below uses Random Forest model to classify the secondary roles of heroes based on some hypothetical features and predict the secondary role of the hero based on the input features.")
 
-st.write("\n")
-st.write("On the other hand, the data below uses Random Forest model to classify the secondary roles of heroes based on some hypothetical features and predict the secondary role of the hero based on the input features.")
+    # SECONDARY ROLES OF MLBB HEROES PREDICTION USING RANDOM FOREST MODEL
+    st.title("Secondary Roles of MLBB Heroes Prediction Using Random Forest Model")
 
-st.title("Secondary Roles of MLBB Heroes Prediction Using Random Forest Model")
+    # Define role data for display
+    data = {
+        'Secondary_Role': ['No Secondary Role', 'Support', 'Tank', 'Assassin', 'Mage', 'Fighter', 'Marksman'],
+        'Count': [84, 7, 6, 6, 5, 3, 3],
+    }
 
-st.sidebar.header("Model Settings")
-resample_size = st.sidebar.slider("Resample Size", min_value=10, max_value=100, value=30, step=5)
-test_size = st.sidebar.slider("Test Size", min_value=0.1, max_value=0.5, value=0.2, step=0.05)
+    # Display role distribution
+    st.subheader("Secondary Role Distribution")
+    role_distribution_df = pd.DataFrame(data)
+    role_distribution_df['Percentage'] = (role_distribution_df['Count'] / role_distribution_df['Count'].sum()) * 100
+    st.dataframe(role_distribution_df)
 
-# Define role data for display
-data = {
-    'Secondary_Role': ['No Secondary Role', 'Support', 'Tank', 'Assassin', 'Mage', 'Fighter', 'Marksman'],
-    'Count': [84, 7, 6, 6, 5, 3, 3],
-}
+    # Define color scheme
+    role_colors = {
+        'No Secondary Role': '#808080',
+        'Support': '#4FB9E3',
+        'Tank': '#2ECC71',
+        'Assassin': '#E74C3C',
+        'Mage': '#9B59B6',
+        'Fighter': '#E67E22',
+        'Marksman': '#F1C40F'
+    }
 
-# Display role distribution
-st.subheader("Secondary Role Distribution")
-role_distribution_df = pd.DataFrame(data)
-role_distribution_df['Percentage'] = (role_distribution_df['Count'] / role_distribution_df['Count'].sum()) * 100
-st.dataframe(role_distribution_df)
+    # Define features and labels
+    selected_features = [
+        'Hp', 'Hp_Regen', 'Mana', 'Mana_Regen',
+        'Phy_Damage', 'Mag_Damage', 'Phy_Defence', 'Mag_Defence',
+        'Mov_Speed', 'Esport_Wins', 'Esport_Loss'
+    ]
 
-# Define color scheme
-role_colors = {
-    'No Secondary Role': '#808080',
-    'Support': '#4FB9E3',
-    'Tank': '#2ECC71',
-    'Assassin': '#E74C3C',
-    'Mage': '#9B59B6',
-    'Fighter': '#E67E22',
-    'Marksman': '#F1C40F'
-}
+    X = df[selected_features]
+    y = df['Secondary_Role']
 
-# Define features and labels
-selected_features = [
-    'Hp', 'Hp_Regen', 'Mana', 'Mana_Regen',
-    'Phy_Damage', 'Mag_Damage', 'Phy_Defence', 'Mag_Defence',
-    'Mov_Speed', 'Esport_Wins', 'Esport_Loss'
-]
+    # Scale features
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+    X_scaled = pd.DataFrame(X_scaled, columns=selected_features)
 
-X = df[selected_features]
-y = df['Secondary_Role']
+    # Filter out "No Secondary Role"
+    mask = y != 'No Secondary Role'
+    X_filtered = X_scaled[mask]
+    y_filtered = y[mask]
 
-# Scale features
-scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)
-X_scaled = pd.DataFrame(X_scaled, columns=selected_features)
+    # Encode target variable
+    le = LabelEncoder()
+    y_filtered_encoded = le.fit_transform(y_filtered)
 
-# Filter out "No Secondary Role"
-mask = y != 'No Secondary Role'
-X_filtered = X_scaled[mask]
-y_filtered = y[mask]
+    # Resample data
+    X_resampled, y_resampled = resample(X_filtered, y_filtered_encoded,
+                                        n_samples=resample_size,
+                                        random_state=42)
 
-# Encode target variable
-le = LabelEncoder()
-y_filtered_encoded = le.fit_transform(y_filtered)
+    # Split data
+    X_train, X_test, y_train, y_test = train_test_split(X_resampled, y_resampled,
+                                                        test_size=test_size,
+                                                        random_state=42)
 
-# Resample data
-X_resampled, y_resampled = resample(X_filtered, y_filtered_encoded,
-                                    n_samples=resample_size,
-                                    random_state=42)
+    # Compute class weights
+    class_weight_dict = dict(zip(np.unique(y_train),
+                                 compute_class_weight(class_weight='balanced',
+                                                      classes=np.unique(y_train),
+                                                      y=y_train)))
 
-# Split data
-X_train, X_test, y_train, y_test = train_test_split(X_resampled, y_resampled,
-                                                    test_size=test_size,
-                                                    random_state=42)
+    # Train model
+    model = RandomForestClassifier(
+        n_estimators=100,
+        max_depth=10,
+        min_samples_split=5,
+        random_state=42,
+        class_weight=class_weight_dict
+    )
+    model.fit(X_train, y_train)
 
-# Compute class weights
-class_weight_dict = dict(zip(np.unique(y_train),
-                             compute_class_weight(class_weight='balanced',
-                                                  classes=np.unique(y_train),
-                                                  y=y_train)))
+    # Predict and evaluate
+    y_pred = model.predict(X_test)
+    accuracy = accuracy_score(y_test, y_pred)
+    st.write(f"Model Accuracy: {accuracy:.3f}")
 
-# Train model
-model = RandomForestClassifier(
-    n_estimators=100,
-    max_depth=10,
-    min_samples_split=5,
-    random_state=42,
-    class_weight=class_weight_dict
-)
-model.fit(X_train, y_train)
+    # Display classification report
+    unique_classes = np.unique(np.concatenate([y_test, y_pred]))
+    target_names = [le.classes_[i] for i in unique_classes]
+    report = classification_report(y_test, y_pred, target_names=target_names, output_dict=True)
+    st.subheader("Classification Report")
+    st.write(pd.DataFrame(report).transpose())
 
-# Predict and evaluate
-y_pred = model.predict(X_test)
-accuracy = accuracy_score(y_test, y_pred)
-st.write(f"Model Accuracy: {accuracy:.3f}")
+    # Visualize feature importance
+    feature_importances = model.feature_importances_
+    importance_df = pd.DataFrame({
+        'Feature': selected_features,
+        'Importance': feature_importances
+    }).sort_values('Importance', ascending=True)
 
-# Display classification report
-unique_classes = np.unique(np.concatenate([y_test, y_pred]))
-target_names = [le.classes_[i] for i in unique_classes]
-report = classification_report(y_test, y_pred, target_names=target_names, output_dict=True)
-st.subheader("Classification Report")
-st.write(pd.DataFrame(report).transpose())
+    # Plotting feature importances
+    st.subheader("Feature Importance")
+    fig, ax = plt.subplots(figsize=(10, 6))
+    bars = ax.barh(importance_df['Feature'], importance_df['Importance'], color=[role_colors['Support'], role_colors['Tank'], role_colors['Assassin'], role_colors['Mage'], role_colors['Fighter'], role_colors['Marksman']])
+    ax.set_xlabel("Feature Importance")
+    ax.set_title("Feature Importance in Predicting Secondary Roles")
+    for i, (bar, importance) in enumerate(zip(bars, importance_df['Importance'])):
+        width = bar.get_width()
+        ax.text(width, bar.get_y() + bar.get_height() / 2,
+                f'{importance * 100:.2f}%', ha='left', va='center', fontweight='bold')
+    st.pyplot(fig)
 
-# Visualize feature importance
-feature_importances = model.feature_importances_
-importance_df = pd.DataFrame({
-    'Feature': selected_features,
-    'Importance': feature_importances
-}).sort_values('Importance', ascending=True)
-
-# Plotting feature importances
-st.subheader("Feature Importance")
-fig, ax = plt.subplots(figsize=(10, 6))
-bars = ax.barh(importance_df['Feature'], importance_df['Importance'], color=[role_colors['Support'], role_colors['Tank'], role_colors['Assassin'], role_colors['Mage'], role_colors['Fighter'], role_colors['Marksman']])
-ax.set_xlabel("Feature Importance")
-ax.set_title("Feature Importance in Predicting Secondary Roles")
-for i, (bar, importance) in enumerate(zip(bars, importance_df['Importance'])):
-    width = bar.get_width()
-    ax.text(width, bar.get_y() + bar.get_height() / 2,
-            f'{importance * 100:.2f}%', ha='left', va='center', fontweight='bold')
-st.pyplot(fig)
-
-# Display feature importance as text
-st.subheader("Feature Importance Percentages")
-for feature, importance in zip(importance_df['Feature'], importance_df['Importance']):
-    st.write(f"{feature}: {importance * 100:.2f}%")
+    # Display feature importance as text
+    st.subheader("Feature Importance Percentages")
+    for feature, importance in zip(importance_df['Feature'], importance_df['Importance']):
+        st.write(f"{feature}: {importance * 100:.2f}%")
 
 
 
-#SUPERVISED LEARNING
+# SUPERVISED LEARNING
 st.title("Supervised Learning for Secondary Role Distribution")
-
-# Sidebar for adjusting test size
-test_size = st.sidebar.slider("Test Size", min_value=0.1, max_value=0.5, value=0.2, step=0.05, key="test_size_slider")
 
 # Define role data
 data = {
@@ -630,7 +622,8 @@ st.subheader("Classification Report")
 st.dataframe(report_df)
 
 
+
 #CONCLUSION
-if st.session_state.page_selection == 'conclusion':
+elif st.session_state.page_selection == 'conclusion':
     st.header("Conclusion")
     st.write("This section concludes the analysis with key findings.")
