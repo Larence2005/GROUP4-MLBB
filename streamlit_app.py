@@ -394,6 +394,37 @@ elif st.session_state.page_selection == 'data_cleaning':
     missing_count = df.isnull().sum()
     st.write(missing_count)
 
+    st.subheader("Label Encoding Primary and Secondary Roles")
+    st.code("""
+    # Encode Primary_Role
+    df['Primary_Role_Encoded'] = primary_encoder.fit_transform(df['Primary_Role'])
+    
+    # Encode Secondary_Role, handling 'No Secondary Role'
+    df['Secondary_Role_Encoded'] = secondary_encoder.fit_transform(df['Secondary_Role'])
+    """)
+    # Create label encoders
+    primary_encoder = LabelEncoder()
+    secondary_encoder = LabelEncoder()
+    
+    # Encode Primary_Role
+    df['Primary_Role_Encoded'] = primary_encoder.fit_transform(df['Primary_Role'])
+    
+    # Encode Secondary_Role, handling 'No Secondary Role'
+    df['Secondary_Role_Encoded'] = secondary_encoder.fit_transform(df['Secondary_Role'])
+    
+    # Print the encoding mappings
+    st.write("Primary Role Encoding:")
+    for i, role in enumerate(primary_encoder.classes_):
+        st.write(f"{role}: {i}")
+    
+    st.write("\nSecondary Role Encoding:")
+    for i, role in enumerate(secondary_encoder.classes_):
+        st.write(f"{role}: {i}")
+    
+    # Example of encoded data
+    st.write("\nExample of encoded data:")
+    st.write(df[['Primary_Role', 'Primary_Role_Encoded', 'Secondary_Role', 'Secondary_Role_Encoded']].head())
+
 #PREDICTION
 elif st.session_state.page_selection == 'prediction':
     st.title("Predicton")
