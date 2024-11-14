@@ -449,6 +449,7 @@ elif st.session_state.page_selection == 'prediction':
     }
     
     # Scale the input data
+    scaler = StandardScaler()
     input_data_scaled = scaler.transform([list(input_data.values())])
     input_data_scaled = pd.DataFrame(input_data_scaled, columns=selected_features)
     
