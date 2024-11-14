@@ -559,7 +559,7 @@ for feature, importance in zip(importance_df['Feature'], importance_df['Importan
 
 
 
-
+#SUPERVISED LEARNING
 st.title("Supervised Learning for Secondary Role Distribution")
 
 # Sidebar for adjusting test size
@@ -613,13 +613,16 @@ target_names = label_encoder.classes_
 unique_classes = np.unique(np.concatenate([y_test, y_pred]))
 
 # Generate classification report with correct labels
-report = classification_report(y_test, y_pred, target_names=target_names, labels=unique_classes)
+report = classification_report(y_test, y_pred, target_names=target_names, labels=unique_classes, output_dict=True)
 
-# Display accuracy and classification report
+# Convert classification report into a pandas DataFrame
+report_df = pd.DataFrame(report).transpose()
+
+# Display accuracy and classification report as a table
 st.subheader("Model Performance")
 st.write(f"Accuracy: {accuracy:.3f}")
-st.text("Classification Report")
-st.text(report)
+st.subheader("Classification Report (as Table)")
+st.dataframe(report_df)
 
 
 #CONCLUSION
