@@ -436,13 +436,12 @@ elif st.session_state.page_selection == 'prediction':
     st.write("This section covers the prediction.")
 
 
-#MACHINE LEARNING
-elif st.session_state.page_selection == 'machine_learning':
-    st.title("Machine Learning")
+# MACHINE LEARNING
+if st.session_state.page_selection == 'machine_learning':
+    st.header("Machine Learning")
     st.write("This section applies machine learning models to the dataset.")
     
-    #PRIMARY ROLES OF MLBB HEROES CLASSIFICATION USING RANDOM FOREST MODEL
-    st.header("Primary Roles of MLBB Heroes Classification using Random Forest Model")
+    st.title("Primary Roles of MLBB Heroes Classification using Random Forest Model")
     st.write("This uses a Random Forest model to classify MLBB heroes primary roles based on selected features.")
     
     # Feature selection
@@ -519,14 +518,9 @@ elif st.session_state.page_selection == 'machine_learning':
     
     st.write("\n")
     st.write("On the other hand, the data below uses Random Forest model to classify the secondary roles of heroes based on some hypothetical features and predict the secondary role of the hero based on the input features.")
-   
-    #-----------------
+    
     st.title("Secondary Roles of MLBB Heroes Prediction Using Random Forest Model")
-
-    st.sidebar.header("Model Settings")
-    resample_size = st.sidebar.slider("Resample Size", min_value=10, max_value=100, value=30, step=5)
-    test_size = st.sidebar.slider("Test Size", min_value=0.1, max_value=0.5, value=0.2, step=0.05)
-
+    
     # Define role data for display
     data = {
         'Secondary_Role': ['No Secondary Role', 'Support', 'Tank', 'Assassin', 'Mage', 'Fighter', 'Marksman'],
@@ -576,12 +570,12 @@ elif st.session_state.page_selection == 'machine_learning':
     
     # Resample data
     X_resampled, y_resampled = resample(X_filtered, y_filtered_encoded,
-                                        n_samples=resample_size,
+                                        n_samples=30,  # Removed the slider part
                                         random_state=42)
     
     # Split data
     X_train, X_test, y_train, y_test = train_test_split(X_resampled, y_resampled,
-                                                        test_size=test_size,
+                                                        test_size=0.2,  # Removed the slider part
                                                         random_state=42)
     
     # Compute class weights
@@ -637,8 +631,7 @@ elif st.session_state.page_selection == 'machine_learning':
         st.write(f"{feature}: {importance * 100:.2f}%")
     
     
-    
-    #------------------------------------=SUPERVISED LEARNING
+    # SUPERVISED LEARNING
     st.title("Supervised Learning for Secondary Role Distribution")
     
     # Define role data
@@ -672,7 +665,7 @@ elif st.session_state.page_selection == 'machine_learning':
     y = label_encoder.fit_transform(df_repeated['Secondary_Role'])
     
     # Split data
-    x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=42)
+    x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     
     # Train Naive Bayes model
     clf = MultinomialNB()
