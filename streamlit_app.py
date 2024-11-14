@@ -200,7 +200,7 @@ elif st.session_state.page_selection == 'eda':
     secondary_df = pd.DataFrame(secondary_data)
     
     # Title
-    st.header("MLBB Heroes Role Analysis")
+    st.title("MLBB Heroes Role Analysis")
     
     # EDA for Primary Role
     st.header("Summary Statistics for Primary Roles")
