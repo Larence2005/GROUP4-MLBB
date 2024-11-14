@@ -605,7 +605,15 @@ clf.fit(x_train, y_train)
 # Make predictions and evaluate
 y_pred = clf.predict(x_test)
 accuracy = accuracy_score(y_test, y_pred)
-report = classification_report(y_test, y_pred, target_names=label_encoder.classes_)
+
+# Ensure all classes are included in classification report
+target_names = label_encoder.classes_
+
+# Get unique classes from both actual and predicted values
+unique_classes = np.unique(np.concatenate([y_test, y_pred]))
+
+# Generate classification report with correct labels
+report = classification_report(y_test, y_pred, target_names=target_names, labels=unique_classes)
 
 # Display accuracy and classification report
 st.subheader("Model Performance")
