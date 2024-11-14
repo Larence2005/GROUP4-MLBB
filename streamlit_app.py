@@ -432,6 +432,6 @@ for feature, importance in zip(feature_importance['Feature'], feature_importance
 
 
 #CONCLUSION
-elif st.session_state.page_selection == 'conclusion':
+if st.session_state.page_selection == 'conclusion':
     st.header("Conclusion")
     st.write("This section concludes the analysis with key findings.")
