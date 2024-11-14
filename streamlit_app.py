@@ -75,7 +75,7 @@ with st.sidebar:
 
 #ABOUT
 if st.session_state.page_selection == 'about':
-    st.header("ℹ️ About")
+    st.title("ℹ️ About")
     st.write("""
     Welcome to the MLBB (Mobile Legends: Bang Bang) Dashboard. This dashboard provides insights and 
     analytics on the statistics of various MLBB heroes, exploring key trends and applying machine learning 
@@ -100,32 +100,35 @@ if st.session_state.page_selection == 'about':
 #DATASET
 
 elif st.session_state.page_selection == 'dataset':
-    st.header("📊 Dataset")
+    st.title("📊 Dataset")
     st.write("Here is a preview of the dataset used in this analysis. The Dataset contains the Stats of heroes until Mobile Legends Version Patch 1.7.20 September 20, 2022.")
-    st.markdown("""**Content**  
+    st.markdown("""
+    
+    **Content**  
     The dataset has **114** rows containing **11 primary attributes** that are related to MLBB heroes, the columns are as follows: 
-    1. Name	
-    2. Title	
-    3. Voice_Line	
-    4. Release_Date	
-    5. Primary_Role
-    6. Secondary_Role
-    7. Lane
-    8. Hp
-    9. Hp_Regen
-    10. Mana
-    11. Mana_Regen
-    12. Phy_Damage	
-    13. Mag_Damage	
-    14. Phy_Defence	
-    15. Mag_Defence	
-    16. Mov_Speed	
-    17. Esport_Wins	
-    18. Esport_Loss
+    1. Name\n
+    2. Title\n
+    3. Voice_Line\n
+    4. Release_Date\n
+    5. Primary_Role\n
+    6. Secondary_Role\n
+    7. Lane\n
+    8. Hp\n
+    9. Hp_Regen\n
+    10. Mana\n
+    11. Mana_Regen\n
+    12. Phy_Damage\n
+    13. Mag_Damage\n
+    14. Phy_Defence\n
+    15. Mag_Defence\n
+    16. Mov_Speed\n
+    17. Esport_Wins\n
+    18. Esport_Loss\n
 
     `Link:` https://www.kaggle.com/datasets/kishan9044/mobile-legends-bang-bang
     
     """)
+    
     st.subheader("Dataset displayed as a Data Frame")
     st.write(df)
     
@@ -168,15 +171,16 @@ elif st.session_state.page_selection == 'dataset':
 #EDA
 
 elif st.session_state.page_selection == 'eda':
-    st.header("📈 Exploratory Data Analysis (EDA)")
+    st.title("📈 Exploratory Data Analysis (EDA)")
     st.write("Here, we explore the dataset through various visualizations.")
 
     with st.expander('Legend', expanded=True):
             st.write('''
-                - Data: [Iris Flower Dataset](https://www.kaggle.com/datasets/arshid/iris-flower-dataset).
-                - :orange[**Pie Chart**]: Distribution of the 3 Iris species in the dataset.
-                - :orange[**Scatter Plots**]: Difference of Iris species' features.
-                - :orange[**Pairwise Scatter Plot Matrix**]: Highlighting *overlaps* and *differences* among Iris species' features.
+                - Data: [MLBB Dataset](https://www.kaggle.com/datasets/kishan9044/mobile-legends-bang-bang).
+                - :orange[**Pie Chart**]: Distribution of the Primary and Secondary roles in the dataset.
+                - :orange[**Histograms**]: Distribution of HP and Physical Damage of heroes.
+                - :orange[**Correlation Heatmap**]: Correlations between different numerical variables features positive correlations as ranges of red and negative correlations as shades of blue.
+                - :orange[*Boxplot**]: Distribution of HP and Physical Damage of heroes by Win/Loss status.
                 ''')
 
     #---------PRIMARY AND SECONDARY ROLE--------
@@ -309,25 +313,7 @@ elif st.session_state.page_selection == 'eda':
 The graph shows physical damage distribution, with a histogram and a superimposed kernel density estimate (green line). The data is roughly normal, peaked around 120, and tapers off to both smaller and higher damage values. Most of the observations fall in the range of 110-130, with fewer cases below 100 and even fewer above 130.
     """)
 
-    #-------------PRIMARY ROLE DISTRIBUTION---------
 
-    # Title
-    st.title("Primary Role Distribution")
-    
-    # Create countplot
-    st.subheader("Distribution of Primary Roles")
-    fig, ax = plt.subplots(figsize=(8, 5))
-    sns.countplot(x='Primary_Role', data=df, palette='Set2', ax=ax)
-    ax.set_title('Distribution of Primary Roles')
-    ax.set_ylabel('Count')
-    ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
-    
-    # Use st.pyplot() to display the plot
-    st.pyplot(fig)
-
-    st.markdown("""
-The graphical representation shows that in this set of characters, there is a leading role which is "Fighter," followed by "Mage," then "Marksman." "Tank" and "Assassin" fall within the middle range, while "Support" is found to be the least. This is a clear leaning towards designs of characters being mostly within the Fighter class.
-    """)
 
     #-----------------CORRRELATION HEATMAP
 
@@ -404,22 +390,22 @@ The heatmap of correlations between different numerical variables features posit
 #DATA_CLEANING
 
 elif st.session_state.page_selection == 'data_cleaning':
-    st.header("Data Cleaning / Pre-processing")
+    st.title("Data Cleaning / Pre-processing")
     st.write("This section covers the data cleaning and pre-processing steps.")
 
 #PREDICTION
 elif st.session_state.page_selection == 'prediction':
-    st.header("Predicton")
+    st.title("Predicton")
     st.write("This section covers the prediction.")
 
 
 #MACHINE LEARNING
-# MACHINE LEARNING
 elif st.session_state.page_selection == 'machine_learning':
-    st.header("Machine Learning")
+    st.title("Machine Learning")
     st.write("This section applies machine learning models to the dataset.")
-
-    st.title("Primary Roles of MLBB Heroes Classification using Random Forest Model")
+    
+    #PRIMARY ROLES OF MLBB HEROES CLASSIFICATION USING RANDOM FOREST MODEL
+    st.header("Primary Roles of MLBB Heroes Classification using Random Forest Model")
     st.write("This uses a Random Forest model to classify MLBB heroes primary roles based on selected features.")
     
     # Feature selection
@@ -498,7 +484,11 @@ elif st.session_state.page_selection == 'machine_learning':
     st.write("On the other hand, the data below uses Random Forest model to classify the secondary roles of heroes based on some hypothetical features and predict the secondary role of the hero based on the input features.")
     
     st.title("Secondary Roles of MLBB Heroes Prediction Using Random Forest Model")
-    
+
+    st.sidebar.header("Model Settings")
+    resample_size = st.sidebar.slider("Resample Size", min_value=10, max_value=100, value=30, step=5)
+    test_size = st.sidebar.slider("Test Size", min_value=0.1, max_value=0.5, value=0.2, step=0.05)
+
     # Define role data for display
     data = {
         'Secondary_Role': ['No Secondary Role', 'Support', 'Tank', 'Assassin', 'Mage', 'Fighter', 'Marksman'],
@@ -548,12 +538,12 @@ elif st.session_state.page_selection == 'machine_learning':
     
     # Resample data
     X_resampled, y_resampled = resample(X_filtered, y_filtered_encoded,
-                                        n_samples=30,  # Removed the slider part
+                                        n_samples=resample_size,
                                         random_state=42)
     
     # Split data
     X_train, X_test, y_train, y_test = train_test_split(X_resampled, y_resampled,
-                                                        test_size=0.2,  # Removed the slider part
+                                                        test_size=test_size,
                                                         random_state=42)
     
     # Compute class weights
@@ -609,7 +599,8 @@ elif st.session_state.page_selection == 'machine_learning':
         st.write(f"{feature}: {importance * 100:.2f}%")
     
     
-    # SUPERVISED LEARNING
+    
+    #SUPERVISED LEARNING
     st.title("Supervised Learning for Secondary Role Distribution")
     
     # Define role data
@@ -643,7 +634,7 @@ elif st.session_state.page_selection == 'machine_learning':
     y = label_encoder.fit_transform(df_repeated['Secondary_Role'])
     
     # Split data
-    x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=42)
     
     # Train Naive Bayes model
     clf = MultinomialNB()
@@ -672,7 +663,8 @@ elif st.session_state.page_selection == 'machine_learning':
     st.dataframe(report_df)
 
 
+
 #CONCLUSION
 elif st.session_state.page_selection == 'conclusion':
-    st.header("Conclusion")
+    st.title("📝 Conclusion")
     st.write("This section concludes the analysis with key findings.")
