@@ -52,12 +52,12 @@ with st.sidebar:
     if st.button("Data Cleaning / Pre-processing", use_container_width=True, on_click=set_page_selection, args=('data_cleaning',)):
         st.session_state.page_selection = "data_cleaning"
 
-    if st.button("Prediction", use_container_width=True, on_click=set_page_selection, args=('prediction',)):
-        st.session_state.page_selection = 'prediction'
-
     if st.button("Machine Learning", use_container_width=True, on_click=set_page_selection, args=('machine_learning',)): 
         st.session_state.page_selection = "machine_learning"
-
+        
+    if st.button("Prediction", use_container_width=True, on_click=set_page_selection, args=('prediction',)):
+            st.session_state.page_selection = 'prediction'
+        
     if st.button("Conclusion", use_container_width=True, on_click=set_page_selection, args=('conclusion',)):
         st.session_state.page_selection = "conclusion"
 
@@ -430,48 +430,6 @@ elif st.session_state.page_selection == 'data_cleaning':
     """)
     st.write("After cleaning the data, it is now ready for the machine learning model, addressing data quality issues and ensuring the model can learn effectively from the available information.")
 
-#PREDICTION
-elif st.session_state.page_selection == 'prediction':
-    st.title("Predicton")
-    # Define input data
-    input_data = {
-        'Hp': 5000,                # 14.20%
-        'Hp_Regen': 50,            # 12.81%
-        'Mana': 2000,              # 5.42%
-        'Mana_Regen': 20,          # 11.32%
-        'Mag_Damage': 0,           # 0.00%
-        'Mag_Defence': 0,          # 0.00%
-        'Phy_Damage': 150,         # 9.59%
-        'Phy_Defence': 30,         # 16.57%
-        'Mov_Speed': 270,          # 12.72%
-        'Esport_Wins': 400,        # 9.20%
-        'Esport_Loss': 350         # 8.17%
-    }
-    
-    # Ensure that selected features are defined in the correct order
-    selected_features = ['Hp', 'Hp_Regen', 'Mana', 'Mana_Regen', 'Mag_Damage', 'Mag_Defence', 
-                         'Phy_Damage', 'Phy_Defence', 'Mov_Speed', 'Esport_Wins', 'Esport_Loss']
-    
-    # Load the pre-fitted scaler
-    scaler = joblib.load("path/to/fitted_scaler.pkl")
-    
-    # Scale the input data
-    input_data_scaled = scaler.transform([list(input_data.values())])
-    input_data_scaled = pd.DataFrame(input_data_scaled, columns=selected_features)
-    
-    # Load the models and classes list
-    model = joblib.load("path/to/primary_role_model.pkl")
-    dt_classifier = joblib.load("path/to/secondary_role_model.pkl")
-    classes_list = ['Role1', 'Role2', 'Role3']  # Replace with actual roles
-    
-    # Make primary and secondary role predictions
-    primary_role_prediction = model.predict(input_data_scaled)[0]
-    secondary_role_prediction = dt_classifier.predict(input_data_scaled)[0]
-    
-    # Display the predictions
-    st.write(f"Predicted Primary Role: {primary_role_prediction}")
-    st.write(f"Predicted Secondary Role: {classes_list[secondary_role_prediction]}")
-
 
 # MACHINE LEARNING
 elif st.session_state.page_selection == 'machine_learning':
@@ -730,6 +688,41 @@ elif st.session_state.page_selection == 'machine_learning':
     st.subheader("Classification Report")
     st.dataframe(report_df)
 
+#PREDICTION
+elif st.session_state.page_selection == 'prediction':
+    st.title("Predicton")
+    # Define input data
+    input_data = {
+        'Hp': 5000,                # 14.20%
+        'Hp_Regen': 50,            # 12.81%
+        'Mana': 2000,              # 5.42%
+        'Mana_Regen': 20,          # 11.32%
+        'Mag_Damage': 0,           # 0.00%
+        'Mag_Defence': 0,          # 0.00%
+        'Phy_Damage': 150,         # 9.59%
+        'Phy_Defence': 30,         # 16.57%
+        'Mov_Speed': 270,          # 12.72%
+        'Esport_Wins': 400,        # 9.20%
+        'Esport_Loss': 350         # 8.17%
+    }
+    
+    # Ensure that selected features are defined in the correct order
+    selected_features = ['Hp', 'Hp_Regen', 'Mana', 'Mana_Regen', 'Mag_Damage', 'Mag_Defence', 
+                         'Phy_Damage', 'Phy_Defence', 'Mov_Speed', 'Esport_Wins', 'Esport_Loss']
+  
+    
+    # Scale the input data
+    input_data_scaled = scaler.transform([list(input_data.values())])
+    input_data_scaled = pd.DataFrame(input_data_scaled, columns=selected_features)
+    
+    
+    # Make primary and secondary role predictions
+    primary_role_prediction = model.predict(input_data_scaled)[0]
+    secondary_role_prediction = dt_classifier.predict(input_data_scaled)[0]
+    
+    # Display the predictions
+    st.write(f"Predicted Primary Role: {primary_role_prediction}")
+    st.write(f"Predicted Secondary Role: {classes_list[secondary_role_prediction]}")
 
 
 #CONCLUSION
