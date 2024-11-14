@@ -498,7 +498,11 @@ elif st.session_state.page_selection == 'machine_learning':
     st.write("On the other hand, the data below uses Random Forest model to classify the secondary roles of heroes based on some hypothetical features and predict the secondary role of the hero based on the input features.")
     
     st.title("Secondary Roles of MLBB Heroes Prediction Using Random Forest Model")
-    
+
+    st.sidebar.header("Model Settings")
+    resample_size = st.sidebar.slider("Resample Size", min_value=10, max_value=100, value=30, step=5)
+    test_size = st.sidebar.slider("Test Size", min_value=0.1, max_value=0.5, value=0.2, step=0.05)
+
     # Define role data for display
     data = {
         'Secondary_Role': ['No Secondary Role', 'Support', 'Tank', 'Assassin', 'Mage', 'Fighter', 'Marksman'],
