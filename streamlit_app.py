@@ -407,9 +407,15 @@ y_pred = model.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
 st.write(f"Model Accuracy: {accuracy:.3f}")
 
-# Display classification report
-st.subheader("Classification Report")
-st.text(classification_report(y_test, y_pred))
+# Generate classification report with output_dict=True
+report = classification_report(y_test, y_pred, output_dict=True)
+
+# Convert the classification report to a DataFrame
+report_df = pd.DataFrame(report).transpose()
+
+# Display the classification report as a table in Streamlit
+st.subheader("Classification Report (as Table)")
+st.dataframe(report_df)
 
 # Feature importance visualization
 feature_importance = pd.DataFrame({
@@ -436,7 +442,6 @@ st.pyplot(fig)
 st.subheader("Feature Importance Percentages")
 for feature, importance in zip(feature_importance['Feature'], feature_importance['Importance']):
     st.write(f"{feature}: {importance * 100:.2f}%")
-
 
 
 st.write("\n")
