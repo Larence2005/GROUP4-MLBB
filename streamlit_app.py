@@ -362,6 +362,73 @@ elif st.session_state.page_selection == 'prediction':
 elif st.session_state.page_selection == 'machine_learning':
     st.header("Machine Learning")
     st.write("This section applies machine learning models to the dataset.")
+    #PRIMARY ROLES OF MLBB HEROES CLASSIFICATION USING RANDOM FOREST MODEL
+
+# Assuming df is your DataFrame
+# Select relevant features
+selected_features = [
+    'Hp', 'Hp_Regen', 'Mana', 'Mana_Regen',
+    'Phy_Damage', 'Mag_Damage', 'Phy_Defence', 'Mag_Defence',
+    'Mov_Speed', 'Esport_Wins', 'Esport_Loss'
+]
+
+# Prepare the data
+X = df[selected_features]
+y = df['Primary_Role']
+
+# Scale the features (important because the stats are on different scales)
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+X_scaled = pd.DataFrame(X_scaled, columns=selected_features)
+
+# Split the data
+X_train, X_test, y_train, y_test = train_test_split(
+    X_scaled, y, test_size=0.2, random_state=42
+)
+
+# Create and train the model
+model = RandomForestClassifier(
+    n_estimators=100,
+    random_state=42,
+    max_depth=10,  # Prevent overfitting
+    min_samples_split=5  # Minimum samples required to split a node
+)
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Print model performance
+print(f"Accuracy: {accuracy_score(y_test, y_pred):.3f}")
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred))
+
+# Visualize feature importance
+feature_importance = pd.DataFrame({
+    'Feature': selected_features,
+    'Importance': model.feature_importances_
+})
+feature_importance = feature_importance.sort_values('Importance', ascending=True)
+
+plt.figure(figsize=(12, 8))
+bars = plt.barh(feature_importance['Feature'], feature_importance['Importance'])
+
+# Add percentage labels
+for bar in bars:
+    width = bar.get_width()
+    plt.text(width, bar.get_y() + bar.get_height()/2,
+             f'{width*100:.1f}%',
+             ha='left', va='center')
+
+plt.xlabel('Feature Importance (%)')
+plt.title('Feature Importance in Predicting MLBB Hero Primary Role')
+plt.tight_layout()
+plt.show()
+
+# Print feature importance percentages
+print("\nFeature Importance Percentages:")
+for feature, importance in zip(feature_importance['Feature'], feature_importance['Importance']):
+    print(f"{feature}: {importance * 100:.2f}%")
 
 
 #CONCLUSION
