@@ -559,11 +559,11 @@ for feature, importance in zip(importance_df['Feature'], importance_df['Importan
 
 
 
-# Streamlit Title
+
 st.title("Supervised Learning for Secondary Role Distribution")
 
 # Sidebar for adjusting test size
-test_size = st.sidebar.slider("Test Size", min_value=0.1, max_value=0.5, value=0.2, step=0.05)
+test_size = st.sidebar.slider("Test Size", min_value=0.1, max_value=0.5, value=0.2, step=0.05, key="test_size_slider")
 
 # Define role data
 data = {
