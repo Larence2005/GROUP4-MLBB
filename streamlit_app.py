@@ -577,10 +577,6 @@ for role, count in zip(data['Secondary_Role'], data['Count']):
     
 
 #CONCLUSION
-
 elif st.session_state.page_selection == 'conclusion':
     st.header("Conclusion")
     st.write("This section concludes the analysis with key findings.")
-
-
-
