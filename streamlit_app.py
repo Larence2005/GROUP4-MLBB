@@ -400,19 +400,12 @@ elif st.session_state.page_selection == 'data_cleaning':
     X_filtered = df[selected_features][mask]
     y_filtered = df['Secondary_Role'][mask]
     """)
-
-    mask = df['Secondary_Role'] != 'No Secondary Role'
-    X_filtered = df[selected_features][mask]
-    y_filtered = df['Secondary_Role'][mask]
     #-------------------------------------
     st.header("Label Encoding Target Variable")
     st.code("""
     le = LabelEncoder()
     y_filtered_encoded = le.fit_transform(y_filtered)
     """)
-   # Encode the target variable
-    le = LabelEncoder()
-    y_filtered_encoded = le.fit_transform(y_filtered)
     #-----------------------------------------------
     st.header("Resampling the Data")
     st.code("""
@@ -420,9 +413,6 @@ elif st.session_state.page_selection == 'data_cleaning':
                                    n_samples=resample_size,
                                    random_state=42)
     """)
-    X_resampled, y_resampled = resample(X_filtered, y_filtered_encoded,
-                                   n_samples=resample_size,
-                                   random_state=42)
     #-----------------------------------------------
     st.header("Scaling the features")
     st.code("""
@@ -430,9 +420,6 @@ elif st.session_state.page_selection == 'data_cleaning':
     X_scaled = scaler.fit_transform(X_resampled)
     X_scaled = pd.DataFrame(X_scaled, columns=selected_features)
     """)
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X_resampled)
-    X_scaled = pd.DataFrame(X_scaled, columns=selected_features)
     #-----------------------------------------------
     st.header("Computing class weights")
     st.code("""
@@ -441,10 +428,6 @@ elif st.session_state.page_selection == 'data_cleaning':
                                                   classes=np.unique(y_resampled),
                                                   y=y_resampled)))
     """)
-    class_weight_dict = dict(zip(np.unique(y_resampled),
-                             compute_class_weight(class_weight='balanced',
-                                                  classes=np.unique(y_resampled),
-                                                  y=y_resampled)))
     #-----------------------------------------------
 
 #PREDICTION
