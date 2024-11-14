@@ -75,7 +75,7 @@ with st.sidebar:
 
 #ABOUT
 if st.session_state.page_selection == 'about':
-    st.header("About")
+    st.header("ℹ️ About")
     st.write("""
     Welcome to the MLBB (Mobile Legends: Bang Bang) Dashboard. This dashboard provides insights and 
     analytics on the statistics of various MLBB heroes, exploring key trends and applying machine learning 
@@ -103,29 +103,81 @@ elif st.session_state.page_selection == 'dataset':
     st.header("📊 Dataset")
     st.write("Here is a preview of the dataset used in this analysis. The Dataset contains the Stats of heroes until Mobile Legends Version Patch 1.7.20 September 20, 2022.")
     st.markdown("""**Content**  
-    The dataset has **114** rows containing **_ primary attributes** that are related to MLBB heroes, the columns are as follows: .
+    The dataset has **114** rows containing **11 primary attributes** that are related to MLBB heroes, the columns are as follows: 
+    1. Name	
+    2. Title	
+    3. Voice_Line	
+    4. Release_Date	
+    5. Primary_Role
+    6. Secondary_Role
+    7. Lane
+    8. Hp
+    9. Hp_Regen
+    10. Mana
+    11. Mana_Regen
+    12. Phy_Damage	
+    13. Mag_Damage	
+    14. Phy_Defence	
+    15. Mag_Defence	
+    16. Mov_Speed	
+    17. Esport_Wins	
+    18. Esport_Loss
 
-    `Link:` https://www.kaggle.com/datasets/kishan9044/mobile-legends-bang-bang         
+    `Link:` https://www.kaggle.com/datasets/kishan9044/mobile-legends-bang-bang
+    
     """)
+    st.subheader("Dataset displayed as a Data Frame")
     st.write(df)
+    
+    st.subheader("Descriptive Statistics")
     describe = df.describe()
     describe
 
     st.markdown("""
 
-    The results from `df.describe()` highlights the descriptive statistics about the dataset. First the **sepal length** averages *5.84 cm* with a standard deviation of *0.83* which indicates moderate variation around the mean. **Sepal width** on the other hand has a lower mean of *3.05* cm and shows less spread with a standard deviation of *0.43*, this indicates that the values of sepal width are generally more consistent. Moving on with **petal length** and **petal width**, these columns show greater variability with means of *3.76 cm* and *1.20 cm* and standard deviation of *1.76* and *0.76*. This suggests that these dimansions vary more significantly across the species.  
+    The results from `df.describe()` highlights the descriptive statistics about the dataset.
 
-    Speaking of minimum and maximum values, petal length ranges from *1.0 cm* up to *6.9 cm*, petal width from *0.1 cm* to *2.5 cm* suggesting that there's a distinct difference between the species.  
+    1. Hp has an average value of 2577.85 with a standard deviation of 213.28, indicating moderate variation in health points across the data. The values range from 918 to 2909, showing a significant spread in HP values.
 
-    The 25th, 50th, and 75th percentiles on the other hand reveals a gradual increase across all features indicating that the dataset offers a promising potential to be used for classification techniques.
-                
+    2. Hp_Regen has a mean of 7.70 and a standard deviation of 1.64, suggesting relatively consistent health regeneration rates, with values ranging from 3.8 to 18.4.
+
+    3. Mana has a mean of 339.37 with a standard deviation of 215.07, reflecting a high level of variability. The range of values is from 0 (possibly indicating characters with no mana) to 750.
+
+    4. Mana_Regen has a mean of 14.80 and a standard deviation of 22.92, indicating substantial variation in mana regeneration. The minimum value is 0, and the maximum reaches 240.
+    
+    5. Phy_Damage has an average of 115.93 and a smaller standard deviation of 9.83, suggesting that physical damage values are relatively stable, ranging from 90 to 140.
+    
+    6. Phy_Defence has a mean of 19.20 and a standard deviation of 3.58, indicating moderate consistency. Values range from 10 to 27.
+    
+    7. Mag_Defence has a mean of 14.91 and a low standard deviation of 0.66, suggesting high consistency across entries, with values between 10 and 15.
+    
+    8. Mov_Speed has an average of 251.18 with a standard deviation of 8.67, showing a small spread around the mean. The movement speed values range from 240 to 270.
+    
+    9. Esport_Wins has a mean of 289.86 and a high standard deviation of 275.36, indicating a wide range of values, from 0 to 1357.
+    
+    10. Esport_Loss similarly has a mean of 289.71 and a high standard deviation of 273.14, with values from 3 to 1529, suggesting large variability in losses.
+    
+    11. Primary_Role_Encoded has an average value of 2.22 and a standard deviation of 1.57, with values ranging from 0 to 5, representing different primary roles in encoded form.
+    
+    12. Secondary_Role_Encoded has a mean of 3.76 with a standard deviation of 1.23, indicating that secondary roles also vary, with values between 0 and 6.
+    
+    In terms of percentiles (25th, 50th, and 75th), the gradual increase across features like Hp, Mana, Phy_Damage, and Mov_Speed suggests a dataset with a broad distribution, offering potential for classification and analysis techniques to explore patterns based on these attributes.
+                    
     """)
 
 #EDA
 
 elif st.session_state.page_selection == 'eda':
-    st.header("Exploratory Data Analysis (EDA)")
+    st.header("📈 Exploratory Data Analysis (EDA)")
     st.write("Here, we explore the dataset through various visualizations.")
+
+    with st.expander('Legend', expanded=True):
+            st.write('''
+                - Data: [Iris Flower Dataset](https://www.kaggle.com/datasets/arshid/iris-flower-dataset).
+                - :orange[**Pie Chart**]: Distribution of the 3 Iris species in the dataset.
+                - :orange[**Scatter Plots**]: Difference of Iris species' features.
+                - :orange[**Pairwise Scatter Plot Matrix**]: Highlighting *overlaps* and *differences* among Iris species' features.
+                ''')
 
     #---------PRIMARY AND SECONDARY ROLE--------
     
