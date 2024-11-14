@@ -9,7 +9,8 @@ from wordcloud import WordCloud
 from mpl_toolkits.mplot3d import Axes3D
 from pandas.plotting import scatter_matrix
 from sklearn.preprocessing import LabelEncoder
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, resample
+from sklearn.utils.class_weight import compute_class_weight
 from sklearn.preprocessing import LabelEncoder
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.ensemble import RandomForestClassifier
@@ -357,9 +358,10 @@ elif st.session_state.page_selection == 'data_cleaning':
 elif st.session_state.page_selection == 'prediction':
     st.header("Predicton")
     st.write("This section covers the prediction.")
-    
-#MACHINE LEARNING
 
+
+
+#MACHINE LEARNING
 if st.session_state.page_selection == 'machine_learning':
     st.header("Machine Learning")
     st.write("This section applies machine learning models to the dataset.")
@@ -433,6 +435,117 @@ st.pyplot(fig)
 st.subheader("Feature Importance Percentages")
 for feature, importance in zip(feature_importance['Feature'], feature_importance['Importance']):
     st.write(f"{feature}: {importance * 100:.2f}%")
+
+
+st.write("On the other hand, this data below uses Random Forest model to classify the secondary roles of heroes based on some hypothetical features and predict the secondary role of the hero based on the input features.")
+
+
+# Title and description
+st.title("Secondary Roles of MLBB Heroes Prediction using Random Forest Model")
+st.write("This app predicts the secondary role of MLBB heroes based on selected features.")
+
+# Sample data for Secondary Role distribution
+data = {
+    'Secondary_Role': ['No Secondary Role', 'Support', 'Tank', 'Assassin', 'Mage', 'Fighter', 'Marksman'],
+    'Count': [84, 7, 6, 6, 5, 3, 3],
+}
+
+# Color scheme for roles
+role_colors = {
+    'No Secondary Role': '#808080',  # Gray
+    'Support': '#4FB9E3',            # Light Blue
+    'Tank': '#2ECC71',               # Green
+    'Assassin': '#E74C3C',           # Red
+    'Mage': '#9B59B6',               # Purple
+    'Fighter': '#E67E22',            # Orange
+    'Marksman': '#F1C40F'            # Yellow
+}
+
+# Load your DataFrame (assuming df is already loaded)
+# For example purposes, replace this with actual data loading
+# df = pd.read_csv("your_data.csv")
+
+# Selected features
+selected_features = [
+    'Hp', 'Hp_Regen', 'Mana', 'Mana_Regen',
+    'Phy_Damage', 'Mag_Damage', 'Phy_Defence', 'Mag_Defence',
+    'Mov_Speed', 'Esport_Wins', 'Esport_Loss'
+]
+
+# Data preparation
+X = df[selected_features]
+y = df['Secondary_Role']
+
+# Scaling
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+X_scaled = pd.DataFrame(X_scaled, columns=selected_features)
+
+# Filter out rows with "No Secondary Role"
+mask = y != 'No Secondary Role'
+X_filtered = X_scaled[mask]
+y_filtered = y[mask]
+
+# Encode target variable
+le = LabelEncoder()
+y_filtered_encoded = le.fit_transform(y_filtered)
+
+# Resampling
+X_resampled, y_resampled = resample(X_filtered, y_filtered_encoded, n_samples=30, random_state=42)
+
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(X_resampled, y_resampled, test_size=0.2, random_state=42)
+
+# Class weights
+class_weight_dict = dict(zip(np.unique(y_train),
+                             compute_class_weight(class_weight='balanced', classes=np.unique(y_train), y=y_train)))
+
+# Model creation and training
+model = RandomForestClassifier(n_estimators=100, max_depth=10, min_samples_split=5, random_state=42, class_weight=class_weight_dict)
+model.fit(X_train, y_train)
+
+# Predictions
+y_pred = model.predict(X_test)
+
+# Display accuracy
+accuracy = accuracy_score(y_test, y_pred)
+st.write(f"Model Accuracy: {accuracy:.3f}")
+
+# Display classification report
+unique_classes = np.unique(np.concatenate([y_test, y_pred]))
+target_names = [le.classes_[i] for i in unique_classes]
+st.subheader("Classification Report")
+st.text(classification_report(y_test, y_pred, target_names=target_names))
+
+# Feature importance visualization
+feature_importances = model.feature_importances_
+importance_df = pd.DataFrame({'Feature': selected_features, 'Importance': feature_importances}).sort_values('Importance', ascending=True)
+
+# Plot feature importance
+st.subheader("Feature Importance in Prediction of Secondary Roles")
+fig, ax = plt.subplots(figsize=(12, 8))
+bars = ax.barh(range(len(importance_df)), importance_df['Importance'])
+
+# Customize bars and add labels
+colors = [color for role, color in role_colors.items() if role != 'No Secondary Role']
+for i, bar in enumerate(bars):
+    bar.set_color(colors[i % len(colors)])
+    width = bar.get_width()
+    ax.text(width, bar.get_y() + bar.get_height()/2, f'{width*100:.2f}%', ha='left', va='center', fontweight='bold')
+
+ax.set_yticks(range(len(importance_df)))
+ax.set_yticklabels(importance_df['Feature'])
+ax.set_xlabel('Feature Importance (%)')
+ax.set_title('Random Forest Feature Importance in Prediction of Secondary Roles')
+st.pyplot(fig)
+
+# Display role distribution
+st.subheader("Secondary Role Distribution")
+for role, count in zip(data['Secondary_Role'], data['Count']):
+    percentage = (count / sum(data['Count'])) * 100
+    st.write(f"{role}: {count} heroes ({percentage:.1f}%)")
+
+
 
 #CONCLUSION
 if st.session_state.page_selection == 'conclusion':
