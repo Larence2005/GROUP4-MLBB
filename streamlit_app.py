@@ -18,6 +18,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.cluster import KMeans
 from sklearn.semi_supervised import LabelPropagation
 from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 
