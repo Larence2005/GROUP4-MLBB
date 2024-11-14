@@ -561,7 +561,19 @@ plt.legend(handles=legend_elements,
 
 plt.tight_layout()
 plt.show()
-    
+
+# Print feature importance percentages
+print("\nFeature Importance Percentages:")
+print("-" * 30)
+for feature, importance in zip(importance_df['Feature'], importance_df['Importance']):
+    print(f"{feature}: {importance * 100:.2f}%")
+
+# Print role distribution
+print("\nSecondary Role Distribution:")
+print("-" * 30)
+for role, count in zip(data['Secondary_Role'], data['Count']):
+    percentage = (count / sum(data['Count'])) * 100
+    print(f"{role}: {count} heroes ({percentage:.1f}%)")
 
 #CONCLUSION
 elif st.session_state.page_selection == 'conclusion':
