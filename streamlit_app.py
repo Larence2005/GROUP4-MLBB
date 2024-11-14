@@ -49,6 +49,9 @@ with st.sidebar:
     if st.button("Data Cleaning / Pre-processing", use_container_width=True, on_click=set_page_selection, args=('data_cleaning',)):
         st.session_state.page_selection = "data_cleaning"
 
+    if st.button("Prediction", use_container_width=True, on_click=set_page_selection, args=('prediction',)):
+        st.session_state.page_selection = 'prediction'
+
     if st.button("Machine Learning", use_container_width=True, on_click=set_page_selection, args=('machine_learning',)): 
         st.session_state.page_selection = "machine_learning"
 
@@ -348,8 +351,12 @@ The heatmap of correlations between different numerical variables features posit
 elif st.session_state.page_selection == 'data_cleaning':
     st.header("Data Cleaning / Pre-processing")
     st.write("This section covers the data cleaning and pre-processing steps.")
-    
 
+#PREDICTION
+elif st.session_state.page_selection == 'prediction':
+    st.header("Predicton")
+    st.write("This section covers the prediction.")
+    
 #MACHINE LEARNING
 
 elif st.session_state.page_selection == 'machine_learning':
