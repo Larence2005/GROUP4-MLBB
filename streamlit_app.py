@@ -433,7 +433,31 @@ elif st.session_state.page_selection == 'data_cleaning':
 #PREDICTION
 elif st.session_state.page_selection == 'prediction':
     st.title("Predicton")
-    st.write("This section covers the prediction.")
+    # Prepare input data
+      input_data = {
+        'Hp': 5000,                # 14.20%
+        'Hp_Regen': 50,            # 12.81%
+        'Mana': 2000,              # 5.42%
+        'Mana_Regen': 20,          # 11.32%
+        'Mag_Damage': 0,           # 0.00%
+        'Mag_Defence': 0,          # 0.00%
+        'Phy_Damage': 150,         # 9.59%
+        'Phy_Defence': 30,         # 16.57%
+        'Mov_Speed': 270,          # 12.72%
+        'Esport_Wins': 400,        # 9.20%
+        'Esport_Loss': 350         # 8.17%
+    }
+    
+    # Scale the input data
+    input_data_scaled = scaler.transform([list(input_data.values())])
+    input_data_scaled = pd.DataFrame(input_data_scaled, columns=selected_features)
+    
+    # Make primary role prediction
+    primary_role_prediction = model.predict(input_data_scaled)[0]
+    secondary_role_prediction = dt_classifier.predict(input_data_scaled)[0]
+
+    print(f"Predicted Primary Role: {primary_role_prediction}")
+    print(f"Predicted Secondary Role: {classes_list[secondary_role_prediction]}")
 
 
 # MACHINE LEARNING
