@@ -437,14 +437,12 @@ for feature, importance in zip(feature_importance['Feature'], feature_importance
     st.write(f"{feature}: {importance * 100:.2f}%")
 
 
-st.write("On the other hand, this data below uses Random Forest model to classify the secondary roles of heroes based on some hypothetical features and predict the secondary role of the hero based on the input features.")
 
+st.write("\n")
+st.write("On the other hand, the data below uses Random Forest model to classify the secondary roles of heroes based on some hypothetical features and predict the secondary role of the hero based on the input features.")
 
-
-# Streamlit Title
 st.title("Secondary Roles of MLBB Heroes Prediction Using Random Forest Model")
 
-# Sidebar Inputs
 st.sidebar.header("Model Settings")
 resample_size = st.sidebar.slider("Resample Size", min_value=10, max_value=100, value=30, step=5)
 test_size = st.sidebar.slider("Test Size", min_value=0.1, max_value=0.5, value=0.2, step=0.05)
@@ -479,9 +477,6 @@ selected_features = [
     'Mov_Speed', 'Esport_Wins', 'Esport_Loss'
 ]
 
-# Load data (assuming df is already loaded or available)
-# df = pd.read_csv("path_to_data.csv")  # Uncomment to load actual data
-# For this example, let's assume df is already defined and contains the necessary columns
 X = df[selected_features]
 y = df['Secondary_Role']
 
