@@ -512,9 +512,11 @@ y_pred = model.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
 st.write(f"Model Accuracy: {accuracy:.3f}")
 
-# Display classification report
+# Ensure target names align with the unique classes in y_test and y_pred
 unique_classes = np.unique(np.concatenate([y_test, y_pred]))
-target_names = [le.classes_[i] for i in unique_classes]
+target_names = le.inverse_transform(unique_classes)  # Transform back to original labels
+
+# Display classification report
 st.subheader("Classification Report")
 st.text(classification_report(y_test, y_pred, target_names=target_names))
 
