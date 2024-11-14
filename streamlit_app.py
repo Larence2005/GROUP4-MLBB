@@ -433,7 +433,7 @@ elif st.session_state.page_selection == 'data_cleaning':
 #PREDICTION
 elif st.session_state.page_selection == 'prediction':
     st.title("Predicton")
-    # Prepare input data
+    # Define input data
     input_data = {
         'Hp': 5000,                # 14.20%
         'Hp_Regen': 50,            # 12.81%
@@ -448,17 +448,29 @@ elif st.session_state.page_selection == 'prediction':
         'Esport_Loss': 350         # 8.17%
     }
     
+    # Ensure that selected features are defined in the correct order
+    selected_features = ['Hp', 'Hp_Regen', 'Mana', 'Mana_Regen', 'Mag_Damage', 'Mag_Defence', 
+                         'Phy_Damage', 'Phy_Defence', 'Mov_Speed', 'Esport_Wins', 'Esport_Loss']
+    
+    # Load the pre-fitted scaler
+    scaler = joblib.load("path/to/fitted_scaler.pkl")
+    
     # Scale the input data
-    scaler = StandardScaler()
     input_data_scaled = scaler.transform([list(input_data.values())])
     input_data_scaled = pd.DataFrame(input_data_scaled, columns=selected_features)
     
-    # Make primary role prediction
+    # Load the models and classes list
+    model = joblib.load("path/to/primary_role_model.pkl")
+    dt_classifier = joblib.load("path/to/secondary_role_model.pkl")
+    classes_list = ['Role1', 'Role2', 'Role3']  # Replace with actual roles
+    
+    # Make primary and secondary role predictions
     primary_role_prediction = model.predict(input_data_scaled)[0]
     secondary_role_prediction = dt_classifier.predict(input_data_scaled)[0]
-
-    print(f"Predicted Primary Role: {primary_role_prediction}")
-    print(f"Predicted Secondary Role: {classes_list[secondary_role_prediction]}")
+    
+    # Display the predictions
+    st.write(f"Predicted Primary Role: {primary_role_prediction}")
+    st.write(f"Predicted Secondary Role: {classes_list[secondary_role_prediction]}")
 
 
 # MACHINE LEARNING
