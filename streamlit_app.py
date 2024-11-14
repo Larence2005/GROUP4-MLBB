@@ -283,9 +283,59 @@ The heatmap of correlations between different numerical variables features posit
 
     #----------BOXPLOT HP WIN/LOSS-----------
    
+ # Create Win column based on Esport wins vs losses
+    df['Win'] = df['Esport_Wins'] > df['Esport_Loss']
+    
+    # Title
+    st.title("HP Distribution by Win/Loss Status")
+    
+    # Create boxplot
+    st.subheader("HP Distribution for Winning vs Losing Heroes")
+    fig, ax = plt.subplots(figsize=(10, 5))
+    sns.boxplot(x='Win', y='Hp', data=df, palette='coolwarm', ax=ax)
+    ax.set_title('Hp vs Win/Loss')
+    ax.set_xlabel('Win (True) / Loss (False)')
+    ax.set_ylabel('Hp')
+    
+    # Display the plot
+    st.pyplot(fig)
+    
+    # Add explanation
+    st.write("""
+    This boxplot shows the distribution of HP values for heroes based on their win/loss record:
+    - True indicates heroes with more wins than losses
+    - False indicates heroes with more losses than wins
+    
+    The box shows the quartiles of the distribution while the whiskers extend to show the rest of the distribution.
+    """)
 
     #-----------BOXPLOT PHYS DMG WIN/LOSS--------
-   
+   # Create Win column based on Esport wins vs losses
+    df['Win'] = df['Esport_Wins'] > df['Esport_Loss']
+    
+    # Title
+    st.title("Physical Damage Distribution by Win/Loss Status")
+    
+    # Create boxplot
+    st.subheader("Physical Damage Distribution for Winning vs Losing Heroes")
+    fig, ax = plt.subplots(figsize=(10, 5))
+    sns.boxplot(x='Win', y='Phy_Damage', data=df, palette='viridis', ax=ax)
+    ax.set_title('Physical Damage vs Win/Loss')
+    ax.set_xlabel('Win (True) / Loss (False)')
+    ax.set_ylabel('Physical Damage')
+    
+    # Display the plot
+    st.pyplot(fig)
+    
+    # Add explanation
+    st.write("""
+    This boxplot shows the distribution of Physical Damage values for heroes based on their win/loss record:
+    - True indicates heroes with more wins than losses
+    - False indicates heroes with more losses than wins
+    
+    The box represents the interquartile range (IQR), with the middle line showing the median value.
+    """)
+
 
 #DATA_CLEANING
 
