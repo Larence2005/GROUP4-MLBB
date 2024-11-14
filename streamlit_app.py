@@ -180,7 +180,7 @@ elif st.session_state.page_selection == 'eda':
                 - :orange[**Pie Chart**]: Distribution of the Primary and Secondary roles in the dataset.
                 - :orange[**Histograms**]: Distribution of HP and Physical Damage of heroes.
                 - :orange[**Correlation Heatmap**]: Correlations between different numerical variables features positive correlations as ranges of red and negative correlations as shades of blue.
-                - :orange[*Boxplot**]: Distribution of HP and Physical Damage of heroes by Win/Loss status.
+                - :orange[**Boxplot**]: Distribution of HP and Physical Damage of heroes by Win/Loss status.
                 ''')
 
     #---------PRIMARY AND SECONDARY ROLE--------
@@ -200,13 +200,10 @@ elif st.session_state.page_selection == 'eda':
     secondary_df = pd.DataFrame(secondary_data)
     
     # Title
-    st.title("MLBB Heroes Role Analysis")
-    
-    # Primary Role Analysis
-    st.header("Primary Role Analysis")
+    st.header("MLBB Heroes Role Analysis")
     
     # EDA for Primary Role
-    st.subheader("Summary Statistics for Primary Roles")
+    st.header("Summary Statistics for Primary Roles")
     st.write(primary_df.describe())
     
     # Total heroes for Primary Role
@@ -235,11 +232,9 @@ elif st.session_state.page_selection == 'eda':
                 
     """)
     
-    # Secondary Role Analysis
-    st.header("Secondary Role Analysis")
     
     # EDA for Secondary Role
-    st.subheader("Summary Statistics for Secondary Roles")
+    st.header("Summary Statistics for Secondary Roles")
     st.write(secondary_df.describe())
     
     # Total heroes for Secondary Role
@@ -274,10 +269,9 @@ elif st.session_state.page_selection == 'eda':
     df = pd.read_csv("Mlbb_Heroes.csv")
     
     # Title
-    st.title("Distribution of Hp")
+    st.header("Distribution of Hp")
     
     # Histogram with KDE
-    st.subheader("Hp Distribution Histogram")
     fig, ax = plt.subplots(figsize=(10, 5))
     sns.histplot(df['Hp'], kde=True, bins=10, color='blue', ax=ax)
     ax.set_title('Distribution of Hp')
@@ -298,10 +292,9 @@ elif st.session_state.page_selection == 'eda':
     #-----------PHYSICAL DAMAGE ANALYSIS-----------
   
     # Title
-    st.title("Physical Damage Analysis")
+    st.header("Physical Damage Analysis")
     
     # Create histogram with KDE
-    st.subheader("Physical Damage Distribution")
     fig, ax = plt.subplots(figsize=(10, 5))
     sns.histplot(df['Phy_Damage'], kde=True, bins=10, color='green', ax=ax)
     ax.set_title('Distribution of Physical Damage')
@@ -317,8 +310,7 @@ The graph shows physical damage distribution, with a histogram and a superimpose
 
     #-----------------CORRRELATION HEATMAP
 
-    st.title("Hero Statistics Correlation Analysis")
-    st.subheader("Correlation Heatmap for Numerical Variables")
+    st.header("Correlation Heatmap for Numerical Variables")
 
     correlation = df[['Hp', 'Mana', 'Phy_Damage', 'Mag_Damage', 'Phy_Defence', 'Mag_Defence', 'Mov_Speed']].corr()
     fig, ax = plt.subplots(figsize=(12, 8))
@@ -336,11 +328,8 @@ The heatmap of correlations between different numerical variables features posit
  # Create Win column based on Esport wins vs losses
     df['Win'] = df['Esport_Wins'] > df['Esport_Loss']
     
-    # Title
-    st.title("HP Distribution by Win/Loss Status")
-    
     # Create boxplot
-    st.subheader("HP Distribution for Winning vs Losing Heroes")
+    st.header("HP Distribution for Winning vs Losing Heroes")
     fig, ax = plt.subplots(figsize=(10, 5))
     sns.boxplot(x='Win', y='Hp', data=df, palette='coolwarm', ax=ax)
     ax.set_title('Hp vs Win/Loss')
@@ -362,12 +351,10 @@ The heatmap of correlations between different numerical variables features posit
     #-----------BOXPLOT PHYS DMG WIN/LOSS--------
    # Create Win column based on Esport wins vs losses
     df['Win'] = df['Esport_Wins'] > df['Esport_Loss']
-    
-    # Title
-    st.title("Physical Damage Distribution by Win/Loss Status")
+
     
     # Create boxplot
-    st.subheader("Physical Damage Distribution for Winning vs Losing Heroes")
+    st.header("Physical Damage Distribution for Winning vs Losing Heroes")
     fig, ax = plt.subplots(figsize=(10, 5))
     sns.boxplot(x='Win', y='Phy_Damage', data=df, palette='viridis', ax=ax)
     ax.set_title('Physical Damage vs Win/Loss')
