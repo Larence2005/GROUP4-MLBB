@@ -247,6 +247,9 @@ elif st.session_state.page_selection == 'eda':
     ax.set_ylabel('Frequency')
     st.pyplot(fig)
 
+    st.markdown("""
+The graph shows physical damage distribution, with a histogram and a superimposed kernel density estimate (green line). The data is roughly normal, peaked around 120, and tapers off to both smaller and higher damage values. Most of the observations fall in the range of 110-130, with fewer cases below 100 and even fewer above 130.
+    """)
 
     #-------------PRIMARY ROLE DISTRIBUTION---------
 
@@ -264,7 +267,11 @@ elif st.session_state.page_selection == 'eda':
     # Use st.pyplot() to display the plot
     st.pyplot(fig)
 
-    #CORRRELATION HEATMAP
+    st.markdown("""
+The graphical representation shows that in this set of characters, there is a leading role which is "Fighter," followed by "Mage," then "Marksman." "Tank" and "Assassin" fall within the middle range, while "Support" is found to be the least. This is a clear leaning towards designs of characters being mostly within the Fighter class.
+    """)
+
+    #-----------------CORRRELATION HEATMAP
 
     st.title("Hero Statistics Correlation Analysis")
     st.subheader("Correlation Heatmap for Numerical Variables")
@@ -279,7 +286,6 @@ The heatmap of correlations between different numerical variables features posit
     """)
 
 
-    
 
     #----------BOXPLOT HP WIN/LOSS-----------
    
@@ -342,6 +348,7 @@ The heatmap of correlations between different numerical variables features posit
 elif st.session_state.page_selection == 'data_cleaning':
     st.header("Data Cleaning / Pre-processing")
     st.write("This section covers the data cleaning and pre-processing steps.")
+    
 
 #MACHINE LEARNING
 
