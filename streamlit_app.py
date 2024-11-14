@@ -412,15 +412,6 @@ elif st.session_state.page_selection == 'data_cleaning':
     # Encode Secondary_Role, handling 'No Secondary Role'
     df['Secondary_Role_Encoded'] = secondary_encoder.fit_transform(df['Secondary_Role'])
     
-    # Print the encoding mappings
-    st.write("Primary Role Encoding:")
-    for i, role in enumerate(primary_encoder.classes_):
-        st.write(f"{role}: {i}")
-    
-    st.write("\nSecondary Role Encoding:")
-    for i, role in enumerate(secondary_encoder.classes_):
-        st.write(f"{role}: {i}")
-    
     # Example of encoded data
     st.write("\nExample of encoded data:")
     st.write(df[['Primary_Role', 'Primary_Role_Encoded', 'Secondary_Role', 'Secondary_Role_Encoded']].head())
