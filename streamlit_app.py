@@ -379,12 +379,12 @@ The heatmap of correlations between different numerical variables features posit
 elif st.session_state.page_selection == 'data_cleaning':
     st.title("🧼 Data Cleaning / Pre-processing")
     st.write("This section covers the data cleaning and pre-processing steps.")
-
+    #-------------------------------------
     st.header("Fixing null values")
     st.subheader("Checking for missing values")
     missing_count = df.isnull().sum()
     st.write(missing_count)
-
+    #-------------------------------------
     st.subheader("Replacing null values in Secondary_Role")
     st.code("""
     df['Secondary_Role'].fillna('No Secondary Role', inplace=True)
@@ -393,28 +393,59 @@ elif st.session_state.page_selection == 'data_cleaning':
     st.subheader("Checking for missing values after cleaning")
     missing_count = df.isnull().sum()
     st.write(missing_count)
-
-    st.subheader("Label Encoding Primary and Secondary Roles")
+    #-------------------------------------
+    st.header("Filter out rows where 'Secondary_Role' is 'No Secondary Role'")
     st.code("""
-    # Encode Primary_Role
-    df['Primary_Role_Encoded'] = primary_encoder.fit_transform(df['Primary_Role'])
-    
-    # Encode Secondary_Role, handling 'No Secondary Role'
-    df['Secondary_Role_Encoded'] = secondary_encoder.fit_transform(df['Secondary_Role'])
+    mask = df['Secondary_Role'] != 'No Secondary Role'
+    X_filtered = df[selected_features][mask]
+    y_filtered = df['Secondary_Role'][mask]
     """)
-    # Create label encoders
-    primary_encoder = LabelEncoder()
-    secondary_encoder = LabelEncoder()
-    
-    # Encode Primary_Role
-    df['Primary_Role_Encoded'] = primary_encoder.fit_transform(df['Primary_Role'])
-    
-    # Encode Secondary_Role, handling 'No Secondary Role'
-    df['Secondary_Role_Encoded'] = secondary_encoder.fit_transform(df['Secondary_Role'])
-    
-    # Example of encoded data
-    st.write("\nExample of encoded data:")
-    st.write(df[['Primary_Role', 'Primary_Role_Encoded', 'Secondary_Role', 'Secondary_Role_Encoded']].head())
+
+    mask = df['Secondary_Role'] != 'No Secondary Role'
+    X_filtered = df[selected_features][mask]
+    y_filtered = df['Secondary_Role'][mask]
+    #-------------------------------------
+    st.header("Label Encoding Target Variable")
+    st.code("""
+    le = LabelEncoder()
+    y_filtered_encoded = le.fit_transform(y_filtered)
+    """)
+   # Encode the target variable
+    le = LabelEncoder()
+    y_filtered_encoded = le.fit_transform(y_filtered)
+    #-----------------------------------------------
+    st.header("Resampling the Data")
+    st.code("""
+    X_resampled, y_resampled = resample(X_filtered, y_filtered_encoded,
+                                   n_samples=resample_size,
+                                   random_state=42)
+    """)
+    X_resampled, y_resampled = resample(X_filtered, y_filtered_encoded,
+                                   n_samples=resample_size,
+                                   random_state=42)
+    #-----------------------------------------------
+    st.header("Scaling the features")
+    st.code("""
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X_resampled)
+    X_scaled = pd.DataFrame(X_scaled, columns=selected_features)
+    """)
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X_resampled)
+    X_scaled = pd.DataFrame(X_scaled, columns=selected_features)
+    #-----------------------------------------------
+    st.header("Computing class weights")
+    st.code("""
+    class_weight_dict = dict(zip(np.unique(y_resampled),
+                             compute_class_weight(class_weight='balanced',
+                                                  classes=np.unique(y_resampled),
+                                                  y=y_resampled)))
+    """)
+    class_weight_dict = dict(zip(np.unique(y_resampled),
+                             compute_class_weight(class_weight='balanced',
+                                                  classes=np.unique(y_resampled),
+                                                  y=y_resampled)))
+    #-----------------------------------------------
 
 #PREDICTION
 elif st.session_state.page_selection == 'prediction':
@@ -505,7 +536,8 @@ elif st.session_state.page_selection == 'machine_learning':
     
     st.write("\n")
     st.write("On the other hand, the data below uses Random Forest model to classify the secondary roles of heroes based on some hypothetical features and predict the secondary role of the hero based on the input features.")
-    
+   
+    #-----------------
     st.title("Secondary Roles of MLBB Heroes Prediction Using Random Forest Model")
 
     st.sidebar.header("Model Settings")
@@ -623,7 +655,7 @@ elif st.session_state.page_selection == 'machine_learning':
     
     
     
-    #SUPERVISED LEARNING
+    #------------------------------------=SUPERVISED LEARNING
     st.title("Supervised Learning for Secondary Role Distribution")
     
     # Define role data
