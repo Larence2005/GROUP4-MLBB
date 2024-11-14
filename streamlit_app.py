@@ -9,7 +9,8 @@ from wordcloud import WordCloud
 from mpl_toolkits.mplot3d import Axes3D
 from pandas.plotting import scatter_matrix
 from sklearn.preprocessing import LabelEncoder
-from sklearn.model_selection import train_test_split, resample
+from sklearn.model_selection import train_test_split
+from sklearn.utils import resample
 from sklearn.utils.class_weight import compute_class_weight
 from sklearn.preprocessing import LabelEncoder
 from sklearn.naive_bayes import MultinomialNB
