@@ -428,7 +428,7 @@ elif st.session_state.page_selection == 'data_cleaning':
                                                   classes=np.unique(y_resampled),
                                                   y=y_resampled)))
     """)
-    #-----------------------------------------------
+    st.write("After cleaning the data, it is now ready for the machine learning model, addressing data quality issues and ensuring the model can learn effectively from the available information.")
 
 #PREDICTION
 elif st.session_state.page_selection == 'prediction':
