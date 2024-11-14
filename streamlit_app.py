@@ -414,7 +414,7 @@ report = classification_report(y_test, y_pred, output_dict=True)
 report_df = pd.DataFrame(report).transpose()
 
 # Display the classification report as a table in Streamlit
-st.subheader("Classification Report (as Table)")
+st.subheader("Classification Report")
 st.dataframe(report_df)
 
 # Feature importance visualization
@@ -626,7 +626,7 @@ report_df = pd.DataFrame(report).transpose()
 # Display accuracy and classification report as a table
 st.subheader("Model Performance")
 st.write(f"Accuracy: {accuracy:.3f}")
-st.subheader("Classification Report (as Table)")
+st.subheader("Classification Report")
 st.dataframe(report_df)
 
 
