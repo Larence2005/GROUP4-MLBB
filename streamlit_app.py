@@ -562,64 +562,76 @@ elif st.session_state.page_selection == 'machine_learning':
     # SUPERVISED LEARNING
     st.title("Supervised Learning for Secondary Role Distribution")
     
-    # Define role data
-    data = {
-        'Secondary_Role': ['Support', 'Tank', 'Assassin', 'Mage', 'Fighter', 'Marksman'],
-        'Count': [7, 6, 6, 5, 3, 3]
-    }
+    # Feature selection
+    selected_features = [
+        'Hp', 'Hp_Regen', 'Mana', 'Mana_Regen',
+        'Phy_Damage', 'Mag_Damage', 'Phy_Defence', 'Mag_Defence',
+        'Mov_Speed', 'Esport_Wins', 'Esport_Loss'
+    ]
     
-    # Display role distribution as a table
-    st.subheader("Role Distribution")
-    df = pd.DataFrame(data)
-    st.table(df)
+    # Data preparation
+    X = df[selected_features]
+    y = df['Primary_Role']
     
-    # Repeat roles based on count
-    roles = []
-    for role, count in zip(df['Secondary_Role'], df['Count']):
-        roles.extend([role] * count)
+    # Scaling
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+    X_scaled = pd.DataFrame(X_scaled, columns=selected_features)
     
-    df_repeated = pd.DataFrame({'Secondary_Role': roles})
+    # Splitting the data
+    X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
     
-    # Display repeated roles count
-    st.subheader("Repeated Roles Count")
-    st.write(df_repeated['Secondary_Role'].value_counts())
+    # Model creation and training
+    model = RandomForestClassifier(
+        n_estimators=100,
+        random_state=42,
+        max_depth=10,
+        min_samples_split=5
+    )
+    model.fit(X_train, y_train)
     
-    # Feature extraction with TF-IDF
-    vectorizer = TfidfVectorizer()
-    X = vectorizer.fit_transform(df_repeated['Secondary_Role'])
+    # Make predictions
+    y_pred = model.predict(X_test)
     
-    # Encode labels
-    label_encoder = LabelEncoder()
-    y = label_encoder.fit_transform(df_repeated['Secondary_Role'])
-    
-    # Split data
-    x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=42)
-    
-    # Train Naive Bayes model
-    clf = MultinomialNB()
-    clf.fit(x_train, y_train)
-    
-    # Make predictions and evaluate
-    y_pred = clf.predict(x_test)
+    # Display model accuracy
     accuracy = accuracy_score(y_test, y_pred)
+    st.write(f"Model Accuracy: {accuracy:.3f}")
     
-    # Ensure all classes are included in classification report
-    target_names = label_encoder.classes_
+    # Generate classification report with output_dict=True
+    report = classification_report(y_test, y_pred, output_dict=True)
     
-    # Get unique classes from both actual and predicted values
-    unique_classes = np.unique(np.concatenate([y_test, y_pred]))
-    
-    # Generate classification report with correct labels
-    report = classification_report(y_test, y_pred, target_names=target_names, labels=unique_classes, output_dict=True)
-    
-    # Convert classification report into a pandas DataFrame
+    # Convert the classification report to a DataFrame
     report_df = pd.DataFrame(report).transpose()
     
-    # Display accuracy and classification report as a table
-    st.subheader("Model Performance")
-    st.write(f"Accuracy: {accuracy:.3f}")
-    st.subheader("Classification Report")
+    # Display the classification report as a table in Streamlit
+    st.subheader("Classification Report (as Table)")
     st.dataframe(report_df)
+    
+    # Feature importance visualization
+    feature_importance = pd.DataFrame({
+        'Feature': selected_features,
+        'Importance': model.feature_importances_
+    }).sort_values('Importance', ascending=True)
+    
+    # Plot feature importance
+    st.subheader("Feature Importance in Predicting MLBB Hero Primary Role")
+    fig, ax = plt.subplots(figsize=(12, 8))
+    bars = ax.barh(feature_importance['Feature'], feature_importance['Importance'])
+    
+    # Add labels to bars
+    for bar in bars:
+        width = bar.get_width()
+        ax.text(width, bar.get_y() + bar.get_height()/2,
+                f'{width*100:.1f}%', ha='left', va='center')
+    
+    ax.set_xlabel('Feature Importance (%)')
+    ax.set_title('Feature Importance in Predicting MLBB Hero Primary Role')
+    st.pyplot(fig)
+    
+    # Display feature importance percentages
+    st.subheader("Feature Importance Percentages")
+    for feature, importance in zip(feature_importance['Feature'], feature_importance['Importance']):
+        st.write(f"{feature}: {importance * 100:.2f}%")
 
 
 
