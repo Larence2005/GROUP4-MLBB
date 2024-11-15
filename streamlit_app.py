@@ -688,65 +688,18 @@ elif st.session_state.page_selection == 'machine_learning':
 
 
 elif st.session_state.page_selection == 'prediction':
-    st.header("Prediction")
-    st.write("This section predicts the roles of MLBB heroes based on the data from the dataset.")
-
-    # Load the MLBB_Heroes.csv file (assuming it's available in the directory)
-    mlbb_heroes_df = pd.read_csv("Mlbb_Heroes.csv")
-
-    # Load the trained model and scaler from saved files
-    model = joblib.load('random_forest_model.pkl')
-    scaler = joblib.load('scaler.pkl')
-
-    # Function to predict the Primary Role of a hero
-    def predict_primary_role(hero_features):
-        # Scale the input features
-        hero_features_scaled = scaler.transform([hero_features])
-        
-        # Make the prediction using the trained model
-        primary_role_prediction = model.predict(hero_features_scaled)
-        return primary_role_prediction[0]
-
-    # Function to predict the Secondary Role of a hero
-    def predict_secondary_role(hero_features):
-        # Scale the input features
-        hero_features_scaled = scaler.transform([hero_features])
-        
-        # Make the prediction using the trained model
-        secondary_role_prediction = model.predict(hero_features_scaled)
-        secondary_role_label = le.inverse_transform(secondary_role_prediction)  # Convert encoded label back to the original role
-        return secondary_role_label[0]
-
-    # Display predictions for all heroes in the dataset
-    st.subheader("Predictions for MLBB Heroes")
-
-    # Iterate over the rows of the DataFrame to predict roles for each hero
-    predictions = []
+    # Train model
+    model = RandomForestClassifier(
+        n_estimators=100,
+        max_depth=10,
+        min_samples_split=5,
+        random_state=42,
+        class_weight=class_weight_dict
+    )
+    model.fit(X_train, y_train)
     
-    for index, row in mlbb_heroes_df.iterrows():
-        hero_features = [
-            row['Hp'], row['Hp_Regen'], row['Mana'], row['Mana_Regen'],
-            row['Phy_Damage'], row['Mag_Damage'], row['Phy_Defence'], row['Mag_Defence'],
-            row['Mov_Speed'], row['Esport_Wins'], row['Esport_Loss']
-        ]
-        
-        # Predict Primary Role
-        primary_role = predict_primary_role(hero_features)
-        
-        # Predict Secondary Role
-        secondary_role = predict_secondary_role(hero_features)
-        
-        predictions.append({
-            'Hero Name': row['Name'],  # Assuming the column with hero names is 'Hero_Name'
-            'Primary Role': primary_role,
-            'Secondary Role': secondary_role
-        })
-    
-    # Convert predictions to DataFrame for display
-    predictions_df = pd.DataFrame(predictions)
-
-    # Display the predictions as a table
-    st.dataframe(predictions_df)
+    # Predict and evaluate
+    y_pred = model.predict(X_test)
 
 
 
