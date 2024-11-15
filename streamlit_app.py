@@ -688,18 +688,6 @@ elif st.session_state.page_selection == 'machine_learning':
 
 
 elif st.session_state.page_selection == 'prediction':
-        # Plotting feature importances
-    st.subheader("Feature Importance")
-    fig, ax = plt.subplots(figsize=(10, 6))
-    bars = ax.barh(importance_df['Feature'], importance_df['Importance'], color=[role_colors['Support'], role_colors['Tank'], role_colors['Assassin'], role_colors['Mage'], role_colors['Fighter'], role_colors['Marksman']])
-    ax.set_xlabel("Feature Importance")
-    ax.set_title("Feature Importance in Predicting Secondary Roles")
-    for i, (bar, importance) in enumerate(zip(bars, importance_df['Importance'])):
-        width = bar.get_width()
-        ax.text(width, bar.get_y() + bar.get_height() / 2,
-                f'{importance * 100:.2f}%', ha='left', va='center', fontweight='bold')
-    st.pyplot(fig)
-    
     # Display feature importance as text
     st.subheader("Feature Importance Percentages")
     for feature, importance in zip(importance_df['Feature'], importance_df['Importance']):
