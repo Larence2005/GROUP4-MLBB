@@ -428,7 +428,7 @@ elif st.session_state.page_selection == 'machine_learning':
     selected_features = [
         'Hp', 'Hp_Regen', 'Mana', 'Mana_Regen',
         'Phy_Damage', 'Phy_Defence','Mov_Speed',
-        'Magic_Damage','Mag_Defence'
+        'Mag_Damage','Mag_Defence'
     ]
 
     # Data preparation
@@ -571,7 +571,7 @@ elif st.session_state.page_selection == 'prediction':
     selected_features = [
         'Hp', 'Hp_Regen', 'Mana', 'Mana_Regen',
         'Phy_Damage', 'Phy_Defence','Mov_Speed',
-        'Magic_Damage','Mag_Defence'
+        'Mag_Damage','Mag_Defence'
     ]
 
     # Data preparation for Primary Role
