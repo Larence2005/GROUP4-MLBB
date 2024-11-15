@@ -27,23 +27,47 @@ A Streamlit web application that performs Exploratory Data Analysis (EDA), Data 
 - Prediction - Prediction page where users can input values to predict the the primary role of the hero based on the input features using the trained models.
 - Conclusion - Summary of the insights and observations from the EDA and model training.
 
-### 💡 Findings / Insights
 
-Through exploratory data analysis and training of one classification models (`Random Forest Regressor`) on the **Mobile Legends: Bang Bang E-sports Heroes Dataset**, the key insights and observations are:
+###Conclusion
+1. Dataset Insights
+Overview
+The dataset contains 114 heroes, each described by 11 attributes such as health, mana, damage, defense, and esports performance.
 
-#### 1. 📊 **Dataset Characteristics**:
+Descriptive Statistics
+Attributes such as HP, Phy_Damage, and Mana demonstrate significant variability, aligning with role-specific hero designs.
 
-- 
+2. Exploratory Data Analysis
+Attribute Distributions
+HP: Right-skewed distribution with a peak between 2,500–2,750, indicating a design balance around this range.
+Phy_Damage: Near-normal distribution, peaking around 120, reflecting balanced attack capabilities.
+Correlation Heatmap
+Highlights moderate positive correlations, such as between HP and Phy_Defence (r = 0.31), and trade-offs like the negative correlation between Mana and Mov_Speed (r = -0.41).
 
-#### 2. 📝 **Feature Distributions and Separability**:
+Performance Insights
+Boxplots show differences in HP and Phy_Damage for winning vs. losing heroes, suggesting that higher survivability and consistent damage output positively impact success.
 
-- 
+3. Machine Learning Classification
+Random Forest Classifier
+Achieved an accuracy of 87% in predicting a hero's Primary Role based on attributes such as health, defense, damage, and mana-related stats.
 
-#### 3. 📈 **Model Performance (Decision Tree Classifier)**:
+Feature Importance
+Top predictors include Mana (23.87%), Phy_Defence (16.29%), HP (15.61%), and Mana_Regen (13.07%).
+Mag_Damage and Mag_Defence had negligible impact.
+Role Classification
+The supervised model identified clear distinctions between roles, with balanced performance across classifications. A repeated test achieved 100% accuracy, demonstrating the model's reliability.
 
-- The `Decision Tree Classifier` achieved 100% accuracy on the training data which suggests that using a relatively simple and structured dataset resulted in a strong performance for this model. However, this could also imply potential **overfitting** due to the model's high sensitivity to the specific training samples.
-- In terms of **feature importance** results from the _Decision Tree Model_, `petal_length` was the dominant predictor having **89%** importance value which is then followed by `petal_width` with **8.7%**.
+4. Key Takeaways
+Role-Specific Traits
+Heroes in certain roles (e.g., Fighters, Mages) exhibit distinct attribute patterns, validated by the Random Forest model's feature importance rankings.
 
-##### **Summing up:**
+Game Balance
+The clustering of attributes like HP and Phy_Damage indicates intentional balancing of heroes to maintain fairness and variety.
 
-Throughout this data science activity, it is evident that 
+Strategic Insights
+Players can leverage attribute-based patterns and machine learning insights to optimize hero selection and role allocation in both casual and competitive play.
+
+Data-Driven Modeling
+The machine learning approach demonstrates the potential for predictive analytics in understanding and enhancing hero dynamics.
+
+Final Thoughts
+This analysis highlights the value of combining statistical, exploratory, and predictive modeling techniques to gain a comprehensive understanding of hero attributes and roles in MLBB. These findings can guide future hero design, balance adjustments, and gameplay strategies, fostering a richer gaming experience.
