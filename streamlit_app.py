@@ -671,7 +671,6 @@ elif st.session_state.page_selection == 'prediction':
 #CONCLUSION
 elif st.session_state.page_selection == 'conclusion':
     st.title("📝 Conclusion")
-    st.write("This section concludes the analysis with key findings.")
     st.markdown("""
                 
     Through exploratory data analysis and training of two classification models (Decision Tree Classifier and Random Forest Regressor) on the *Iris Flower dataset*, the key insights and observations are:
