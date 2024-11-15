@@ -685,47 +685,61 @@ elif st.session_state.page_selection == 'machine_learning':
     st.dataframe(report_df)
 
 #PREDICTION
+X = df[selected_features]
+y_primary = df['Primary_Role']  # Adjusted for primary role
+y_secondary = df['Secondary_Role']  # Adjusted for secondary role
+
+# Define scaler and scale your features
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+X_scaled = pd.DataFrame(X_scaled, columns=selected_features)
+
+# Split data and define models here
+X_train, X_test, y_train, y_test = train_test_split(X_scaled, y_primary, test_size=0.2, random_state=42)
+model = RandomForestClassifier(n_estimators=100, random_state=42, max_depth=10, min_samples_split=5)
+model.fit(X_train, y_train)
+
+# Define secondary role classifier (Decision Tree as an example)
+dt_classifier = DecisionTreeClassifier(random_state=42)
+y_secondary_encoded = LabelEncoder().fit_transform(y_secondary)
+X_train, X_test, y_train_secondary, y_test_secondary = train_test_split(X_scaled, y_secondary_encoded, test_size=0.2, random_state=42)
+dt_classifier.fit(X_train, y_train_secondary)
+
+# Save list of classes for secondary role predictions
+classes_list = LabelEncoder().fit(y_secondary).classes_
+
+# Prediction section
 elif st.session_state.page_selection == 'prediction':
-    st.title("Predicton")
-    
+    st.title("Prediction")
+
     # Define input data
     input_data = {
-        'Hp': 5000,                # 14.20%
-        'Hp_Regen': 50,            # 12.81%
-        'Mana': 2000,              # 5.42%
-        'Mana_Regen': 20,          # 11.32%
-        'Mag_Damage': 0,           # 0.00%
-        'Mag_Defence': 0,          # 0.00%
-        'Phy_Damage': 150,         # 9.59%
-        'Phy_Defence': 30,         # 16.57%
-        'Mov_Speed': 270,          # 12.72%
-        'Esport_Wins': 400,        # 9.20%
-        'Esport_Loss': 350         # 8.17%
+        'Hp': 5000,
+        'Hp_Regen': 50,
+        'Mana': 2000,
+        'Mana_Regen': 20,
+        'Mag_Damage': 0,
+        'Mag_Defence': 0,
+        'Phy_Damage': 150,
+        'Phy_Defence': 30,
+        'Mov_Speed': 270,
+        'Esport_Wins': 400,
+        'Esport_Loss': 350
     }
-    
-    # Ensure that selected features are defined in the correct order
-    selected_features = ['Hp', 'Hp_Regen', 'Mana', 'Mana_Regen', 'Mag_Damage', 'Mag_Defence', 
-                         'Phy_Damage', 'Phy_Defence', 'Mov_Speed', 'Esport_Wins', 'Esport_Loss']
-    
-    # Convert input data to a DataFrame with appropriate columns
-    input_df = pd.DataFrame([input_data])
 
-    # Initialize the scaler and fit it to the input data structure
-    scaler = StandardScaler()
-    scaler.fit(input_df)  # Normally, the scaler is fit on training data in production
-
-    # Scale the input data
-    input_data_scaled = scaler.transform(input_df)
+    # Ensure input data order matches the training features
+    input_data_scaled = scaler.transform([list(input_data.values())])
     input_data_scaled = pd.DataFrame(input_data_scaled, columns=selected_features)
-    
-    # Make primary and secondary role predictions
+
+    # Make predictions
     primary_role_prediction = model.predict(input_data_scaled)[0]
     secondary_role_prediction = dt_classifier.predict(input_data_scaled)[0]
-    
-    # Display the predictions
+
+    # Display predictions
     st.write(f"Predicted Primary Role: {primary_role_prediction}")
     st.write(f"Predicted Secondary Role: {classes_list[secondary_role_prediction]}")
-
+    
+    
 
 #CONCLUSION
 elif st.session_state.page_selection == 'conclusion':
