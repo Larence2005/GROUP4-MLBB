@@ -495,13 +495,13 @@ elif st.session_state.page_selection == 'machine_learning':
 
     st.write("\n")
 
-    # SUPERVISED LEARNING
-    st.title("Supervised Learning for Secondary Role Distribution")
+    # -------------------------SUPERVISED LEARNING
+    st.title("Supervised Learning for Primary Role Distribution")
 
     # Define role data
     data = {
-        'Secondary_Role': ['Support', 'Tank', 'Assassin', 'Mage', 'Fighter', 'Marksman'],
-        'Count': [7, 6, 6, 5, 3, 3]
+        'Secondary_Role': ['Fighter','Mage','Marksman', 'Tank', 'Assassin','Support'],
+        'Count': [33, 25, 18, 16, 13, 9]
     }
 
     # Display role distribution as a table
@@ -511,14 +511,14 @@ elif st.session_state.page_selection == 'machine_learning':
 
     # Repeat roles based on count
     roles = []
-    for role, count in zip(df['Secondary_Role'], df['Count']):
+    for role, count in zip(df['Primary_Role'], df['Count']):
         roles.extend([role] * count)
 
-    df_repeated = pd.DataFrame({'Secondary_Role': roles})
+    df_repeated = pd.DataFrame({'Primary_Role': roles})
 
     # Display repeated roles count
     st.subheader("Repeated Roles Count")
-    st.write(df_repeated['Secondary_Role'].value_counts())
+    st.write(df_repeated['Primary_Role'].value_counts())
 
     # Feature extraction with TF-IDF
     vectorizer = TfidfVectorizer()
@@ -526,7 +526,7 @@ elif st.session_state.page_selection == 'machine_learning':
 
     # Encode labels
     label_encoder = LabelEncoder()
-    y = label_encoder.fit_transform(df_repeated['Secondary_Role'])
+    y = label_encoder.fit_transform(df_repeated['Primary_Role'])
 
     # Split data
     x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
