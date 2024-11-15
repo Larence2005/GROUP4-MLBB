@@ -683,8 +683,7 @@ elif st.session_state.page_selection == 'conclusion':
     
     st.subheader('Role Distribution')
     st.write("""
-    - **Primary Roles**: Fighters dominate (33 heroes), followed by Mages (25). Support roles are least represented (9).
-    - **Secondary Roles**: Support leads (7 heroes), with Fighter and Marksman roles sharing the lowest count (3 each).
+    - Fighters dominate (33 heroes), followed by Mages (25). Support roles are least represented (9). Fighter and Marksman roles sharing the lowest count (3 each).
     """)
     
     st.subheader('Descriptive Statistics')
