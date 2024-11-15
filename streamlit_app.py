@@ -713,7 +713,7 @@ def load_data():
     df = load_data()
 
 # Prediction Page
-elif st.session_state.page_selection == "prediction":
+if st.session_state.page_selection == "prediction":
     st.header("MLBB Hero Role Prediction")
 
     # Create 3 columns for the layout
