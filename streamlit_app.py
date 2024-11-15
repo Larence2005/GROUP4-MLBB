@@ -685,12 +685,15 @@ elif st.session_state.page_selection == 'machine_learning':
     st.write(f"Accuracy: {accuracy:.3f}")
     st.subheader("Classification Report")
     st.dataframe(report_df)
-    joblib.dump(primary_role_model, 'primary_role_model.pkl')
-    joblib.dump(secondary_role_model, 'secondary_role_model.pkl')
 
 
 
 #PREDICTION
+# Global variable to store models
+primary_role_model = None
+secondary_role_model = None
+
+# MACHINE LEARNING
 elif st.session_state.page_selection == 'prediction':
     st.header("Predict Roles of MLBB Heroes")
     st.write("This section allows you to predict both the primary and secondary roles of a MLBB hero based on selected features using trained Random Forest models.")
@@ -722,14 +725,36 @@ elif st.session_state.page_selection == 'prediction':
     hero_features = pd.DataFrame([[Hp, Hp_Regen, Mana, Mana_Regen, Phy_Damage, Mag_Damage, Phy_Defence, Mag_Defence, Mov_Speed, Esport_Wins, Esport_Loss]],
                                  columns=selected_features)
     
-    # Load the trained models for primary and secondary roles
-    try:
-        primary_role_model = joblib.load('primary_role_model.pkl')  # Load pre-trained primary role model
-        secondary_role_model = joblib.load('secondary_role_model.pkl')  # Load pre-trained secondary role model
-    except FileNotFoundError:
-        st.error("Pre-trained models not found. Please upload the models and try again.")
-        st.stop()  # Stop execution if models are not found
-    
+    # Load or train models if they are not already trained
+    if primary_role_model is None or secondary_role_model is None:
+        # Read in your dataset (df) for training
+        df = pd.read_csv("Mlbb_Heroes.csv")  # Adjust the path to your dataset
+        
+        # Primary role model training
+        X = df[selected_features]
+        y_primary = df['Primary_Role']
+        
+        # Scale features
+        scaler = StandardScaler()
+        X_scaled = scaler.fit_transform(X)
+        X_scaled = pd.DataFrame(X_scaled, columns=selected_features)
+        
+        X_train, X_test, y_train, y_test = train_test_split(X_scaled, y_primary, test_size=0.2, random_state=42)
+        
+        primary_role_model = RandomForestClassifier(n_estimators=100, random_state=42, max_depth=10, min_samples_split=5)
+        primary_role_model.fit(X_train, y_train)
+        
+        # Secondary role model training
+        y_secondary = df['Secondary_Role']
+        X_train, X_test, y_train, y_test = train_test_split(X_scaled, y_secondary, test_size=0.2, random_state=42)
+        
+        secondary_role_model = RandomForestClassifier(n_estimators=100, random_state=42, max_depth=10, min_samples_split=5)
+        secondary_role_model.fit(X_train, y_train)
+        
+        # Optionally, save models to disk (for later use)
+        joblib.dump(primary_role_model, 'primary_role_model.pkl')
+        joblib.dump(secondary_role_model, 'secondary_role_model.pkl')
+
     # Scale the input features (same scaler used as in the model training phase)
     scaler = StandardScaler()
     hero_features_scaled = scaler.fit_transform(hero_features)
@@ -770,6 +795,7 @@ elif st.session_state.page_selection == 'prediction':
     st.subheader("Feature Importance for Secondary Role Prediction")
     for feature, importance in zip(secondary_role_importance['Feature'], secondary_role_importance['Importance']):
         st.write(f"{feature}: {importance * 100:.2f}%")
+        
 
 
 #CONCLUSION
