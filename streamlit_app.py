@@ -689,9 +689,6 @@ elif st.session_state.page_selection == 'machine_learning':
 #PREDICTION
 elif st.session_state.page_selection == "prediction":
     def train_mlbb_models(data_path):
-    """
-    Train the MLBB hero role prediction models and save all necessary components.
-    """
     # Load the dataset
     try:
         df = pd.read_csv("Mlbb_Heroes.csv")
