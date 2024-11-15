@@ -56,10 +56,10 @@ with st.sidebar:
 
     if st.button("Machine Learning", use_container_width=True, on_click=set_page_selection, args=('machine_learning',)): 
         st.session_state.page_selection = "machine_learning"
-        
+
     if st.button("Prediction", use_container_width=True, on_click=set_page_selection, args=('prediction',)):
             st.session_state.page_selection = 'prediction'
-        
+
     if st.button("Conclusion", use_container_width=True, on_click=set_page_selection, args=('conclusion',)):
         st.session_state.page_selection = "conclusion"
 
@@ -75,7 +75,6 @@ with st.sidebar:
 
 # Content based on sidebar selection
 
-
 #ABOUT
 if st.session_state.page_selection == 'about':
     st.title("ℹ️ About")
@@ -84,12 +83,11 @@ if st.session_state.page_selection == 'about':
     analytics on the statistics of various MLBB heroes, exploring key trends and applying machine learning 
     techniques to enhance gameplay strategies.
     """)
-    
+
     image_path = "MLBB.jpg"
     st.image(image_path, use_column_width=True)
 
     st.markdown("""
-
     #### Pages
     1. `Dataset` - Brief description of the Mobile Legends: Bang Bang (MLBB) dataset used in this dashboard. 
     2. `EDA` - Exploratory Data Analysis of MLBB dataset. Highlighting the distribution of Primary and Secondary Roles, HP, and Physical Damage. It also highlights the frequency of primary roles. Includes graphs such as Pie Chart, Histograms, Bar Graphs, Heatmaps, and Boxplots
@@ -97,8 +95,6 @@ if st.session_state.page_selection == 'about':
     4. `Machine Learning` - Training two supervised classification models: Supervised Learning and Random Forest Regressor.
     5. `Prediction` - Prediction page where users can input values to predict the the primary role of the hero based on the input features using the trained models.
     6. `Conclusion` - Summary of the insights and observations from the EDA and model training.
-
-
     """)
 #DATASET
 
@@ -127,28 +123,22 @@ elif st.session_state.page_selection == 'dataset':
     16. Mov_Speed\n
     17. Esport_Wins\n
     18. Esport_Loss\n
-
     `Link:` https://www.kaggle.com/datasets/kishan9044/mobile-legends-bang-bang
     
     """)
-    
+
     st.subheader("Dataset displayed as a Data Frame")
     st.write(df)
-    
+
     st.subheader("Descriptive Statistics")
     describe = df.describe()
     describe
 
     st.markdown("""
-
     The results from `df.describe()` highlights the descriptive statistics about the dataset.
-
     1. Hp has an average value of 2577.85 with a standard deviation of 213.28, indicating moderate variation in health points across the data. The values range from 918 to 2909, showing a significant spread in HP values.
-
     2. Hp_Regen has a mean of 7.70 and a standard deviation of 1.64, suggesting relatively consistent health regeneration rates, with values ranging from 3.8 to 18.4.
-
     3. Mana has a mean of 339.37 with a standard deviation of 215.07, reflecting a high level of variability. The range of values is from 0 (possibly indicating characters with no mana) to 750.
-
     4. Mana_Regen has a mean of 14.80 and a standard deviation of 22.92, indicating substantial variation in mana regeneration. The minimum value is 0, and the maximum reaches 240.
     
     5. Phy_Damage has an average of 115.93 and a smaller standard deviation of 9.83, suggesting that physical damage values are relatively stable, ranging from 90 to 140.
@@ -183,36 +173,36 @@ elif st.session_state.page_selection == 'eda':
                 ''')
 
     #---------PRIMARY AND SECONDARY ROLE--------
-    
+
     # Data for Primary Role
     primary_data = {
         'Primary_Role': ['Fighter', 'Mage', 'Marksman', 'Tank', 'Assassin', 'Support'],
         'Count': [33, 25, 18, 16, 13, 9]
     }
     primary_df = pd.DataFrame(primary_data)
-    
+
     # Data for Secondary Role
     secondary_data = {
         'Secondary_Role': ['No Second Role', 'Support', 'Tank', 'Assassin', 'Mage', 'Fighter', 'Marksman'],
         'Count': [84, 7, 6, 6, 5, 3, 3]
     }
     secondary_df = pd.DataFrame(secondary_data)
-    
+
     # Title
     st.title("MLBB Heroes Role Analysis")
-    
+
     # EDA for Primary Role
     st.header("Summary Statistics for Primary Roles")
     st.write(primary_df.describe())
-    
+
     # Total heroes for Primary Role
     total_primary_heroes = primary_df['Count'].sum()
     st.write(f"**Total number of heroes:** {total_primary_heroes}")
-    
+
     # Frequency distribution for Primary Role
     st.subheader("Frequency Distribution by Primary Role")
     st.write(primary_df)
-    
+
     # Pie chart for Primary Role
     st.subheader("Distribution of Primary Roles of Heroes in MLBB")
     fig1, ax1 = plt.subplots(figsize=(8, 6))
@@ -223,27 +213,26 @@ elif st.session_state.page_selection == 'eda':
     st.pyplot(fig1)
 
     st.markdown("""
-
     As displayed in this exploratory data analysis, it reveals that the **Fighter** role has the highest count with 33 heroes, 
     while **Support** has the least with 9 heroes, out of the total of 114 heroes. The summary statistics show a mean of **19 heroes per  role**, 
     with **a standard deviation of 8.69**, indicating moderate variability in the distrubution of heroes across each role. In addition, the pie chart provided visualizes the 
     **proportional distrubution of the heroes** of **Mobile Legends: Bang Bang** based on the dataset chosen for this project.
                 
     """)
-    
-    
+
+
     # EDA for Secondary Role
     st.header("Summary Statistics for Secondary Roles")
     st.write(secondary_df.describe())
-    
+
     # Total heroes for Secondary Role
     total_secondary_heroes = secondary_df['Count'].sum()
     st.write(f"**Total number of heroes with secondary roles:** {total_secondary_heroes}")
-    
+
     # Frequency distribution for Secondary Role
     st.subheader("Frequency Distribution by Secondary Role")
     st.write(secondary_df)
-    
+
     # Pie chart for Secondary Role
     st.subheader("Distribution of Secondary Roles of Heroes in MLBB")
     fig2, ax2 = plt.subplots(figsize=(8, 6))
@@ -254,7 +243,6 @@ elif st.session_state.page_selection == 'eda':
     st.pyplot(fig2)
 
     st.markdown("""
-
    Based on this exploratory data analysis, it illustrates the distrubution of heroes based on their secondary roles in 
    **Mobile Legends: Bang Bang (MLBB**). It gives vital statistical results such as the mean and standard deviation of the
    number of heroes per role, revealing that **"Support"** has the most (7), while **"Fighter"** and **"Marksmen"** have the fewest 
@@ -264,12 +252,12 @@ elif st.session_state.page_selection == 'eda':
     """)
 
     #---------DISTRIBUTION OF HP-----------
-    
+
     df = pd.read_csv("Mlbb_Heroes.csv")
-    
+
     # Title
     st.header("Distribution of Hp")
-    
+
     # Histogram with KDE
     fig, ax = plt.subplots(figsize=(10, 5))
     sns.histplot(df['Hp'], kde=True, bins=10, color='blue', ax=ax)
@@ -279,7 +267,6 @@ elif st.session_state.page_selection == 'eda':
     st.pyplot(fig)
 
     st.markdown("""
-
     This histogram plots the distribution of HP values with a superimposed kernel density estimate (the blue line) to give 
     a representation of the data's frequency. The distribution is right-skewed, meaning it has a longer tail on the higher end of the 
     HP scale. Note most values cluster between 2,250 and 3,000. It shows an apparent peak around 2,500–2,750. Characters that have very low HP, 
@@ -289,10 +276,10 @@ elif st.session_state.page_selection == 'eda':
     """)
 
     #-----------PHYSICAL DAMAGE ANALYSIS-----------
-  
+
     # Title
     st.header("Physical Damage Analysis")
-    
+
     # Create histogram with KDE
     fig, ax = plt.subplots(figsize=(10, 5))
     sns.histplot(df['Phy_Damage'], kde=True, bins=10, color='green', ax=ax)
@@ -323,10 +310,10 @@ The heatmap of correlations between different numerical variables features posit
 
 
     #----------BOXPLOT HP WIN/LOSS-----------
-   
+
  # Create Win column based on Esport wins vs losses
     df['Win'] = df['Esport_Wins'] > df['Esport_Loss']
-    
+
     # Create boxplot
     st.header("HP Distribution for Winning vs Losing Heroes")
     fig, ax = plt.subplots(figsize=(10, 5))
@@ -334,10 +321,10 @@ The heatmap of correlations between different numerical variables features posit
     ax.set_title('Hp vs Win/Loss')
     ax.set_xlabel('Win (True) / Loss (False)')
     ax.set_ylabel('Hp')
-    
+
     # Display the plot
     st.pyplot(fig)
-    
+
     # Add explanation
     st.write("""
     This boxplot shows the distribution of HP values for heroes based on their win/loss record:
@@ -351,7 +338,7 @@ The heatmap of correlations between different numerical variables features posit
    # Create Win column based on Esport wins vs losses
     df['Win'] = df['Esport_Wins'] > df['Esport_Loss']
 
-    
+
     # Create boxplot
     st.header("Physical Damage Distribution for Winning vs Losing Heroes")
     fig, ax = plt.subplots(figsize=(10, 5))
@@ -359,10 +346,10 @@ The heatmap of correlations between different numerical variables features posit
     ax.set_title('Physical Damage vs Win/Loss')
     ax.set_xlabel('Win (True) / Loss (False)')
     ax.set_ylabel('Physical Damage')
-    
+
     # Display the plot
     st.pyplot(fig)
-    
+
     # Add explanation
     st.write("""
     This boxplot shows the distribution of Physical Damage values for heroes based on their win/loss record:
@@ -434,29 +421,29 @@ elif st.session_state.page_selection == 'data_cleaning':
 elif st.session_state.page_selection == 'machine_learning':
     st.header("Machine Learning")
     st.write("This section applies machine learning models to the dataset.")
-    
+
     st.title("Primary Roles of MLBB Heroes Classification using Random Forest Model")
     st.write("This uses a Random Forest model to classify MLBB heroes primary roles based on selected features.")
-    
+
     # Feature selection
     selected_features = [
         'Hp', 'Hp_Regen', 'Mana', 'Mana_Regen',
         'Phy_Damage', 'Mag_Damage', 'Phy_Defence', 'Mag_Defence',
         'Mov_Speed', 'Esport_Wins', 'Esport_Loss'
     ]
-    
+
     # Data preparation
     X = df[selected_features]
     y = df['Primary_Role']
-    
+
     # Scaling
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
     X_scaled = pd.DataFrame(X_scaled, columns=selected_features)
-    
+
     # Splitting the data
     X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
-    
+
     # Model creation and training
     model = RandomForestClassifier(
         n_estimators=100,
@@ -465,68 +452,68 @@ elif st.session_state.page_selection == 'machine_learning':
         min_samples_split=5
     )
     model.fit(X_train, y_train)
-    
+
     # Make predictions
     y_pred = model.predict(X_test)
-    
+
     # Display model accuracy
     accuracy = accuracy_score(y_test, y_pred)
     st.write(f"Model Accuracy: {accuracy:.3f}")
-    
+
     # Generate classification report with output_dict=True
     report = classification_report(y_test, y_pred, output_dict=True)
-    
+
     # Convert the classification report to a DataFrame
     report_df = pd.DataFrame(report).transpose()
-    
+
     # Display the classification report as a table in Streamlit
     st.subheader("Classification Report")
     st.dataframe(report_df)
-    
+
     # Feature importance visualization
     feature_importance = pd.DataFrame({
         'Feature': selected_features,
         'Importance': model.feature_importances_
     }).sort_values('Importance', ascending=True)
-    
+
     # Plot feature importance
     st.subheader("Feature Importance in Predicting MLBB Hero Primary Role")
     fig, ax = plt.subplots(figsize=(12, 8))
     bars = ax.barh(feature_importance['Feature'], feature_importance['Importance'])
-    
+
     # Add labels to bars
     for bar in bars:
         width = bar.get_width()
         ax.text(width, bar.get_y() + bar.get_height()/2,
                 f'{width*100:.1f}%', ha='left', va='center')
-    
+
     ax.set_xlabel('Feature Importance (%)')
     ax.set_title('Feature Importance in Predicting MLBB Hero Primary Role')
     st.pyplot(fig)
-    
+
     # Display feature importance percentages
     st.subheader("Feature Importance Percentages")
     for feature, importance in zip(feature_importance['Feature'], feature_importance['Importance']):
         st.write(f"{feature}: {importance * 100:.2f}%")
-    
-    
+
+
     st.write("\n")
     st.write("On the other hand, the data below uses Random Forest model to classify the secondary roles of heroes based on some hypothetical features and predict the secondary role of the hero based on the input features.")
-    
+
     st.title("Secondary Roles of MLBB Heroes Prediction Using Random Forest Model")
-    
+
     # Define role data for display
     data = {
         'Secondary_Role': ['No Secondary Role', 'Support', 'Tank', 'Assassin', 'Mage', 'Fighter', 'Marksman'],
         'Count': [84, 7, 6, 6, 5, 3, 3],
     }
-    
+
     # Display role distribution
     st.subheader("Secondary Role Distribution")
     role_distribution_df = pd.DataFrame(data)
     role_distribution_df['Percentage'] = (role_distribution_df['Count'] / role_distribution_df['Count'].sum()) * 100
     st.dataframe(role_distribution_df)
-    
+
     # Define color scheme
     role_colors = {
         'No Secondary Role': '#808080',
@@ -537,47 +524,47 @@ elif st.session_state.page_selection == 'machine_learning':
         'Fighter': '#E67E22',
         'Marksman': '#F1C40F'
     }
-    
+
     # Define features and labels
     selected_features = [
         'Hp', 'Hp_Regen', 'Mana', 'Mana_Regen',
         'Phy_Damage', 'Mag_Damage', 'Phy_Defence', 'Mag_Defence',
         'Mov_Speed', 'Esport_Wins', 'Esport_Loss'
     ]
-    
+
     X = df[selected_features]
     y = df['Secondary_Role']
-    
+
     # Scale features
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
     X_scaled = pd.DataFrame(X_scaled, columns=selected_features)
-    
+
     # Filter out "No Secondary Role"
     mask = y != 'No Secondary Role'
     X_filtered = X_scaled[mask]
     y_filtered = y[mask]
-    
+
     # Encode target variable
     le = LabelEncoder()
     y_filtered_encoded = le.fit_transform(y_filtered)
-    
+
     # Resample data
     X_resampled, y_resampled = resample(X_filtered, y_filtered_encoded,
                                         n_samples=30,  # Removed the slider part
                                         random_state=42)
-    
+
     # Split data
     X_train, X_test, y_train, y_test = train_test_split(X_resampled, y_resampled,
                                                         test_size=0.2,  # Removed the slider part
                                                         random_state=42)
-    
+
     # Compute class weights
     class_weight_dict = dict(zip(np.unique(y_train),
                                  compute_class_weight(class_weight='balanced',
                                                       classes=np.unique(y_train),
                                                       y=y_train)))
-    
+
     # Train model
     model = RandomForestClassifier(
         n_estimators=100,
@@ -587,26 +574,26 @@ elif st.session_state.page_selection == 'machine_learning':
         class_weight=class_weight_dict
     )
     model.fit(X_train, y_train)
-    
+
     # Predict and evaluate
     y_pred = model.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
     st.write(f"Model Accuracy: {accuracy:.3f}")
-    
+
     # Display classification report
     unique_classes = np.unique(np.concatenate([y_test, y_pred]))
     target_names = [le.classes_[i] for i in unique_classes]
     report = classification_report(y_test, y_pred, target_names=target_names, output_dict=True)
     st.subheader("Classification Report")
     st.write(pd.DataFrame(report).transpose())
-    
+
     # Visualize feature importance
     feature_importances = model.feature_importances_
     importance_df = pd.DataFrame({
         'Feature': selected_features,
         'Importance': feature_importances
     }).sort_values('Importance', ascending=True)
-    
+
     # Plotting feature importances
     st.subheader("Feature Importance")
     fig, ax = plt.subplots(figsize=(10, 6))
@@ -618,85 +605,99 @@ elif st.session_state.page_selection == 'machine_learning':
         ax.text(width, bar.get_y() + bar.get_height() / 2,
                 f'{importance * 100:.2f}%', ha='left', va='center', fontweight='bold')
     st.pyplot(fig)
-    
+
     # Display feature importance as text
     st.subheader("Feature Importance Percentages")
     for feature, importance in zip(importance_df['Feature'], importance_df['Importance']):
         st.write(f"{feature}: {importance * 100:.2f}%")
-    
-    
+
+
     # SUPERVISED LEARNING
     st.title("Supervised Learning for Secondary Role Distribution")
-    
+
     # Define role data
     data = {
         'Secondary_Role': ['Support', 'Tank', 'Assassin', 'Mage', 'Fighter', 'Marksman'],
         'Count': [7, 6, 6, 5, 3, 3]
     }
-    
+
     # Display role distribution as a table
     st.subheader("Role Distribution")
     df = pd.DataFrame(data)
     st.table(df)
-    
+
     # Repeat roles based on count
     roles = []
     for role, count in zip(df['Secondary_Role'], df['Count']):
         roles.extend([role] * count)
-    
+
     df_repeated = pd.DataFrame({'Secondary_Role': roles})
-    
+
     # Display repeated roles count
     st.subheader("Repeated Roles Count")
     st.write(df_repeated['Secondary_Role'].value_counts())
-    
+
     # Feature extraction with TF-IDF
     vectorizer = TfidfVectorizer()
     X = vectorizer.fit_transform(df_repeated['Secondary_Role'])
-    
+
     # Encode labels
     label_encoder = LabelEncoder()
     y = label_encoder.fit_transform(df_repeated['Secondary_Role'])
-    
+
     # Split data
     x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    
+
     # Train Naive Bayes model
     clf = MultinomialNB()
     clf.fit(x_train, y_train)
-    
+
     # Make predictions and evaluate
     y_pred = clf.predict(x_test)
     accuracy = accuracy_score(y_test, y_pred)
-    
+
     # Ensure all classes are included in classification report
     target_names = label_encoder.classes_
-    
+
     # Get unique classes from both actual and predicted values
     unique_classes = np.unique(np.concatenate([y_test, y_pred]))
-    
+
     # Generate classification report with correct labels
     report = classification_report(y_test, y_pred, target_names=target_names, labels=unique_classes, output_dict=True)
-    
+
     # Convert classification report into a pandas DataFrame
     report_df = pd.DataFrame(report).transpose()
-    
+
     # Display accuracy and classification report as a table
     st.subheader("Model Performance")
     st.write(f"Accuracy: {accuracy:.3f}")
     st.subheader("Classification Report")
     st.dataframe(report_df)
 
+# PREDICTION
+elif st.session_state.page_selection == 'prediction':
+    st.title("Prediction")
+    
+    # Define input data
+    input_data = {
+        'Hp': 5000, 
+        'Hp_Regen': 50, 
+        'Mana': 2000, 
+        'Mana_Regen': 20, 
+        'Mag_Damage': 0, 
+        'Mag_Defence': 0, 
+        'Phy_Damage': 150, 
+        'Phy_Defence': 30, 
+        'Mov_Speed': 270, 
+        'Esport_Wins': 400, 
+        'Esport_Loss': 350
 #PREDICTION
 elif st.session_state.page_selection == "prediction":
     st.header("MLBB Hero Role Prediction")
-
     col_pred = st.columns((1.5, 3, 3), gap='medium')
-
     # Initialize session state for clearing results
     if 'clear' not in st.session_state:
         st.session_state.clear = False
-
     with col_pred[0]:
         with st.expander('Options', expanded=True):
             show_dataset = st.checkbox('Show Dataset')
@@ -708,7 +709,6 @@ elif st.session_state.page_selection == "prediction":
             clear_results = st.button('Clear Results', key='clear_results')
             if clear_results:
                 st.session_state.clear = True
-
     with col_pred[1]:
         st.markdown("#### 🎮 Primary Role Prediction")
         
@@ -770,7 +770,6 @@ elif st.session_state.page_selection == "prediction":
                     st.write(f"{row['Role']}: {row['Probability']*100:.1f}%")
             except Exception as e:
                 st.error(f"Error making prediction: {str(e)}")
-
     with col_pred[2]:
         st.markdown("#### 🎮 Secondary Role Prediction")
         
@@ -811,18 +810,15 @@ elif st.session_state.page_selection == "prediction":
                         st.write(f"{row['Role']}: {row['Probability']*100:.1f}%")
             except Exception as e:
                 st.error(f"Error making prediction: {str(e)}")
-
     # Show dataset and examples based on checkboxes
     if show_dataset:
         st.subheader("Complete Dataset")
         st.dataframe(df, use_container_width=True, hide_index=True)
-
     if show_roles:
         for role in df['Primary_Role'].unique():
             role_examples = df[df['Primary_Role'] == role].head(5)
             st.subheader(f"{role} Examples")
             st.dataframe(role_examples, use_container_width=True, hide_index=True)
-
     # Show specific role examples based on individual checkboxes
     role_checkboxes = {
         'show_tank': 'Tank',
@@ -830,13 +826,27 @@ elif st.session_state.page_selection == "prediction":
         'show_assassin': 'Assassin'
     }
 
+    # Ensure features are in correct order
+    selected_features = ['Hp', 'Hp_Regen', 'Mana', 'Mana_Regen', 'Mag_Damage', 
+                        'Mag_Defence', 'Phy_Damage', 'Phy_Defence', 'Mov_Speed', 
+                        'Esport_Wins', 'Esport_Loss']
+    
+    # Scale the input data exactly as in your original code
+    input_data_scaled = scaler.transform([list(input_data.values())])
+    input_data_scaled = pd.DataFrame(input_data_scaled, columns=selected_features)
+    
+    # Make predictions
+    primary_role_prediction = model.predict(input_data_scaled)[0]
+    secondary_role_prediction = dt_classifier.predict(input_data_scaled)[0]
+    
+    # Display the predictions
+    st.write(f"Predicted Primary Role: {primary_role_prediction}")
+    st.write(f"Predicted Secondary Role: {classes_list[secondary_role_prediction]}")
     for checkbox, role in role_checkboxes.items():
         if locals()[checkbox]:
             role_examples = df[df['Primary_Role'] == role].head(5)
             st.subheader(f"{role} Examples")
             st.dataframe(role_examples, use_container_width=True, hide_index=True)
-
-
 
 #CONCLUSION
 elif st.session_state.page_selection == 'conclusion':
