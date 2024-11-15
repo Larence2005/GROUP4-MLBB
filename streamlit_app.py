@@ -688,15 +688,76 @@ elif st.session_state.page_selection == 'machine_learning':
 
 
 elif st.session_state.page_selection == 'prediction':
-    model = RandomForestClassifier(
-    n_estimators=100,
-    random_state=42,
-    max_depth=10,
-    min_samples_split=5
-    )
-    model.fit(X_train, y_train)
+    elif st.session_state.page_selection == 'prediction':
+    st.header("Prediction")
+    st.write("This section allows you to predict the roles of MLBB heroes based on their features.")
 
-    y_pred = model.predict(X_test)
+    # Function to predict the Primary Role of a hero
+    def predict_primary_role(hero_features):
+        selected_features = [
+            'Hp', 'Hp_Regen', 'Mana', 'Mana_Regen',
+            'Phy_Damage', 'Mag_Damage', 'Phy_Defence', 'Mag_Defence',
+            'Mov_Speed', 'Esport_Wins', 'Esport_Loss'
+        ]
+        
+        # Scale the input features
+        scaler = StandardScaler()
+        hero_features_scaled = scaler.fit_transform([hero_features])
+        
+        # Make the prediction using the trained model
+        primary_role_prediction = model.predict(hero_features_scaled)
+        return primary_role_prediction[0]
+
+    # Function to predict the Secondary Role of a hero
+    def predict_secondary_role(hero_features):
+        selected_features = [
+            'Hp', 'Hp_Regen', 'Mana', 'Mana_Regen',
+            'Phy_Damage', 'Mag_Damage', 'Phy_Defence', 'Mag_Defence',
+            'Mov_Speed', 'Esport_Wins', 'Esport_Loss'
+        ]
+        
+        # Scale the input features
+        scaler = StandardScaler()
+        hero_features_scaled = scaler.fit_transform([hero_features])
+        
+        # Make the prediction using the trained model
+        secondary_role_prediction = model.predict(hero_features_scaled)
+        secondary_role_label = le.inverse_transform(secondary_role_prediction)  # Convert encoded label back to the original role
+        return secondary_role_label[0]
+
+    # User input form to predict hero roles
+    st.subheader("Enter Hero Features for Prediction")
+
+    # User inputs for hero features (You can modify these inputs according to your feature set)
+    hp = st.number_input("Health Points (Hp)", min_value=0)
+    hp_regen = st.number_input("Health Regen (Hp_Regen)", min_value=0)
+    mana = st.number_input("Mana", min_value=0)
+    mana_regen = st.number_input("Mana Regen (Mana_Regen)", min_value=0)
+    phy_damage = st.number_input("Physical Damage (Phy_Damage)", min_value=0)
+    mag_damage = st.number_input("Magical Damage (Mag_Damage)", min_value=0)
+    phy_defence = st.number_input("Physical Defense (Phy_Defence)", min_value=0)
+    mag_defence = st.number_input("Magical Defense (Mag_Defence)", min_value=0)
+    mov_speed = st.number_input("Movement Speed (Mov_Speed)", min_value=0)
+    esport_wins = st.number_input("Esport Wins", min_value=0)
+    esport_losses = st.number_input("Esport Losses", min_value=0)
+
+    # Collect features into a list
+    hero_features = [
+        hp, hp_regen, mana, mana_regen,
+        phy_damage, mag_damage, phy_defence, mag_defence,
+        mov_speed, esport_wins, esport_losses
+    ]
+
+    # Prediction button for Primary Role
+    if st.button("Predict Primary Role"):
+        primary_role = predict_primary_role(hero_features)
+        st.write(f"Predicted Primary Role: {primary_role}")
+
+    # Prediction button for Secondary Role
+    if st.button("Predict Secondary Role"):
+        secondary_role = predict_secondary_role(hero_features)
+        st.write(f"Predicted Secondary Role: {secondary_role}")
+
 
 
 
