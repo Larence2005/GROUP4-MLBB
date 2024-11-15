@@ -687,11 +687,18 @@ elif st.session_state.page_selection == 'machine_learning':
 
     
     #PREDICTION
-# Check if the scaler and models are already initialized in session state
+# Check if essential components are already initialized in session state
 if 'scaler' not in st.session_state:
-    # Data preparation
-    selected_features = ['Hp', 'Hp_Regen', 'Mana', 'Mana_Regen', 'Mag_Damage', 'Mag_Defence', 
-                         'Phy_Damage', 'Phy_Defence', 'Mov_Speed', 'Esport_Wins', 'Esport_Loss']
+    selected_features = [
+        'Hp', 'Hp_Regen', 'Mana', 'Mana_Regen', 'Mag_Damage', 
+        'Mag_Defence', 'Phy_Damage', 'Phy_Defence', 
+        'Mov_Speed', 'Esport_Wins', 'Esport_Loss'
+    ]
+    
+    # Store selected_features in session state
+    st.session_state.selected_features = selected_features
+    
+    # Assume df is defined with selected features and target columns
     X = df[selected_features]
     y_primary = df['Primary_Role']
     y_secondary = df['Secondary_Role']
@@ -722,7 +729,7 @@ if 'scaler' not in st.session_state:
     st.session_state.classes_list = label_encoder.classes_
 
 # Prediction section
-elif st.session_state.page_selection == 'prediction':
+if st.session_state.page_selection == 'prediction':
     st.title("Prediction")
     
     # Define input data
@@ -742,7 +749,7 @@ elif st.session_state.page_selection == 'prediction':
     
     # Scale the input data
     input_data_scaled = st.session_state.scaler.transform([list(input_data.values())])
-    input_data_scaled = pd.DataFrame(input_data_scaled, columns=selected_features)
+    input_data_scaled = pd.DataFrame(input_data_scaled, columns=st.session_state.selected_features)
     
     # Make predictions
     primary_role_prediction = st.session_state.model.predict(input_data_scaled)[0]
