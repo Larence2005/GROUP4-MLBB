@@ -705,21 +705,22 @@ elif st.session_state.page_selection == 'prediction':
         'Esport_Loss': 350
     }
 
-    # Get values in correct order
-    input_values = [list(input_data.values())]
+    # Ensure features are in correct order
+    selected_features = ['Hp', 'Hp_Regen', 'Mana', 'Mana_Regen', 'Mag_Damage', 
+                        'Mag_Defence', 'Phy_Damage', 'Phy_Defence', 'Mov_Speed', 
+                        'Esport_Wins', 'Esport_Loss']
     
-    # Scale the input data
-    input_scaled = scaler.transform(input_values)
-    input_scaled_df = pd.DataFrame(input_scaled, columns=selected_features)
+    # Scale the input data exactly as in your original code
+    input_data_scaled = scaler.transform([list(input_data.values())])
+    input_data_scaled = pd.DataFrame(input_data_scaled, columns=selected_features)
     
     # Make predictions
-    primary_role = model.predict(input_scaled_df)[0]
-    secondary_role = dt_classifier.predict(input_scaled_df)[0]
+    primary_role_prediction = model.predict(input_data_scaled)[0]
+    secondary_role_prediction = dt_classifier.predict(input_data_scaled)[0]
     
-    # Display results
-    st.write(f"Primary Role: {primary_role}")
-    st.write(f"Secondary Role: {classes_list[secondary_role]}")
-    st.write("Input features:", input_data)
+    # Display the predictions
+    st.write(f"Predicted Primary Role: {primary_role_prediction}")
+    st.write(f"Predicted Secondary Role: {classes_list[secondary_role_prediction]}")
 
 
 #CONCLUSION
