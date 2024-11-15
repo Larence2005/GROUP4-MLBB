@@ -685,81 +685,52 @@ elif st.session_state.page_selection == 'machine_learning':
     st.subheader("Classification Report")
     st.dataframe(report_df)
 
-    
-    #PREDICTION
-# Check if essential components are already initialized in session state
-if 'scaler' not in st.session_state:
-    selected_features = [
-        'Hp', 'Hp_Regen', 'Mana', 'Mana_Regen', 'Mag_Damage', 
-        'Mag_Defence', 'Phy_Damage', 'Phy_Defence', 
-        'Mov_Speed', 'Esport_Wins', 'Esport_Loss'
-    ]
-    
-    # Store selected_features in session state
-    st.session_state.selected_features = selected_features
-    
-    # Assume df is defined with selected features and target columns
-    X = df[selected_features]
-    y_primary = df['Primary_Role']
-    y_secondary = df['Secondary_Role']
-    
-    # Initialize scaler
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
-    X_scaled = pd.DataFrame(X_scaled, columns=selected_features)
-    
-    # Store scaler in session state
-    st.session_state.scaler = scaler
-    
-    # Define and train primary role model
-    X_train, X_test, y_train, y_test = train_test_split(X_scaled, y_primary, test_size=0.2, random_state=42)
-    model = RandomForestClassifier(n_estimators=100, random_state=42, max_depth=10, min_samples_split=5)
-    model.fit(X_train, y_train)
-    st.session_state.model = model
-    
-    # Define and train secondary role model
-    label_encoder = LabelEncoder()
-    y_secondary_encoded = label_encoder.fit_transform(y_secondary)
-    X_train_sec, X_test_sec, y_train_sec, y_test_sec = train_test_split(X_scaled, y_secondary_encoded, test_size=0.2, random_state=42)
-    dt_classifier = DecisionTreeClassifier(random_state=42)
-    dt_classifier.fit(X_train_sec, y_train_sec)
-    
-    # Store secondary model and label encoder in session state
-    st.session_state.dt_classifier = dt_classifier
-    st.session_state.classes_list = label_encoder.classes_
 
-# Prediction section
-if st.session_state.page_selection == 'prediction':
+# PREDICTION
+elif st.session_state.page_selection == 'prediction':
     st.title("Prediction")
-    
+
     # Define input data
     input_data = {
-        'Hp': 5000,
-        'Hp_Regen': 50,
-        'Mana': 2000,
-        'Mana_Regen': 20,
-        'Mag_Damage': 0,
-        'Mag_Defence': 0,
-        'Phy_Damage': 150,
-        'Phy_Defence': 30,
-        'Mov_Speed': 270,
-        'Esport_Wins': 400,
-        'Esport_Loss': 350
+        'Hp': 5000,                # 14.20%
+        'Hp_Regen': 50,            # 12.81%
+        'Mana': 2000,              # 5.42%
+        'Mana_Regen': 20,          # 11.32%
+        'Mag_Damage': 0,           # 0.00%
+        'Mag_Defence': 0,          # 0.00%
+        'Phy_Damage': 150,         # 9.59%
+        'Phy_Defence': 30,         # 16.57%
+        'Mov_Speed': 270,          # 12.72%
+        'Esport_Wins': 400,        # 9.20%
+        'Esport_Loss': 350         # 8.17%
     }
-    
+
+    # Ensure that selected features are defined in the correct order
+    selected_features = ['Hp', 'Hp_Regen', 'Mana', 'Mana_Regen', 'Mag_Damage', 'Mag_Defence', 
+                         'Phy_Damage', 'Phy_Defence', 'Mov_Speed', 'Esport_Wins', 'Esport_Loss']
+
     # Scale the input data
-    input_data_scaled = st.session_state.scaler.transform([list(input_data.values())])
-    input_data_scaled = pd.DataFrame(input_data_scaled, columns=st.session_state.selected_features)
-    
-    # Make predictions
-    primary_role_prediction = st.session_state.model.predict(input_data_scaled)[0]
-    secondary_role_prediction = st.session_state.dt_classifier.predict(input_data_scaled)[0]
-    
-    # Display the predictions
+    input_data_scaled = scaler.transform([list(input_data.values())])
+    input_data_scaled = pd.DataFrame(input_data_scaled, columns=selected_features)
+
+    # Make primary and secondary role predictions
+    primary_role_prediction = model.predict(input_data_scaled)[0]
+    secondary_role_prediction = dt_classifier.predict(input_data_scaled)[0]
+
+    # Display the samples of predictions for each role
+    primary_role_samples = iris_df[iris_df["species"] == primary_role_prediction].head(5)
+    secondary_role_samples = iris_df[iris_df["species"] == classes_list[secondary_role_prediction]].head(5)
+
+    # Display the results
     st.write(f"Predicted Primary Role: {primary_role_prediction}")
-    st.write(f"Predicted Secondary Role: {st.session_state.classes_list[secondary_role_prediction]}")
-    
-    
+    st.write("Sample Data for Predicted Primary Role:")
+    st.write(primary_role_samples)
+
+    st.write(f"Predicted Secondary Role: {classes_list[secondary_role_prediction]}")
+    st.write("Sample Data for Predicted Secondary Role:")
+    st.write(secondary_role_samples)
+
+
 
 #CONCLUSION
 elif st.session_state.page_selection == 'conclusion':
