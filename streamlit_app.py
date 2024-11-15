@@ -687,34 +687,44 @@ elif st.session_state.page_selection == 'machine_learning':
 
     
     #PREDICTION
-    # Load data and define selected features and target
-    selected_features = ['Hp', 'Hp_Regen', 'Mana', 'Mana_Regen', 'Mag_Damage', 'Mag_Defence', 'Phy_Damage', 'Phy_Defence', 'Mov_Speed', 'Esport_Wins', 'Esport_Loss']
+# Check if the scaler and models are already initialized in session state
+if 'scaler' not in st.session_state:
+    # Data preparation
+    selected_features = ['Hp', 'Hp_Regen', 'Mana', 'Mana_Regen', 'Mag_Damage', 'Mag_Defence', 
+                         'Phy_Damage', 'Phy_Defence', 'Mov_Speed', 'Esport_Wins', 'Esport_Loss']
     X = df[selected_features]
     y_primary = df['Primary_Role']
     y_secondary = df['Secondary_Role']
     
-    # Initialize and fit the scaler outside any blocks
+    # Initialize scaler
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
     X_scaled = pd.DataFrame(X_scaled, columns=selected_features)
     
-    # Define and fit the primary role model
+    # Store scaler in session state
+    st.session_state.scaler = scaler
+    
+    # Define and train primary role model
     X_train, X_test, y_train, y_test = train_test_split(X_scaled, y_primary, test_size=0.2, random_state=42)
     model = RandomForestClassifier(n_estimators=100, random_state=42, max_depth=10, min_samples_split=5)
     model.fit(X_train, y_train)
+    st.session_state.model = model
     
-    # Define and fit the secondary role classifier
+    # Define and train secondary role model
     label_encoder = LabelEncoder()
     y_secondary_encoded = label_encoder.fit_transform(y_secondary)
     X_train_sec, X_test_sec, y_train_sec, y_test_sec = train_test_split(X_scaled, y_secondary_encoded, test_size=0.2, random_state=42)
     dt_classifier = DecisionTreeClassifier(random_state=42)
     dt_classifier.fit(X_train_sec, y_train_sec)
-    classes_list = label_encoder.classes_
+    
+    # Store secondary model and label encoder in session state
+    st.session_state.dt_classifier = dt_classifier
+    st.session_state.classes_list = label_encoder.classes_
 
 # Prediction section
 elif st.session_state.page_selection == 'prediction':
     st.title("Prediction")
-
+    
     # Define input data
     input_data = {
         'Hp': 5000,
@@ -729,18 +739,18 @@ elif st.session_state.page_selection == 'prediction':
         'Esport_Wins': 400,
         'Esport_Loss': 350
     }
-
-    # Scale the input data using the global scaler
-    input_data_scaled = scaler.transform([list(input_data.values())])
+    
+    # Scale the input data
+    input_data_scaled = st.session_state.scaler.transform([list(input_data.values())])
     input_data_scaled = pd.DataFrame(input_data_scaled, columns=selected_features)
-
-    # Make primary and secondary role predictions
-    primary_role_prediction = model.predict(input_data_scaled)[0]
-    secondary_role_prediction = dt_classifier.predict(input_data_scaled)[0]
-
+    
+    # Make predictions
+    primary_role_prediction = st.session_state.model.predict(input_data_scaled)[0]
+    secondary_role_prediction = st.session_state.dt_classifier.predict(input_data_scaled)[0]
+    
     # Display the predictions
     st.write(f"Predicted Primary Role: {primary_role_prediction}")
-    st.write(f"Predicted Secondary Role: {classes_list[secondary_role_prediction]}")
+    st.write(f"Predicted Secondary Role: {st.session_state.classes_list[secondary_role_prediction]}")
     
     
 
