@@ -689,11 +689,6 @@ elif st.session_state.page_selection == 'machine_learning':
 
 
 #PREDICTION
-    # Global variable to store models
-    primary_role_model = None
-    secondary_role_model = None
-
-# MACHINE LEARNING
 elif st.session_state.page_selection == 'prediction':
     st.header("Predict Roles of MLBB Heroes")
     st.write("This section allows you to predict both the primary and secondary roles of a MLBB hero based on selected features using trained Random Forest models.")
