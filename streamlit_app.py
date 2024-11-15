@@ -685,6 +685,9 @@ elif st.session_state.page_selection == 'machine_learning':
     st.write(f"Accuracy: {accuracy:.3f}")
     st.subheader("Classification Report")
     st.dataframe(report_df)
+    joblib.dump(primary_role_model, 'primary_role_model.pkl')
+    joblib.dump(secondary_role_model, 'secondary_role_model.pkl')
+
 
 
 #PREDICTION
@@ -767,9 +770,6 @@ elif st.session_state.page_selection == 'prediction':
     st.subheader("Feature Importance for Secondary Role Prediction")
     for feature, importance in zip(secondary_role_importance['Feature'], secondary_role_importance['Importance']):
         st.write(f"{feature}: {importance * 100:.2f}%")
-
-    joblib.dump(primary_role_model, 'primary_role_model.pkl')
-    joblib.dump(secondary_role_model, 'secondary_role_model.pkl')
 
 
 #CONCLUSION
