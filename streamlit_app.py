@@ -687,6 +687,7 @@ elif st.session_state.page_selection == 'machine_learning':
 #PREDICTION
 elif st.session_state.page_selection == 'prediction':
     st.title("Predicton")
+    
     # Define input data
     input_data = {
         'Hp': 5000,                # 14.20%
@@ -705,12 +706,17 @@ elif st.session_state.page_selection == 'prediction':
     # Ensure that selected features are defined in the correct order
     selected_features = ['Hp', 'Hp_Regen', 'Mana', 'Mana_Regen', 'Mag_Damage', 'Mag_Defence', 
                          'Phy_Damage', 'Phy_Defence', 'Mov_Speed', 'Esport_Wins', 'Esport_Loss']
-  
     
+    # Convert input data to a DataFrame with appropriate columns
+    input_df = pd.DataFrame([input_data])
+
+    # Initialize the scaler and fit it to the input data structure
+    scaler = StandardScaler()
+    scaler.fit(input_df)  # Normally, the scaler is fit on training data in production
+
     # Scale the input data
-    input_data_scaled = scaler.transform([list(input_data.values())])
+    input_data_scaled = scaler.transform(input_df)
     input_data_scaled = pd.DataFrame(input_data_scaled, columns=selected_features)
-    
     
     # Make primary and secondary role predictions
     primary_role_prediction = model.predict(input_data_scaled)[0]
