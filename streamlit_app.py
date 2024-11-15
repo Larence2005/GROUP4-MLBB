@@ -694,17 +694,14 @@ elif st.session_state.page_selection == 'prediction':
     # Load the MLBB_Heroes.csv file (assuming it's available in the directory)
     mlbb_heroes_df = pd.read_csv("Mlbb_Heroes.csv")
 
+    # Load the trained model and scaler from saved files
+    model = joblib.load('random_forest_model.pkl')
+    scaler = joblib.load('scaler.pkl')
+
     # Function to predict the Primary Role of a hero
     def predict_primary_role(hero_features):
-        selected_features = [
-            'Hp', 'Hp_Regen', 'Mana', 'Mana_Regen',
-            'Phy_Damage', 'Mag_Damage', 'Phy_Defence', 'Mag_Defence',
-            'Mov_Speed', 'Esport_Wins', 'Esport_Loss'
-        ]
-        
         # Scale the input features
-        scaler = StandardScaler()
-        hero_features_scaled = scaler.fit_transform([hero_features])
+        hero_features_scaled = scaler.transform([hero_features])
         
         # Make the prediction using the trained model
         primary_role_prediction = model.predict(hero_features_scaled)
@@ -712,15 +709,8 @@ elif st.session_state.page_selection == 'prediction':
 
     # Function to predict the Secondary Role of a hero
     def predict_secondary_role(hero_features):
-        selected_features = [
-            'Hp', 'Hp_Regen', 'Mana', 'Mana_Regen',
-            'Phy_Damage', 'Mag_Damage', 'Phy_Defence', 'Mag_Defence',
-            'Mov_Speed', 'Esport_Wins', 'Esport_Loss'
-        ]
-        
         # Scale the input features
-        scaler = StandardScaler()
-        hero_features_scaled = scaler.fit_transform([hero_features])
+        hero_features_scaled = scaler.transform([hero_features])
         
         # Make the prediction using the trained model
         secondary_role_prediction = model.predict(hero_features_scaled)
@@ -757,7 +747,6 @@ elif st.session_state.page_selection == 'prediction':
 
     # Display the predictions as a table
     st.dataframe(predictions_df)
-
 
 
 
