@@ -618,7 +618,6 @@ elif st.session_state.page_selection == 'prediction':
                 st.session_state.clear = True
     
     with col_pred[1]:
-        st.markdown("#### 🎮 Primary Role Prediction")
         
         # Input boxes for the features
         input_values = {}
@@ -673,3 +672,28 @@ elif st.session_state.page_selection == 'prediction':
 elif st.session_state.page_selection == 'conclusion':
     st.title("📝 Conclusion")
     st.write("This section concludes the analysis with key findings.")
+    st.markdown("""
+                
+    Through exploratory data analysis and training of two classification models (Decision Tree Classifier and Random Forest Regressor) on the *Iris Flower dataset*, the key insights and observations are:
+
+    #### 1. 📊 *Dataset Characteristics*:
+    - The dataset shows moderate variation across the *sepal and petal* features. petal_length and petal_width has higher variability than the sepal features further suggesting that these features are more likely to distinguish between the three Iris flower species.
+    - All of the three Iris species have a *balanced class distribution* which further eliminates the need to rebalance the dataset.
+
+    #### 2. 📝 *Feature Distributions and Separability*:
+    - *Pairwise Scatter Plot* analysis indicates that Iris Setosa forms a distinct cluster based on petal features which makes it easily distinguishable from Iris Versicolor and Iris Virginica.
+    - *Petal Length* emerged as the most discriminative feature especially for distinguishing Iris Setosa from other Iris species.
+
+    #### 3. 📈 *Model Performance (Decision Tree Classifier)*:
+
+    - The Decision Tree Classifier achieved 100% accuracy on the training data which suggests that using a relatively simple and structured dataset resulted in a strong performance for this model. However, this could also imply potential *overfitting* due to the model's high sensitivity to the specific training samples.
+    - In terms of *feature importance* results from the Decision Tree Model, petal_length was the dominant predictor having *89%* importance value which is then followed by petal_width with *8.7%*.
+
+    #### 4. 📈 *Model Performance (Random Forest Regressor)*:
+    - The *Random Forest Regressor* achieved an accuracy of 98.58% on training and 99.82% on testing which is slightly lower compared to the performance of the Decision Tree Classifier Model
+    - *Feature importance* analysis also highlighted petal_length as the primary predictor having *58%* importance value followed by petal_width with *39%*.
+
+    ##### *Summing up:*  
+    Throughout this data science activity, it is evident that the Iris dataset is a good dataset to use for classification despite of its simplicity. Due to its balanced distribution of 3 Iris flower species and having 0 null values, further data cleansing techniques were not used. 2 of the classifier models trained were able to leverage the features that can be found in the dataset which resulted to a high accuracy in terms of the two models' predictions. Despite of the slight overlap between Iris Versicolor and Iris Virginica, the two models trained were able to achieve high accuracy and was able to learn patterns from the dataset.         
+                
+    """)
