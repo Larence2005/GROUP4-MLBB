@@ -687,11 +687,92 @@ elif st.session_state.page_selection == 'machine_learning':
     st.dataframe(report_df)
 
 
+#PREDICTION
 elif st.session_state.page_selection == 'prediction':
-    # Display feature importance as text
-    st.subheader("Feature Importance Percentages")
-    for feature, importance in zip(importance_df['Feature'], importance_df['Importance']):
+    st.header("Predict Roles of MLBB Heroes")
+    st.write("This section allows you to predict both the primary and secondary roles of a MLBB hero based on selected features using trained Random Forest models.")
+    
+    # Feature selection (same as before)
+    selected_features = [
+        'Hp', 'Hp_Regen', 'Mana', 'Mana_Regen',
+        'Phy_Damage', 'Mag_Damage', 'Phy_Defence', 'Mag_Defence',
+        'Mov_Speed', 'Esport_Wins', 'Esport_Loss'
+    ]
+    
+    # Display input form for users to provide feature values
+    st.subheader("Enter Hero Features for Prediction")
+    
+    # Collect user input for features
+    Hp = st.number_input('HP', min_value=0, max_value=10000, value=2000)
+    Hp_Regen = st.number_input('HP Regen', min_value=0, max_value=100, value=5)
+    Mana = st.number_input('Mana', min_value=0, max_value=1000, value=400)
+    Mana_Regen = st.number_input('Mana Regen', min_value=0, max_value=50, value=5)
+    Phy_Damage = st.number_input('Physical Damage', min_value=0, max_value=300, value=100)
+    Mag_Damage = st.number_input('Magical Damage', min_value=0, max_value=300, value=100)
+    Phy_Defence = st.number_input('Physical Defence', min_value=0, max_value=300, value=50)
+    Mag_Defence = st.number_input('Magical Defence', min_value=0, max_value=300, value=50)
+    Mov_Speed = st.number_input('Movement Speed', min_value=0, max_value=600, value=260)
+    Esport_Wins = st.number_input('Esport Wins', min_value=0, max_value=1000, value=50)
+    Esport_Loss = st.number_input('Esport Losses', min_value=0, max_value=1000, value=30)
+    
+    # Create a DataFrame with the input values
+    hero_features = pd.DataFrame([[Hp, Hp_Regen, Mana, Mana_Regen, Phy_Damage, Mag_Damage, Phy_Defence, Mag_Defence, Mov_Speed, Esport_Wins, Esport_Loss]],
+                                 columns=selected_features)
+    
+    # Load the trained models for primary and secondary roles (assuming they are pre-trained)
+    # Example for loading models (assuming models are already trained and saved):
+    # primary_role_model = joblib.load('primary_role_model.pkl')
+    # secondary_role_model = joblib.load('secondary_role_model.pkl')
+    
+    # For the sake of this example, we'll assume the models are RandomForestClassifier already fitted:
+    primary_role_model = RandomForestClassifier(n_estimators=100, max_depth=10, min_samples_split=5, random_state=42)
+    secondary_role_model = RandomForestClassifier(n_estimators=100, max_depth=10, min_samples_split=5, random_state=42)
+    
+    # You should replace the following with actual loading of pre-trained models:
+    primary_role_model.fit(X_train_primary, y_train_primary)  # Train with primary role data
+    secondary_role_model.fit(X_train_secondary, y_train_secondary)  # Train with secondary role data
+
+    # Scale the input features (same scaler used as in the model training phase)
+    scaler = StandardScaler()
+    hero_features_scaled = scaler.fit_transform(hero_features)
+    hero_features_scaled = pd.DataFrame(hero_features_scaled, columns=selected_features)
+    
+    # Predict Primary Role
+    primary_role_prediction = primary_role_model.predict(hero_features_scaled)
+    primary_role_names = ['Fighter', 'Mage', 'Marksman', 'Support', 'Tank', 'Assassin']  # Example primary roles
+    primary_role_predicted = primary_role_names[primary_role_prediction[0]]
+    
+    # Predict Secondary Role
+    secondary_role_prediction = secondary_role_model.predict(hero_features_scaled)
+    secondary_role_names = ['No Secondary Role', 'Support', 'Tank', 'Assassin', 'Mage', 'Fighter', 'Marksman']  # Example secondary roles
+    secondary_role_predicted = secondary_role_names[secondary_role_prediction[0]]
+    
+    # Display the predictions
+    st.write(f"The predicted **Primary Role** for this hero is: **{primary_role_predicted}**")
+    st.write(f"The predicted **Secondary Role** for this hero is: **{secondary_role_predicted}**")
+    
+    # Feature importance for Primary Role
+    primary_role_importance = pd.DataFrame({
+        'Feature': selected_features,
+        'Importance': primary_role_model.feature_importances_
+    }).sort_values('Importance', ascending=True)
+    
+    # Feature importance for Secondary Role
+    secondary_role_importance = pd.DataFrame({
+        'Feature': selected_features,
+        'Importance': secondary_role_model.feature_importances_
+    }).sort_values('Importance', ascending=True)
+    
+    # Display feature importance for Primary Role
+    st.subheader("Feature Importance for Primary Role Prediction")
+    for feature, importance in zip(primary_role_importance['Feature'], primary_role_importance['Importance']):
         st.write(f"{feature}: {importance * 100:.2f}%")
+    
+    # Display feature importance for Secondary Role
+    st.subheader("Feature Importance for Secondary Role Prediction")
+    for feature, importance in zip(secondary_role_importance['Feature'], secondary_role_importance['Importance']):
+        st.write(f"{feature}: {importance * 100:.2f}%")
+
 
 
 
