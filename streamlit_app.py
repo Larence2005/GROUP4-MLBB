@@ -719,19 +719,14 @@ elif st.session_state.page_selection == 'prediction':
     hero_features = pd.DataFrame([[Hp, Hp_Regen, Mana, Mana_Regen, Phy_Damage, Mag_Damage, Phy_Defence, Mag_Defence, Mov_Speed, Esport_Wins, Esport_Loss]],
                                  columns=selected_features)
     
-    # Load the trained models for primary and secondary roles (assuming they are pre-trained)
-    # Example for loading models (assuming models are already trained and saved):
-    # primary_role_model = joblib.load('primary_role_model.pkl')
-    # secondary_role_model = joblib.load('secondary_role_model.pkl')
+    # Load the trained models for primary and secondary roles
+    try:
+        primary_role_model = joblib.load('primary_role_model.pkl')  # Load pre-trained primary role model
+        secondary_role_model = joblib.load('secondary_role_model.pkl')  # Load pre-trained secondary role model
+    except FileNotFoundError:
+        st.error("Pre-trained models not found. Please upload the models and try again.")
+        st.stop()  # Stop execution if models are not found
     
-    # For the sake of this example, we'll assume the models are RandomForestClassifier already fitted:
-    primary_role_model = RandomForestClassifier(n_estimators=100, max_depth=10, min_samples_split=5, random_state=42)
-    secondary_role_model = RandomForestClassifier(n_estimators=100, max_depth=10, min_samples_split=5, random_state=42)
-    
-    # You should replace the following with actual loading of pre-trained models:
-    primary_role_model.fit(X_train_primary, y_train_primary)  # Train with primary role data
-    secondary_role_model.fit(X_train_secondary, y_train_secondary)  # Train with secondary role data
-
     # Scale the input features (same scaler used as in the model training phase)
     scaler = StandardScaler()
     hero_features_scaled = scaler.fit_transform(hero_features)
@@ -773,8 +768,8 @@ elif st.session_state.page_selection == 'prediction':
     for feature, importance in zip(secondary_role_importance['Feature'], secondary_role_importance['Importance']):
         st.write(f"{feature}: {importance * 100:.2f}%")
 
-
-
+    joblib.dump(primary_role_model, 'primary_role_model.pkl')
+    joblib.dump(secondary_role_model, 'secondary_role_model.pkl')
 
 
 #CONCLUSION
