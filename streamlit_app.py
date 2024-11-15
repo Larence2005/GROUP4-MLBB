@@ -160,10 +160,6 @@ elif st.session_state.page_selection == 'dataset':
     
     10. Esport_Loss similarly has a mean of 289.71 and a high standard deviation of 273.14, with values from 3 to 1529, suggesting large variability in losses.
     
-    11. Primary_Role_Encoded has an average value of 2.22 and a standard deviation of 1.57, with values ranging from 0 to 5, representing different primary roles in encoded form.
-    
-    12. Secondary_Role_Encoded has a mean of 3.76 with a standard deviation of 1.23, indicating that secondary roles also vary, with values between 0 and 6.
-    
     In terms of percentiles (25th, 50th, and 75th), the gradual increase across features like Hp, Mana, Phy_Damage, and Mov_Speed suggests a dataset with a broad distribution, offering potential for classification and analysis techniques to explore patterns based on these attributes.
                     
     """)
