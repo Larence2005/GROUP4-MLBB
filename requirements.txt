@@ -7,3 +7,4 @@ seaborn
 altair
 wordcloud
 StandardScaler
+joblib
