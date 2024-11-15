@@ -684,29 +684,30 @@ elif st.session_state.page_selection == 'machine_learning':
     st.subheader("Classification Report")
     st.dataframe(report_df)
 
-#PREDICTION
-X = df[selected_features]
-y_primary = df['Primary_Role']  # Adjusted for primary role
-y_secondary = df['Secondary_Role']  # Adjusted for secondary role
-
-# Define scaler and scale your features
-scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)
-X_scaled = pd.DataFrame(X_scaled, columns=selected_features)
-
-# Split data and define models here
-X_train, X_test, y_train, y_test = train_test_split(X_scaled, y_primary, test_size=0.2, random_state=42)
-model = RandomForestClassifier(n_estimators=100, random_state=42, max_depth=10, min_samples_split=5)
-model.fit(X_train, y_train)
-
-# Define secondary role classifier (Decision Tree as an example)
-dt_classifier = DecisionTreeClassifier(random_state=42)
-y_secondary_encoded = LabelEncoder().fit_transform(y_secondary)
-X_train, X_test, y_train_secondary, y_test_secondary = train_test_split(X_scaled, y_secondary_encoded, test_size=0.2, random_state=42)
-dt_classifier.fit(X_train, y_train_secondary)
-
-# Save list of classes for secondary role predictions
-classes_list = LabelEncoder().fit(y_secondary).classes_
+    
+    #PREDICTION
+    X = df[selected_features]
+    y_primary = df['Primary_Role']  # Adjusted for primary role
+    y_secondary = df['Secondary_Role']  # Adjusted for secondary role
+    
+    # Define scaler and scale your features
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+    X_scaled = pd.DataFrame(X_scaled, columns=selected_features)
+    
+    # Split data and define models here
+    X_train, X_test, y_train, y_test = train_test_split(X_scaled, y_primary, test_size=0.2, random_state=42)
+    model = RandomForestClassifier(n_estimators=100, random_state=42, max_depth=10, min_samples_split=5)
+    model.fit(X_train, y_train)
+    
+    # Define secondary role classifier (Decision Tree as an example)
+    dt_classifier = DecisionTreeClassifier(random_state=42)
+    y_secondary_encoded = LabelEncoder().fit_transform(y_secondary)
+    X_train, X_test, y_train_secondary, y_test_secondary = train_test_split(X_scaled, y_secondary_encoded, test_size=0.2, random_state=42)
+    dt_classifier.fit(X_train, y_train_secondary)
+    
+    # Save list of classes for secondary role predictions
+    classes_list = LabelEncoder().fit(y_secondary).classes_
 
 # Prediction section
 elif st.session_state.page_selection == 'prediction':
