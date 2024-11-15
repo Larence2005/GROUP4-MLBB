@@ -415,7 +415,7 @@ elif st.session_state.page_selection == 'data_cleaning':
 
 # MACHINE LEARNING
 elif st.session_state.page_selection == 'machine_learning':
-    st.header("Machine Learning")
+    st.header("🤖 Machine Learning")
     st.write("This section applies machine learning models to the dataset.")
 
     st.title("Primary Roles of MLBB Heroes Classification using Random Forest Model")
