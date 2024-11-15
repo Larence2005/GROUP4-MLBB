@@ -688,88 +688,108 @@ elif st.session_state.page_selection == 'machine_learning':
 
 #PREDICTION
 elif st.session_state.page_selection == "prediction":
-    def train_mlbb_models(data_path):
-    # Load the dataset
-    try:
-        df = pd.read_csv("Mlbb_Heroes.csv")
-    except FileNotFoundError:
-        raise FileNotFoundError(f"Dataset not found at {data_path}")
-   # Prepare features and targets
-    feature_columns = ['hp', 'hp_regen', 'mana', 'mana_regen', 'phy_damage', 
-                      'mag_damage', 'phy_defence', 'mag_defence', 'mov_speed', 
-                      'esport_wins', 'esport_loss']
-    
-    X = df[feature_columns]
-    y_primary = df['Primary_Role']
-    y_secondary = df['Secondary_Role']
+    st.header("MLBB Hero Role Model Training")
 
-    # Split the data
-    X_train, X_test, y_primary_train, y_primary_test, y_secondary_train, y_secondary_test = \
-        train_test_split(X, y_primary, y_secondary, test_size=0.2, random_state=42)
+    col_train = st.columns((1.5, 3), gap='medium')
 
-    # Scale the features
-    scaler = StandardScaler()
-    X_train_scaled = scaler.fit_transform(X_train)
-    X_test_scaled = scaler.transform(X_test)
+    with col_train[0]:
+        with st.expander('Training Options', expanded=True):
+            uploaded_file = st.file_uploader("Upload Dataset (CSV)", type=['csv'])
+            test_size = st.slider("Test Size", 0.1, 0.4, 0.2, 0.05)
+            n_estimators = st.slider("Number of Trees (Random Forest)", 50, 200, 100, 10)
+            show_metrics = st.checkbox('Show Performance Metrics')
+            show_feature_importance = st.checkbox('Show Feature Importance')
+            
+            train_button = st.button('Train Models', key='train_models')
 
-    # Train Primary Role Model (Random Forest)
-    primary_model = RandomForestClassifier(n_estimators=100, random_state=42)
-    primary_model.fit(X_train_scaled, y_primary_train)
+    with col_train[1]:
+        if uploaded_file is not None:
+            try:
+                # Load and display dataset info
+                df = pd.read_csv(uploaded_file)
+                st.markdown("#### 📊 Dataset Information")
+                st.write(f"Total Records: {len(df)}")
+                st.write(f"Features: {', '.join(df.columns)}")
 
-    # Train Secondary Role Model (Decision Tree)
-    secondary_model = DecisionTreeClassifier(random_state=42)
-    secondary_model.fit(X_train_scaled, y_secondary_train)
+                if train_button:
+                    st.markdown("#### 🔄 Training Models")
+                    progress_bar = st.progress(0)
+                    status_text = st.empty()
 
-    # Evaluate models
-    print("Primary Role Model Performance:")
-    y_primary_pred = primary_model.predict(X_test_scaled)
-    print(classification_report(y_primary_test, y_primary_pred))
-    print(f"Accuracy: {accuracy_score(y_primary_test, y_primary_pred):.4f}")
+                    # Prepare features and targets
+                    feature_columns = ['hp', 'hp_regen', 'mana', 'mana_regen', 
+                                     'phy_damage', 'mag_damage', 'phy_defence', 
+                                     'mag_defence', 'mov_speed', 'esport_wins', 
+                                     'esport_loss']
+                    
+                    X = df[feature_columns]
+                    y_primary = df['Primary_Role']
+                    y_secondary = df['Secondary_Role']
 
-    print("\nSecondary Role Model Performance:")
-    y_secondary_pred = secondary_model.predict(X_test_scaled)
-    print(classification_report(y_secondary_test, y_secondary_pred))
-    print(f"Accuracy: {accuracy_score(y_secondary_test, y_secondary_pred):.4f}")
+                    # Split the data
+                    X_train, X_test, y_primary_train, y_primary_test, y_secondary_train, y_secondary_test = \
+                        train_test_split(X, y_primary, y_secondary, test_size=test_size, random_state=42)
+                    
+                    progress_bar.progress(20)
+                    status_text.text("Scaling features...")
 
-    # Save all components
-    joblib.dump(scaler, 'scaler.joblib')
-    joblib.dump(primary_model, 'primary_role_model.joblib')
-    joblib.dump(secondary_model, 'secondary_role_model.joblib')
-    
-    # Save the class labels
-    primary_classes = list(y_primary.unique())
-    secondary_classes = list(y_secondary.unique())
-    joblib.dump(primary_classes, 'classes_list.joblib')
+                    # Scale features
+                    scaler = StandardScaler()
+                    X_train_scaled = scaler.fit_transform(X_train)
+                    X_test_scaled = scaler.transform(X_test)
+                    
+                    progress_bar.progress(40)
+                    status_text.text("Training Primary Role Model...")
 
-    # Save feature names for reference
-    joblib.dump(feature_columns, 'feature_columns.joblib')
+                    # Train Primary Role Model
+                    primary_model = RandomForestClassifier(n_estimators=n_estimators, random_state=42)
+                    primary_model.fit(X_train_scaled, y_primary_train)
+                    
+                    progress_bar.progress(60)
+                    status_text.text("Training Secondary Role Model...")
 
-    print("\nAll models and components have been saved successfully!")
-    return {
-        'scaler': scaler,
-        'primary_model': primary_model,
-        'secondary_model': secondary_model,
-        'primary_classes': primary_classes,
-        'secondary_classes': secondary_classes,
-        'feature_columns': feature_columns
-    }
+                    # Train Secondary Role Model
+                    secondary_model = DecisionTreeClassifier(random_state=42)
+                    secondary_model.fit(X_train_scaled, y_secondary_train)
+                    
+                    progress_bar.progress(80)
+                    status_text.text("Saving models...")
 
-if __name__ == "__main__":
-    # Example usage
-    DATA_PATH = "Mlbb_Heroes.csv"  # Replace with your dataset path
-    
-    try:
-        trained_components = train_mlbb_models(DATA_PATH)
-        print("\nSaved files:")
-        print("- scaler.joblib")
-        print("- primary_role_model.joblib")
-        print("- secondary_role_model.joblib")
-        print("- classes_list.joblib")
-        print("- feature_columns.joblib")
-    except Exception as e:
-        print(f"Error during training: {str(e)}")
+                    # Save components
+                    joblib.dump(scaler, 'scaler.joblib')
+                    joblib.dump(primary_model, 'primary_role_model.joblib')
+                    joblib.dump(secondary_model, 'secondary_role_model.joblib')
+                    joblib.dump(list(y_primary.unique()), 'classes_list.joblib')
+                    
+                    progress_bar.progress(100)
+                    status_text.text("Training completed!")
 
+                    if show_metrics:
+                        st.markdown("#### 📈 Model Performance")
+                        
+                        # Primary Role Performance
+                        y_primary_pred = primary_model.predict(X_test_scaled)
+                        primary_accuracy = accuracy_score(y_primary_test, y_primary_pred)
+                        st.write("Primary Role Model Accuracy:", f"{primary_accuracy:.2%}")
+                        
+                        # Secondary Role Performance
+                        y_secondary_pred = secondary_model.predict(X_test_scaled)
+                        secondary_accuracy = accuracy_score(y_secondary_test, y_secondary_pred)
+                        st.write("Secondary Role Model Accuracy:", f"{secondary_accuracy:.2%}")
 
+                    if show_feature_importance and hasattr(primary_model, 'feature_importances_'):
+                        st.markdown("#### 🎯 Feature Importance")
+                        importances = pd.DataFrame({
+                            'Feature': feature_columns,
+                            'Importance': primary_model.feature_importances_
+                        }).sort_values('Importance', ascending=False)
+                        
+                        st.bar_chart(importances.set_index('Feature'))
+
+            except Exception as e:
+                st.error(f"Error during training: {str(e)}")
+        else:
+            st.info("Please upload a dataset to begin training.")
 
 #CONCLUSION
 elif st.session_state.page_selection == 'conclusion':
