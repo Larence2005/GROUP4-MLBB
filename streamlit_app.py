@@ -688,6 +688,31 @@ elif st.session_state.page_selection == 'machine_learning':
 
 
 #PREDICTION
+@st.cache_resource
+def load_models():
+    try:
+        model = joblib.load('models/mlbb_model.joblib')  # Adjust path as needed
+        scaler = joblib.load('models/mlbb_scaler.joblib')  # Adjust path as needed
+        return model, scaler
+    except Exception as e:
+        st.error(f"Error loading models: {str(e)}")
+        return None, None
+
+# Load the data
+@st.cache_data  # This decorator will cache the loaded data
+def load_data():
+    try:
+        df = pd.read_csv('data/mlbb_heroes.csv')  # Adjust path as needed
+        return df
+    except Exception as e:
+        st.error(f"Error loading data: {str(e)}")
+        return None
+
+# Load models and data
+model, scaler = load_models()
+df = load_data()
+
+# Prediction Page
 elif st.session_state.page_selection == "prediction":
     st.header("MLBB Hero Role Prediction")
 
@@ -726,33 +751,36 @@ elif st.session_state.page_selection == "prediction":
                                               key=key)
 
         if st.button('Predict Primary Role'):
-            try:
-                # Prepare input data
-                feature_list = list(input_values.values())
-                input_data = np.array(feature_list).reshape(1, -1)
-                input_scaled = scaler.transform(input_data)
-                
-                # Make prediction
-                prediction = model.predict(input_scaled)
-                probabilities = model.predict_proba(input_scaled)
-                
-                # Display results
-                st.markdown(f'Predicted Primary Role: {prediction[0]}')
-                
-                st.markdown("#### Role Probabilities:")
-                prob_df = pd.DataFrame({
-                    'Role': model.classes_,
-                    'Probability': probabilities[0]
-                }).sort_values('Probability', ascending=False)
-                
-                for _, row in prob_df.iterrows():
-                    st.write(f"{row['Role']}: {row['Probability']*100:.1f}%")
+            if model is not None and scaler is not None:
+                try:
+                    # Prepare input data
+                    feature_list = list(input_values.values())
+                    input_data = np.array(feature_list).reshape(1, -1)
+                    input_scaled = scaler.transform(input_data)
                     
-            except Exception as e:
-                st.error(f"Error making prediction: {str(e)}")
+                    # Make prediction
+                    prediction = model.predict(input_scaled)
+                    probabilities = model.predict_proba(input_scaled)
+                    
+                    # Display results
+                    st.markdown(f'Predicted Primary Role: {prediction[0]}')
+                    
+                    st.markdown("#### Role Probabilities:")
+                    prob_df = pd.DataFrame({
+                        'Role': model.classes_,
+                        'Probability': probabilities[0]
+                    }).sort_values('Probability', ascending=False)
+                    
+                    for _, row in prob_df.iterrows():
+                        st.write(f"{row['Role']}: {row['Probability']*100:.1f}%")
+                        
+                except Exception as e:
+                    st.error(f"Error making prediction: {str(e)}")
+            else:
+                st.error("Model or scaler not loaded properly. Please check your model files.")
 
     # Show examples if checkbox is selected
-    if show_examples:
+    if show_examples and df is not None:
         st.markdown("### Role Examples")
         
         # Get 5 examples for each role
