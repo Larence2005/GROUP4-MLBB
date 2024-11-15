@@ -612,6 +612,7 @@ elif st.session_state.page_selection == 'prediction':
     with col_pred[0]:
         with st.expander('Options', expanded=True):
             show_dataset = st.checkbox('Show Dataset')
+            show_roles = st.checkbox('Show Role Examples')
             clear_results = st.button('Clear Results', key='clear_results')
             if clear_results:
                 st.session_state.clear = True
