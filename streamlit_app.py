@@ -687,154 +687,133 @@ elif st.session_state.page_selection == 'machine_learning':
 
 
 #PREDICTION
-elif st.session_state.page_selection == "prediction":
+def display_prediction_page():
     st.header("MLBB Hero Role Prediction")
-
-    col_pred = st.columns((1.5, 3, 3), gap='medium')
-
-    # Initialize session state for clearing results
-    if 'clear' not in st.session_state:
-        st.session_state.clear = False
-
-    with col_pred[0]:
-        with st.expander('Options', expanded=True):
-            show_dataset = st.checkbox('Show Dataset')
-            show_roles = st.checkbox('Show Role Examples')
-            show_tank = st.checkbox('Show Tank Examples')
-            show_fighter = st.checkbox('Show Fighter Examples')
-            show_assassin = st.checkbox('Show Assassin Examples')
-            
-            clear_results = st.button('Clear Results', key='clear_results')
-            if clear_results:
-                st.session_state.clear = True
-
-    with col_pred[1]:
+    
+    # Create layout
+    left_col, main_col, right_col = st.columns((1.5, 3, 3), gap='medium')
+    
+    # Sidebar options
+    with left_col:
+        display_options()
+    
+    # Input features and primary role prediction
+    with main_col:
         st.markdown("#### 🎮 Primary Role Prediction")
+        input_values = get_hero_stats()
         
-        # Input boxes for the features
-        input_values = {}
-        input_values['hp'] = st.number_input('HP', min_value=0.0, max_value=10000.0, step=100.0, 
-                           key='hp', value=0.0 if st.session_state.clear else st.session_state.get('hp', 0.0))
-        input_values['hp_regen'] = st.number_input('HP Regen', min_value=0.0, max_value=100.0, step=1.0, 
-                                 key='hp_regen', value=0.0 if st.session_state.clear else st.session_state.get('hp_regen', 0.0))
-        input_values['mana'] = st.number_input('Mana', min_value=0.0, max_value=5000.0, step=100.0, 
-                             key='mana', value=0.0 if st.session_state.clear else st.session_state.get('mana', 0.0))
-        input_values['mana_regen'] = st.number_input('Mana Regen', min_value=0.0, max_value=100.0, step=1.0, 
-                                   key='mana_regen', value=0.0 if st.session_state.clear else st.session_state.get('mana_regen', 0.0))
-        input_values['phy_damage'] = st.number_input('Physical Damage', min_value=0.0, max_value=1000.0, step=10.0,
-                                   key='phy_damage', value=0.0 if st.session_state.clear else st.session_state.get('phy_damage', 0.0))
-        input_values['mag_damage'] = st.number_input('Magical Damage', min_value=0.0, max_value=1000.0, step=10.0,
-                                   key='mag_damage', value=0.0 if st.session_state.clear else st.session_state.get('mag_damage', 0.0))
-        input_values['phy_defence'] = st.number_input('Physical Defence', min_value=0.0, max_value=500.0, step=10.0,
-                                    key='phy_defence', value=0.0 if st.session_state.clear else st.session_state.get('phy_defence', 0.0))
-        input_values['mag_defence'] = st.number_input('Magical Defence', min_value=0.0, max_value=500.0, step=10.0,
-                                    key='mag_defence', value=0.0 if st.session_state.clear else st.session_state.get('mag_defence', 0.0))
-        input_values['mov_speed'] = st.number_input('Movement Speed', min_value=0.0, max_value=500.0, step=10.0,
-                                  key='mov_speed', value=0.0 if st.session_state.clear else st.session_state.get('mov_speed', 0.0))
-        input_values['esport_wins'] = st.number_input('Esport Wins', min_value=0, max_value=1000, step=1,
-                                    key='esport_wins', value=0 if st.session_state.clear else st.session_state.get('esport_wins', 0))
-        input_values['esport_loss'] = st.number_input('Esport Losses', min_value=0, max_value=1000, step=1,
-                                    key='esport_loss', value=0 if st.session_state.clear else st.session_state.get('esport_loss', 0))
-        
-        # Button to predict primary role
         if st.button('Predict Primary Role', key='primary_role_predict'):
-            try:
-                # Convert dictionary values to a list in the correct order
-                feature_list = [input_values[key] for key in ['hp', 'hp_regen', 'mana', 'mana_regen', 
-                                                            'phy_damage', 'mag_damage', 'phy_defence', 
-                                                            'mag_defence', 'mov_speed', 'esport_wins', 
-                                                            'esport_loss']]
-                
-                # Prepare the input data as a 2D array
-                input_data = np.array(feature_list).reshape(1, -1)
-                
-                # Scale the input data
-                input_scaled = scaler.transform(input_data)
-                
-                # Predict the primary role
-                primary_prediction = model.predict(input_scaled)
-                
-                # Display the prediction result
-                st.markdown(f'Predicted Primary Role: {primary_prediction[0]}')
-                
-                # Display prediction probabilities
-                probabilities = model.predict_proba(input_scaled)
-                prob_df = pd.DataFrame({
-                    'Role': model.classes_,
-                    'Probability': probabilities[0]
-                }).sort_values('Probability', ascending=False)
-                
-                st.markdown("#### Role Probabilities:")
-                for _, row in prob_df.iterrows():
-                    st.write(f"{row['Role']}: {row['Probability']*100:.1f}%")
-            except Exception as e:
-                st.error(f"Error making prediction: {str(e)}")
-
-    with col_pred[2]:
+            predict_role(input_values, model, scaler, is_primary=True)
+    
+    # Secondary role prediction
+    with right_col:
         st.markdown("#### 🎮 Secondary Role Prediction")
-        
-        # Button to predict secondary role
         if st.button('Predict Secondary Role', key='secondary_role_predict'):
-            try:
-                # Use the same feature list creation as above
-                feature_list = [input_values[key] for key in ['hp', 'hp_regen', 'mana', 'mana_regen', 
-                                                            'phy_damage', 'mag_damage', 'phy_defence', 
-                                                            'mag_defence', 'mov_speed', 'esport_wins', 
-                                                            'esport_loss']]
-                
-                # Prepare the input data as a 2D array
-                input_data = np.array(feature_list).reshape(1, -1)
-                
-                # Scale the input data
-                input_scaled = scaler.transform(input_data)
-                
-                # Predict the secondary role
-                secondary_prediction = dt_classifier.predict(input_scaled)
-                
-                # Convert numerical prediction back to role name
-                predicted_role = classes_list[secondary_prediction[0]]
-                
-                # Display the prediction result
-                st.markdown(f'Predicted Secondary Role: {predicted_role}')
-                
-                # Get prediction probabilities if available
-                if hasattr(dt_classifier, 'predict_proba'):
-                    probabilities = dt_classifier.predict_proba(input_scaled)
-                    prob_df = pd.DataFrame({
-                        'Role': classes_list,
-                        'Probability': probabilities[0]
-                    }).sort_values('Probability', ascending=False)
-                    
-                    st.markdown("#### Role Probabilities:")
-                    for _, row in prob_df.iterrows():
-                        st.write(f"{row['Role']}: {row['Probability']*100:.1f}%")
-            except Exception as e:
-                st.error(f"Error making prediction: {str(e)}")
+            predict_role(input_values, dt_classifier, scaler, is_primary=False)
+    
+    # Display examples if selected
+    display_examples()
 
-    # Show dataset and examples based on checkboxes
-    if show_dataset:
+def display_options():
+    with st.expander('Options', expanded=True):
+        options = {
+            'show_dataset': 'Show Dataset',
+            'show_roles': 'Show Role Examples',
+            'show_tank': 'Show Tank Examples',
+            'show_fighter': 'Show Fighter Examples',
+            'show_assassin': 'Show Assassin Examples'
+        }
+        
+        for key, label in options.items():
+            st.session_state[key] = st.checkbox(label)
+        
+        if st.button('Clear Results'):
+            st.session_state.clear = True
+
+def get_hero_stats():
+    stats = {
+        'hp': ('HP', 0.0, 10000.0, 100.0),
+        'hp_regen': ('HP Regen', 0.0, 100.0, 1.0),
+        'mana': ('Mana', 0.0, 5000.0, 100.0),
+        'mana_regen': ('Mana Regen', 0.0, 100.0, 1.0),
+        'phy_damage': ('Physical Damage', 0.0, 1000.0, 10.0),
+        'mag_damage': ('Magical Damage', 0.0, 1000.0, 10.0),
+        'phy_defence': ('Physical Defence', 0.0, 500.0, 10.0),
+        'mag_defence': ('Magical Defence', 0.0, 500.0, 10.0),
+        'mov_speed': ('Movement Speed', 0.0, 500.0, 10.0),
+        'esport_wins': ('Esport Wins', 0, 1000, 1),
+        'esport_loss': ('Esport Losses', 0, 1000, 1)
+    }
+    
+    input_values = {}
+    for key, (label, min_val, max_val, step) in stats.items():
+        default_value = 0.0 if st.session_state.get('clear', False) else st.session_state.get(key, 0.0)
+        input_values[key] = st.number_input(
+            label, 
+            min_value=min_val, 
+            max_value=max_val, 
+            step=step,
+            key=key, 
+            value=default_value
+        )
+    
+    return input_values
+
+def predict_role(input_values, model, scaler, is_primary=True):
+    try:
+        # Prepare and scale input data
+        feature_list = [input_values[key] for key in input_values.keys()]
+        input_scaled = scaler.transform(np.array(feature_list).reshape(1, -1))
+        
+        # Make prediction
+        prediction = model.predict(input_scaled)
+        predicted_role = prediction[0] if is_primary else classes_list[prediction[0]]
+        st.markdown(f'Predicted Role: {predicted_role}')
+        
+        # Display probabilities
+        probabilities = model.predict_proba(input_scaled)
+        classes = model.classes_ if is_primary else classes_list
+        
+        st.markdown("#### Role Probabilities:")
+        prob_df = pd.DataFrame({
+            'Role': classes,
+            'Probability': probabilities[0]
+        }).sort_values('Probability', ascending=False)
+        
+        for _, row in prob_df.iterrows():
+            st.write(f"{row['Role']}: {row['Probability']*100:.1f}%")
+            
+    except Exception as e:
+        st.error(f"Error making prediction: {str(e)}")
+
+def display_examples():
+    if st.session_state.get('show_dataset'):
         st.subheader("Complete Dataset")
         st.dataframe(df, use_container_width=True, hide_index=True)
-
-    if show_roles:
+    
+    if st.session_state.get('show_roles'):
         for role in df['Primary_Role'].unique():
-            role_examples = df[df['Primary_Role'] == role].head(5)
-            st.subheader(f"{role} Examples")
-            st.dataframe(role_examples, use_container_width=True, hide_index=True)
-
-    # Show specific role examples based on individual checkboxes
+            display_role_examples(role)
+    
     role_checkboxes = {
         'show_tank': 'Tank',
         'show_fighter': 'Fighter',
         'show_assassin': 'Assassin'
     }
-
+    
     for checkbox, role in role_checkboxes.items():
-        if locals()[checkbox]:
-            role_examples = df[df['Primary_Role'] == role].head(5)
-            st.subheader(f"{role} Examples")
-            st.dataframe(role_examples, use_container_width=True, hide_index=True)
+        if st.session_state.get(checkbox):
+            display_role_examples(role)
 
+def display_role_examples(role):
+    role_examples = df[df['Primary_Role'] == role].head(5)
+    st.subheader(f"{role} Examples")
+    st.dataframe(role_examples, use_container_width=True, hide_index=True)
+
+# Main page selection check
+if st.session_state.page_selection == "prediction":
+    display_prediction_page()
+    
 
 
 #CONCLUSION
