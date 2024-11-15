@@ -414,6 +414,110 @@ elif st.session_state.page_selection == 'data_cleaning':
                                                   classes=np.unique(y_resampled),
                                                   y=y_resampled)))
     """)
+    st.set_page_config(page_title="Class Balance Analysis", layout="wide")
+
+    st.title("Class Balance Analysis Dashboard")
+    
+    # Create two columns for the key metrics
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.subheader("Original Class Distribution")
+        
+        # Assuming y_resampled is your target variable
+        original_dist = y_resampled.value_counts()
+        original_dist_normalized = y_resampled.value_counts(normalize=True)
+        
+        # Create pie chart for original distribution
+        fig1 = go.Figure(data=[go.Pie(
+            labels=original_dist.index,
+            values=original_dist.values,
+            hole=0.3,
+            textinfo='label+percent'
+        )])
+        fig1.update_layout(title="Original Class Distribution")
+        st.plotly_chart(fig1, use_container_width=True)
+        
+        # Display raw counts
+        st.write("Raw Counts:")
+        st.write(pd.DataFrame({
+            'Class': original_dist.index,
+            'Count': original_dist.values,
+            'Percentage': (original_dist_normalized * 100).round(2).astype(str) + '%'
+        }).set_index('Class'))
+    
+    with col2:
+        st.subheader("Weighted Class Distribution")
+        
+        # Calculate weighted distribution
+        weighted_counts = y_resampled.value_counts() * pd.Series(class_weight_dict)
+        weighted_dist_normalized = weighted_counts / weighted_counts.sum()
+        
+        # Create pie chart for weighted distribution
+        fig2 = go.Figure(data=[go.Pie(
+            labels=weighted_counts.index,
+            values=weighted_counts.values,
+            hole=0.3,
+            textinfo='label+percent'
+        )])
+        fig2.update_layout(title="Weighted Class Distribution")
+        st.plotly_chart(fig2, use_container_width=True)
+        
+        # Display weights
+        st.write("Class Weights:")
+        st.write(pd.DataFrame({
+            'Class': class_weight_dict.keys(),
+            'Weight': [f"{w:.4f}" for w in class_weight_dict.values()],
+            'Effective %': (weighted_dist_normalized * 100).round(2).astype(str) + '%'
+        }).set_index('Class'))
+    
+    # Show comparison bar plot
+    st.subheader("Before vs After Weighting Comparison")
+    fig3 = go.Figure(data=[
+        go.Bar(name='Original Distribution', 
+               x=original_dist.index, 
+               y=original_dist_normalized.values * 100),
+        go.Bar(name='Weighted Distribution', 
+               x=weighted_counts.index, 
+               y=weighted_dist_normalized.values * 100)
+    ])
+    fig3.update_layout(
+        barmode='group',
+        yaxis_title='Percentage (%)',
+        xaxis_title='Class',
+        title='Class Distribution Comparison'
+    )
+    st.plotly_chart(fig3, use_container_width=True)
+    
+    # Calculate and display balance metrics
+    st.subheader("Balance Metrics")
+    metrics_col1, metrics_col2 = st.columns(2)
+    
+    with metrics_col1:
+        # Calculate imbalance ratio before weighting
+        imbalance_ratio_before = original_dist.max() / original_dist.min()
+        st.metric(
+            label="Imbalance Ratio (Before)",
+            value=f"{imbalance_ratio_before:.2f}",
+            help="Ratio between the majority and minority class. Closer to 1 means more balanced."
+        )
+    
+    with metrics_col2:
+        # Calculate imbalance ratio after weighting
+        imbalance_ratio_after = weighted_dist_normalized.max() / weighted_dist_normalized.min()
+        st.metric(
+            label="Imbalance Ratio (After)",
+            value=f"{imbalance_ratio_after:.2f}",
+            help="Ratio between the majority and minority class after applying weights. Should be close to 1."
+        )
+    
+    # Add explanatory text
+    st.markdown("""
+    ### Interpretation Guide
+    - **Perfect Balance**: An even distribution would show equal percentages for all classes
+    - **Imbalance Ratio**: A ratio of 1.0 indicates perfect balance
+    - **Class Weights**: Larger weights are assigned to minority classes to compensate for their lower frequency
+    """)
     st.write("After cleaning the data, it is now ready for the machine learning model, addressing data quality issues and ensuring the model can learn effectively from the available information.")
 
 
