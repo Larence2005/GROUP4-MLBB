@@ -708,9 +708,9 @@ def load_data():
         st.error(f"Error loading data: {str(e)}")
         return None
 
-# Load models and data
-model, scaler = load_models()
-df = load_data()
+    # Load models and data
+    model, scaler = load_models()
+    df = load_data()
 
 # Prediction Page
 elif st.session_state.page_selection == "prediction":
