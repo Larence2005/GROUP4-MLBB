@@ -688,6 +688,14 @@ elif st.session_state.page_selection == 'machine_learning':
 
 
 elif st.session_state.page_selection == 'prediction':
+    model = RandomForestClassifier(
+    n_estimators=100,
+    random_state=42,
+    max_depth=10,
+    min_samples_split=5
+    )
+    model.fit(X_train, y_train)
+
     y_pred = model.predict(X_test)
 
 
