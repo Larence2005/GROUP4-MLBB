@@ -15,6 +15,7 @@ from sklearn.utils.class_weight import compute_class_weight
 from sklearn.preprocessing import LabelEncoder
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.metrics import confusion_matrix
 from sklearn.cluster import KMeans
@@ -686,28 +687,29 @@ elif st.session_state.page_selection == 'machine_learning':
 
     
     #PREDICTION
+    # Load data and define selected features and target
+    selected_features = ['Hp', 'Hp_Regen', 'Mana', 'Mana_Regen', 'Mag_Damage', 'Mag_Defence', 'Phy_Damage', 'Phy_Defence', 'Mov_Speed', 'Esport_Wins', 'Esport_Loss']
     X = df[selected_features]
-    y_primary = df['Primary_Role']  # Adjusted for primary role
-    y_secondary = df['Secondary_Role']  # Adjusted for secondary role
+    y_primary = df['Primary_Role']
+    y_secondary = df['Secondary_Role']
     
-    # Define scaler and scale your features
+    # Initialize and fit the scaler outside any blocks
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
     X_scaled = pd.DataFrame(X_scaled, columns=selected_features)
     
-    # Split data and define models here
+    # Define and fit the primary role model
     X_train, X_test, y_train, y_test = train_test_split(X_scaled, y_primary, test_size=0.2, random_state=42)
     model = RandomForestClassifier(n_estimators=100, random_state=42, max_depth=10, min_samples_split=5)
     model.fit(X_train, y_train)
     
-    # Define secondary role classifier (Decision Tree as an example)
+    # Define and fit the secondary role classifier
+    label_encoder = LabelEncoder()
+    y_secondary_encoded = label_encoder.fit_transform(y_secondary)
+    X_train_sec, X_test_sec, y_train_sec, y_test_sec = train_test_split(X_scaled, y_secondary_encoded, test_size=0.2, random_state=42)
     dt_classifier = DecisionTreeClassifier(random_state=42)
-    y_secondary_encoded = LabelEncoder().fit_transform(y_secondary)
-    X_train, X_test, y_train_secondary, y_test_secondary = train_test_split(X_scaled, y_secondary_encoded, test_size=0.2, random_state=42)
-    dt_classifier.fit(X_train, y_train_secondary)
-    
-    # Save list of classes for secondary role predictions
-    classes_list = LabelEncoder().fit(y_secondary).classes_
+    dt_classifier.fit(X_train_sec, y_train_sec)
+    classes_list = label_encoder.classes_
 
 # Prediction section
 elif st.session_state.page_selection == 'prediction':
@@ -728,15 +730,15 @@ elif st.session_state.page_selection == 'prediction':
         'Esport_Loss': 350
     }
 
-    # Ensure input data order matches the training features
+    # Scale the input data using the global scaler
     input_data_scaled = scaler.transform([list(input_data.values())])
     input_data_scaled = pd.DataFrame(input_data_scaled, columns=selected_features)
 
-    # Make predictions
+    # Make primary and secondary role predictions
     primary_role_prediction = model.predict(input_data_scaled)[0]
     secondary_role_prediction = dt_classifier.predict(input_data_scaled)[0]
 
-    # Display predictions
+    # Display the predictions
     st.write(f"Predicted Primary Role: {primary_role_prediction}")
     st.write(f"Predicted Secondary Role: {classes_list[secondary_role_prediction]}")
     
