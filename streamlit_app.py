@@ -522,7 +522,7 @@ elif st.session_state.page_selection == 'machine_learning':
 
     # Feature extraction with TF-IDF
     vectorizer = TfidfVectorizer()
-    X = vectorizer.fit_transform(df_repeated['Secondary_Role'])
+    X = vectorizer.fit_transform(df_repeated['Primary_Role'])
 
     # Encode labels
     label_encoder = LabelEncoder()
