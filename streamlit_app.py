@@ -670,29 +670,88 @@ elif st.session_state.page_selection == 'prediction':
 
 #CONCLUSION
 elif st.session_state.page_selection == 'conclusion':
-    st.title("📝 Conclusion")
-    st.markdown("""
-                
-    Through exploratory data analysis and training of two classification models (Decision Tree Classifier and Random Forest Regressor) on the *Iris Flower dataset*, the key insights and observations are:
 
-    #### 1. 📊 *Dataset Characteristics*:
-    - The dataset shows moderate variation across the *sepal and petal* features. petal_length and petal_width has higher variability than the sepal features further suggesting that these features are more likely to distinguish between the three Iris flower species.
-    - All of the three Iris species have a *balanced class distribution* which further eliminates the need to rebalance the dataset.
-
-    #### 2. 📝 *Feature Distributions and Separability*:
-    - *Pairwise Scatter Plot* analysis indicates that Iris Setosa forms a distinct cluster based on petal features which makes it easily distinguishable from Iris Versicolor and Iris Virginica.
-    - *Petal Length* emerged as the most discriminative feature especially for distinguishing Iris Setosa from other Iris species.
-
-    #### 3. 📈 *Model Performance (Decision Tree Classifier)*:
-
-    - The Decision Tree Classifier achieved 100% accuracy on the training data which suggests that using a relatively simple and structured dataset resulted in a strong performance for this model. However, this could also imply potential *overfitting* due to the model's high sensitivity to the specific training samples.
-    - In terms of *feature importance* results from the Decision Tree Model, petal_length was the dominant predictor having *89%* importance value which is then followed by petal_width with *8.7%*.
-
-    #### 4. 📈 *Model Performance (Random Forest Regressor)*:
-    - The *Random Forest Regressor* achieved an accuracy of 98.58% on training and 99.82% on testing which is slightly lower compared to the performance of the Decision Tree Classifier Model
-    - *Feature importance* analysis also highlighted petal_length as the primary predictor having *58%* importance value followed by petal_width with *39%*.
-
-    ##### *Summing up:*  
-    Throughout this data science activity, it is evident that the Iris dataset is a good dataset to use for classification despite of its simplicity. Due to its balanced distribution of 3 Iris flower species and having 0 null values, further data cleansing techniques were not used. 2 of the classifier models trained were able to leverage the features that can be found in the dataset which resulted to a high accuracy in terms of the two models' predictions. Despite of the slight overlap between Iris Versicolor and Iris Virginica, the two models trained were able to achieve high accuracy and was able to learn patterns from the dataset.         
-                
+    # Title
+    st.title('Conclusion')
+    
+    # Section: Dataset Insights
+    st.header('1. Dataset Insights')
+    st.subheader('Overview')
+    st.write("""
+    The dataset contains 114 heroes, each described by 11 attributes such as health, mana, damage, defense, and esports performance.
+    """)
+    
+    st.subheader('Role Distribution')
+    st.write("""
+    - **Primary Roles**: Fighters dominate (33 heroes), followed by Mages (25). Support roles are least represented (9).
+    - **Secondary Roles**: Support leads (7 heroes), with Fighter and Marksman roles sharing the lowest count (3 each).
+    """)
+    
+    st.subheader('Descriptive Statistics')
+    st.write("""
+    Attributes such as **HP**, **Phy_Damage**, and **Mana** demonstrate significant variability, aligning with role-specific hero designs.
+    """)
+    
+    # Section: Exploratory Data Analysis
+    st.header('2. Exploratory Data Analysis')
+    st.subheader('Attribute Distributions')
+    st.write("""
+    - **HP**: Right-skewed distribution with a peak between 2,500–2,750, indicating a design balance around this range.
+    - **Phy_Damage**: Near-normal distribution, peaking around 120, reflecting balanced attack capabilities.
+    """)
+    
+    st.subheader('Correlation Heatmap')
+    st.write("""
+    Highlights moderate positive correlations, such as between **HP** and **Phy_Defence** (r = 0.31), and trade-offs like the negative correlation between **Mana** and **Mov_Speed** (r = -0.41).
+    """)
+    
+    st.subheader('Performance Insights')
+    st.write("""
+    Boxplots show differences in **HP** and **Phy_Damage** for winning vs. losing heroes, suggesting that higher survivability and consistent damage output positively impact success.
+    """)
+    
+    # Section: Machine Learning Classification
+    st.header('3. Machine Learning Classification')
+    st.subheader('Random Forest Classifier')
+    st.write("""
+    Achieved an **accuracy of 87%** in predicting a hero's **Primary Role** based on attributes such as health, defense, damage, and mana-related stats.
+    """)
+    
+    st.subheader('Feature Importance')
+    st.write("""
+    - Top predictors include **Mana** (23.87%), **Phy_Defence** (16.29%), **HP** (15.61%), and **Mana_Regen** (13.07%).
+    - **Mag_Damage** and **Mag_Defence** had negligible impact.
+    """)
+    
+    st.subheader('Role Classification')
+    st.write("""
+    The supervised model identified clear distinctions between roles, with balanced performance across classifications. A repeated test achieved **100% accuracy**, demonstrating the model's reliability.
+    """)
+    
+    # Section: Key Takeaways
+    st.header('4. Key Takeaways')
+    st.subheader('Role-Specific Traits')
+    st.write("""
+    Heroes in certain roles (e.g., Fighters, Mages) exhibit distinct attribute patterns, validated by the Random Forest model's feature importance rankings.
+    """)
+    
+    st.subheader('Game Balance')
+    st.write("""
+    The clustering of attributes like **HP** and **Phy_Damage** indicates intentional balancing of heroes to maintain fairness and variety.
+    """)
+    
+    st.subheader('Strategic Insights')
+    st.write("""
+    Players can leverage attribute-based patterns and machine learning insights to optimize hero selection and role allocation in both casual and competitive play.
+    """)
+    
+    st.subheader('Data-Driven Modeling')
+    st.write("""
+    The machine learning approach demonstrates the potential for predictive analytics in understanding and enhancing hero dynamics.
+    """)
+    
+    # Final Thoughts
+    st.header('Final Thoughts')
+    st.write("""
+    This analysis highlights the value of combining statistical, exploratory, and predictive modeling techniques to gain a comprehensive understanding of hero attributes and roles in MLBB. These findings can guide future hero design, balance adjustments, and gameplay strategies, fostering a richer gaming experience.
     """)
