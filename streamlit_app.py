@@ -689,9 +689,14 @@ elif st.session_state.page_selection == 'machine_learning':
 
 
 #PREDICTION
+    # Global variable to store models
+    primary_role_model = None
+    secondary_role_model = None
+
+# MACHINE LEARNING
 elif st.session_state.page_selection == 'prediction':
     st.header("Predict Roles of MLBB Heroes")
-    st.write("This section allows you to predict both the primary and secondary roles of a MLBB hero based on selected features using trained Random Forest models.")
+    st.write("This section allows you to predict both the primary and secondary roles of an MLBB hero based on selected features using trained Random Forest models.")
     
     # Feature selection (same as before)
     selected_features = [
@@ -768,6 +773,17 @@ elif st.session_state.page_selection == 'prediction':
     # Display the predictions
     st.write(f"The predicted **Primary Role** for this hero is: **{primary_role_predicted}**")
     st.write(f"The predicted **Secondary Role** for this hero is: **{secondary_role_predicted}**")
+    
+    # Show sample predictions for Primary and Secondary Roles (for demonstration)
+    setosa_samples = df[df['Primary_Role'] == 'Fighter'].head(5)
+    versicolor_samples = df[df['Primary_Role'] == 'Mage'].head(5)
+    virginica_samples = df[df['Primary_Role'] == 'Marksman'].head(5)
+    
+    # Display sample rows
+    st.write("**Sample Predictions for Primary Role (Fighter, Mage, Marksman):**")
+    st.write("Fighter Samples:\n", setosa_samples)
+    st.write("\nMage Samples:\n", versicolor_samples)
+    st.write("\nMarksman Samples:\n", virginica_samples)
     
     # Feature importance for Primary Role
     primary_role_importance = pd.DataFrame({
