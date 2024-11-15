@@ -688,7 +688,7 @@ elif st.session_state.page_selection == 'machine_learning':
 
 
 elif st.session_state.page_selection == 'prediction':
-y_pred = model.predict(X_test)
+    y_pred = model.predict(X_test)
 
 
 
