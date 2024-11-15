@@ -428,7 +428,7 @@ elif st.session_state.page_selection == 'machine_learning':
     selected_features = [
         'Hp', 'Hp_Regen', 'Mana', 'Mana_Regen',
         'Phy_Damage', 'Phy_Defence','Mov_Speed',
-        'Mag_Damage','Mag_Defence'
+        'Mag_Damage','Mag_Defence','Esport_Wins', 'Esport_Loss'
     ]
 
     # Data preparation
