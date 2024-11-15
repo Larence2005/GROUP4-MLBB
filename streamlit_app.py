@@ -691,8 +691,7 @@ elif st.session_state.page_selection == 'prediction':
         'Mov_Speed': 270, 
         'Esport_Wins': 400, 
         'Esport_Loss': 350
-#PREDICTION
-elif st.session_state.page_selection == "prediction":
+
     st.header("MLBB Hero Role Prediction")
     col_pred = st.columns((1.5, 3, 3), gap='medium')
     # Initialize session state for clearing results
