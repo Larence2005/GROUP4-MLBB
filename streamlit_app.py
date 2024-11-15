@@ -689,9 +689,9 @@ elif st.session_state.page_selection == 'machine_learning':
 
 
 #PREDICTION
-# Global variable to store models
-primary_role_model = None
-secondary_role_model = None
+    # Global variable to store models
+    primary_role_model = None
+    secondary_role_model = None
 
 # MACHINE LEARNING
 elif st.session_state.page_selection == 'prediction':
