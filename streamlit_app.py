@@ -737,7 +737,7 @@ elif st.session_state.page_selection == 'prediction':
         secondary_role = predict_secondary_role(hero_features)
         
         predictions.append({
-            'Hero Name': row['Hero_Name'],  # Assuming the column with hero names is 'Hero_Name'
+            'Hero Name': row['Name'],  # Assuming the column with hero names is 'Hero_Name'
             'Primary Role': primary_role,
             'Secondary Role': secondary_role
         })
