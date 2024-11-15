@@ -75,6 +75,10 @@ with st.sidebar:
 
 # Content based on sidebar selection
 
+# Initialize scaler globally
+scaler = StandardScaler()
+
+
 #ABOUT
 if st.session_state.page_selection == 'about':
     st.title("ℹ️ About")
@@ -546,11 +550,10 @@ elif st.session_state.page_selection == 'machine_learning':
     
     X = df[selected_features]
     y = df['Secondary_Role']
-    
-    # Scale features
-    scaler = StandardScaler()
+
+    # Scaling
     X_scaled = scaler.fit_transform(X)
-    X_scaled = pd.DataFrame(X_scaled, columns=selected_features)
+
     
     # Filter out "No Secondary Role"
     mask = y != 'No Secondary Role'
