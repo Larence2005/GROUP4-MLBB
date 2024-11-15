@@ -500,7 +500,7 @@ elif st.session_state.page_selection == 'machine_learning':
 
     # Define role data
     data = {
-        'Secondary_Role': ['Fighter','Mage','Marksman', 'Tank', 'Assassin','Support'],
+        'Primary_Role': ['Fighter','Mage','Marksman', 'Tank', 'Assassin','Support'],
         'Count': [33, 25, 18, 16, 13, 9]
     }
 
