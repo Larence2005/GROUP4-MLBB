@@ -77,6 +77,9 @@ with st.sidebar:
 
 # Initialize scaler globally
 scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)  # Fit and transform the training data
+X_scaled = pd.DataFrame(X_scaled, columns=selected_features)
+
 
 
 #ABOUT
