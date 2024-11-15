@@ -387,33 +387,30 @@ elif st.session_state.page_selection == 'data_cleaning':
     y_filtered = df['Secondary_Role'][mask]
     """)
     #-------------------------------------
-    st.header("Label Encoding Target Variable")
+    
+    st.header("Feature Selection")
+    st.write("Upon analyzing the importance of each hero feature in determining the primary role, we have selected the following features to consider when predicting.")
     st.code("""
-    le = LabelEncoder()
-    y_filtered_encoded = le.fit_transform(y_filtered)
+     selected_features = [
+        'Hp', 'Hp_Regen', 'Mana', 'Mana_Regen',
+        'Phy_Damage', 'Phy_Defence','Mov_Speed',
+        'Mag_Damage','Mag_Defence'
+    ]
+
     """)
     #-----------------------------------------------
-    st.header("Resampling the Data")
+    st.header("Data preparation for Primary Role")
     st.code("""
-    X_resampled, y_resampled = resample(X_filtered, y_filtered_encoded,
-                                   n_samples=resample_size,
-                                   random_state=42)
+    X = df[selected_features]
+    y = df['Primary_Role']
     """)
     #-----------------------------------------------
     st.header("Scaling the features")
     st.code("""
     scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X_resampled)
-    X_scaled = pd.DataFrame(X_scaled, columns=selected_features)
+    X_scaled = scaler.fit_transform(X)
     """)
-    #-----------------------------------------------
-    st.header("Computing class weights")
-    st.code("""
-    class_weight_dict = dict(zip(np.unique(y_resampled),
-                             compute_class_weight(class_weight='balanced',
-                                                  classes=np.unique(y_resampled),
-                                                  y=y_resampled)))
-    """)
+    
    
 
 # MACHINE LEARNING
@@ -562,7 +559,7 @@ elif st.session_state.page_selection == 'machine_learning':
 
 # PREDICTION
 elif st.session_state.page_selection == 'prediction':
-    st.title("Prediction")
+    st.title("🎮 Prediction")
     
     # Primary Role Prediction Model - Training
     st.header("Primary Role Prediction Model")
