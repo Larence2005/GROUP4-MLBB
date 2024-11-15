@@ -681,11 +681,6 @@ elif st.session_state.page_selection == 'conclusion':
     The dataset contains 114 heroes, each described by 11 attributes such as health, mana, damage, defense, and esports performance.
     """)
     
-    st.subheader('Role Distribution')
-    st.write("""
-    - Fighters dominate (33 heroes), followed by Mages (25). Support roles are least represented (9). Fighter and Marksman roles sharing the lowest count (3 each).
-    """)
-    
     st.subheader('Descriptive Statistics')
     st.write("""
     Attributes such as **HP**, **Phy_Damage**, and **Mana** demonstrate significant variability, aligning with role-specific hero designs.
