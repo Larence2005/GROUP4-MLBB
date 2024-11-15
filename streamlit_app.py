@@ -809,39 +809,6 @@ elif st.session_state.page_selection == 'prediction':
     )
     model.fit(X_scaled, y)
 
-    # Secondary Role Prediction Model - Training
-    st.header("Secondary Role Prediction Model")
-
-    # Data preparation for Secondary Role
-    X = df[selected_features]
-    y = df['Secondary_Role']
-
-    # Scale features for Secondary Role
-    X_scaled = scaler.fit_transform(X)
-
-    # Filter out "No Secondary Role"
-    mask = y != 'No Secondary Role'
-    X_filtered = X_scaled[mask]
-    y_filtered = y[mask]
-
-    # Encode target variable for Secondary Role
-    le = LabelEncoder()
-    y_filtered_encoded = le.fit_transform(y_filtered)
-
-    # Resample data for Secondary Role
-    X_resampled, y_resampled = resample(X_filtered, y_filtered_encoded,
-                                        n_samples=30,  # Example resampling
-                                        random_state=42)
-
-    # Model creation and training for Secondary Role
-    model_secondary = RandomForestClassifier(
-        n_estimators=100,
-        max_depth=10,
-        min_samples_split=5,
-        random_state=42
-    )
-    model_secondary.fit(X_resampled, y_resampled)
-
     # Define input data for prediction
     input_data = {
         'Hp': 5000, 
@@ -857,8 +824,8 @@ elif st.session_state.page_selection == 'prediction':
         'Esport_Loss': 350
     }
 
-    st.header("MLBB Hero Role Prediction")
-    col_pred = st.columns((1.5, 3, 3), gap='medium')
+    st.header("MLBB Hero Primary Role Prediction")
+    col_pred = st.columns((1.5, 3), gap='medium')
 
     # Initialize session state for clearing results
     if 'clear' not in st.session_state:
@@ -868,10 +835,6 @@ elif st.session_state.page_selection == 'prediction':
         with st.expander('Options', expanded=True):
             show_dataset = st.checkbox('Show Dataset')
             show_roles = st.checkbox('Show Role Examples')
-            show_tank = st.checkbox('Show Tank Examples')
-            show_fighter = st.checkbox('Show Fighter Examples')
-            show_assassin = st.checkbox('Show Assassin Examples')
-            
             clear_results = st.button('Clear Results', key='clear_results')
             if clear_results:
                 st.session_state.clear = True
@@ -915,44 +878,6 @@ elif st.session_state.page_selection == 'prediction':
                     st.write(f"{row['Role']}: {row['Probability']*100:.1f}%")
             except Exception as e:
                 st.error(f"Error making prediction: {str(e)}")
-    
-    with col_pred[2]:
-        st.markdown("#### 🎮 Secondary Role Prediction")
-        
-        # Button to predict secondary role
-        if st.button('Predict Secondary Role', key='secondary_role_predict'):
-            try:
-                # Use the same feature list creation as above
-                feature_list = [input_values[feature] for feature in selected_features]
-                
-                # Prepare the input data as a 2D array
-                input_data = np.array(feature_list).reshape(1, -1)
-                
-                # Scale the input data
-                input_scaled = scaler.transform(input_data)
-                
-                # Predict the secondary role
-                secondary_prediction = model_secondary.predict(input_scaled)
-                
-                # Convert numerical prediction back to role name
-                predicted_role = le.classes_[secondary_prediction[0]]
-                
-                # Display the prediction result
-                st.markdown(f'Predicted Secondary Role: `{predicted_role}`')
-                
-                # Get prediction probabilities if available
-                if hasattr(model_secondary, 'predict_proba'):
-                    probabilities = model_secondary.predict_proba(input_scaled)
-                    prob_df = pd.DataFrame({
-                        'Role': le.classes_,
-                        'Probability': probabilities[0]
-                    }).sort_values('Probability', ascending=False)
-                    
-                    st.markdown("#### Role Probabilities:")
-                    for _, row in prob_df.iterrows():
-                        st.write(f"{row['Role']}: {row['Probability']*100:.1f}%")
-            except Exception as e:
-                st.error(f"Error making prediction: {str(e)}")
 
     # Show dataset and examples based on checkboxes
     if show_dataset:
@@ -963,35 +888,7 @@ elif st.session_state.page_selection == 'prediction':
             role_examples = df[df['Primary_Role'] == role].head(5)
             st.subheader(f"{role} Examples")
             st.dataframe(role_examples, use_container_width=True, hide_index=True)
-    # Show specific role examples based on individual checkboxes
-    role_checkboxes = {
-        'show_tank': 'Tank',
-        'show_fighter': 'Fighter',
-        'show_assassin': 'Assassin'
-    }
 
-    # Ensure features are in correct order
-    selected_features = ['Hp', 'Hp_Regen', 'Mana', 'Mana_Regen', 'Mag_Damage', 
-                         'Mag_Defence', 'Phy_Damage', 'Phy_Defence', 'Mov_Speed', 
-                         'Esport_Wins', 'Esport_Loss']
-    
-    # Scale the input data exactly as in your original code
-    input_data_scaled = scaler.transform([list(input_data.values())])
-    input_data_scaled = pd.DataFrame(input_data_scaled, columns=selected_features)
-    
-    # Make predictions
-    primary_role_prediction = model.predict(input_data_scaled)[0]
-    secondary_role_prediction = le.classes_[model_secondary.predict(input_data_scaled)[0]]
-    
-    # Display the predictions
-    st.write(f"Predicted Primary Role: {primary_role_prediction}")
-    st.write(f"Predicted Secondary Role: {secondary_role_prediction}")
-    
-    for checkbox, role in role_checkboxes.items():
-        if locals()[checkbox]:
-            role_examples = df[df['Primary_Role'] == role].head(5)
-            st.subheader(f"{role} Examples")
-            st.dataframe(role_examples, use_container_width=True, hide_index=True)
 
 
 #CONCLUSION
