@@ -503,125 +503,9 @@ elif st.session_state.page_selection == 'machine_learning':
     ax.set_title('Feature Importance in Predicting MLBB Hero Primary Role')
     st.pyplot(fig)
     
-    # Display feature importance percentages
-    st.subheader("Feature Importance Percentages")
-    for feature, importance in zip(feature_importance['Feature'], feature_importance['Importance']):
-        st.write(f"{feature}: {importance * 100:.2f}%")
-    
-    
-    st.write("\n")
-    st.write("On the other hand, the data below uses Random Forest model to classify the secondary roles of heroes based on some hypothetical features and predict the secondary role of the hero based on the input features.")
-    
-    st.title("Secondary Roles of MLBB Heroes Prediction Using Random Forest Model")
-    
-    # Define role data for display
-    data = {
-        'Secondary_Role': ['No Secondary Role', 'Support', 'Tank', 'Assassin', 'Mage', 'Fighter', 'Marksman'],
-        'Count': [84, 7, 6, 6, 5, 3, 3],
-    }
-    
-    # Display role distribution
-    st.subheader("Secondary Role Distribution")
-    role_distribution_df = pd.DataFrame(data)
-    role_distribution_df['Percentage'] = (role_distribution_df['Count'] / role_distribution_df['Count'].sum()) * 100
-    st.dataframe(role_distribution_df)
-    
-    # Define color scheme
-    role_colors = {
-        'No Secondary Role': '#808080',
-        'Support': '#4FB9E3',
-        'Tank': '#2ECC71',
-        'Assassin': '#E74C3C',
-        'Mage': '#9B59B6',
-        'Fighter': '#E67E22',
-        'Marksman': '#F1C40F'
-    }
-    
-    # Define features and labels
-    selected_features = [
-        'Hp', 'Hp_Regen', 'Mana', 'Mana_Regen',
-        'Phy_Damage', 'Mag_Damage', 'Phy_Defence', 'Mag_Defence',
-        'Mov_Speed', 'Esport_Wins', 'Esport_Loss'
-    ]
-    
-    X = df[selected_features]
-    y = df['Secondary_Role']
-    
-    # Scale features
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
-    X_scaled = pd.DataFrame(X_scaled, columns=selected_features)
-    
-    # Filter out "No Secondary Role"
-    mask = y != 'No Secondary Role'
-    X_filtered = X_scaled[mask]
-    y_filtered = y[mask]
-    
-    # Encode target variable
-    le = LabelEncoder()
-    y_filtered_encoded = le.fit_transform(y_filtered)
-    
-    # Resample data
-    X_resampled, y_resampled = resample(X_filtered, y_filtered_encoded,
-                                        n_samples=30,  # Removed the slider part
-                                        random_state=42)
-    
-    # Split data
-    X_train, X_test, y_train, y_test = train_test_split(X_resampled, y_resampled,
-                                                        test_size=0.2,  # Removed the slider part
-                                                        random_state=42)
-    
-    # Compute class weights
-    class_weight_dict = dict(zip(np.unique(y_train),
-                                 compute_class_weight(class_weight='balanced',
-                                                      classes=np.unique(y_train),
-                                                      y=y_train)))
-    
-    # Train model
-    model = RandomForestClassifier(
-        n_estimators=100,
-        max_depth=10,
-        min_samples_split=5,
-        random_state=42,
-        class_weight=class_weight_dict
-    )
-    model.fit(X_train, y_train)
-    
-    # Predict and evaluate
-    y_pred = model.predict(X_test)
-    accuracy = accuracy_score(y_test, y_pred)
-    st.write(f"Model Accuracy: {accuracy:.3f}")
-    
-    # Display classification report
-    unique_classes = np.unique(np.concatenate([y_test, y_pred]))
-    target_names = [le.classes_[i] for i in unique_classes]
-    report = classification_report(y_test, y_pred, target_names=target_names, output_dict=True)
-    st.subheader("Classification Report")
-    st.write(pd.DataFrame(report).transpose())
-    
-    # Visualize feature importance
-    feature_importances = model.feature_importances_
-    importance_df = pd.DataFrame({
-        'Feature': selected_features,
-        'Importance': feature_importances
-    }).sort_values('Importance', ascending=True)
-    
-    # Plotting feature importances
-    st.subheader("Feature Importance")
-    fig, ax = plt.subplots(figsize=(10, 6))
-    bars = ax.barh(importance_df['Feature'], importance_df['Importance'], color=[role_colors['Support'], role_colors['Tank'], role_colors['Assassin'], role_colors['Mage'], role_colors['Fighter'], role_colors['Marksman']])
-    ax.set_xlabel("Feature Importance")
-    ax.set_title("Feature Importance in Predicting Secondary Roles")
-    for i, (bar, importance) in enumerate(zip(bars, importance_df['Importance'])):
-        width = bar.get_width()
-        ax.text(width, bar.get_y() + bar.get_height() / 2,
-                f'{importance * 100:.2f}%', ha='left', va='center', fontweight='bold')
-    st.pyplot(fig)
-    
-    # Display feature importance as text
-    st.subheader("Feature Importance Percentages")
-    for feature, importance in zip(importance_df['Feature'], importance_df['Importance']):
-        st.write(f"{feature}: {importance * 100:.2f}%")
+    # Now move the Feature Importance Percentages to a new elif block
+    st.session_state.page_selection = 'prediction'  # Update to the new block when needed
+
 
     
     
@@ -687,7 +571,159 @@ elif st.session_state.page_selection == 'machine_learning':
     st.subheader("Classification Report")
     st.dataframe(report_df)
 
+     #-----------------------------------------------EVALUATION
+    def evaluate_primary_role_classifier(model, X_test, y_test, feature_names, class_names):
+    """
+    Comprehensive evaluation of the primary role classifier
+    """
+    # Get predictions
+    y_pred = model.predict(X_test)
+    y_pred_proba = model.predict_proba(X_test)
+    
+    # 1. Confusion Matrix
+    plt.figure(figsize=(12, 8))
+    cm = confusion_matrix(y_test, y_pred)
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
+                xticklabels=class_names,
+                yticklabels=class_names)
+    plt.title('Confusion Matrix - Primary Roles')
+    plt.xlabel('Predicted')
+    plt.ylabel('Actual')
+    st.pyplot(plt)
+    
+    # 2. ROC Curves
+    y_test_bin = label_binarize(y_test, classes=class_names)
+    plt.figure(figsize=(10, 6))
+    
+    for i, class_name in enumerate(class_names):
+        fpr, tpr, _ = roc_curve(y_test_bin[:, i], y_pred_proba[:, i])
+        roc_auc = auc(fpr, tpr)
+        plt.plot(fpr, tpr, label=f'{class_name} (AUC = {roc_auc:.2f})')
+    
+    plt.plot([0, 1], [0, 1], 'k--')
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate')
+    plt.title('ROC Curves - Primary Roles')
+    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.tight_layout()
+    st.pyplot(plt)
+    
+    # 3. Feature Importance Analysis
+    feature_importance = pd.DataFrame({
+        'Feature': feature_names,
+        'Importance': model.feature_importances_
+    }).sort_values('Importance', ascending=False)
+    
+    plt.figure(figsize=(12, 6))
+    sns.barplot(data=feature_importance, x='Importance', y='Feature')
+    plt.title('Feature Importance Analysis')
+    st.pyplot(plt)
+    
+    # 4. Per-Class Metrics
+    metrics_dict = {}
+    for i, class_name in enumerate(class_names):
+        precision, recall, _ = precision_recall_curve(y_test_bin[:, i], y_pred_proba[:, i])
+        metrics_dict[class_name] = {
+            'Precision': np.mean(precision),
+            'Recall': np.mean(recall),
+            'F1-Score': 2 * (np.mean(precision) * np.mean(recall)) / (np.mean(precision) + np.mean(recall))
+        }
+    
+    metrics_df = pd.DataFrame(metrics_dict).transpose()
+    st.write("Per-Class Performance Metrics:")
+    st.dataframe(metrics_df)
 
+    def evaluate_secondary_role_classifier(model, X_test, y_test, feature_names, le):
+        """
+        Comprehensive evaluation of the secondary role classifier
+        """
+        # Get predictions
+        y_pred = model.predict(X_test)
+        y_pred_proba = model.predict_proba(X_test)
+        
+        # Convert encoded labels back to original class names
+        class_names = le.classes_
+        y_test_original = le.inverse_transform(y_test)
+        y_pred_original = le.inverse_transform(y_pred)
+        
+        # 1. Confusion Matrix
+        plt.figure(figsize=(12, 8))
+        cm = confusion_matrix(y_test_original, y_pred_original)
+        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
+                    xticklabels=class_names,
+                    yticklabels=class_names)
+        plt.title('Confusion Matrix - Secondary Roles')
+        plt.xlabel('Predicted')
+        plt.ylabel('Actual')
+        st.pyplot(plt)
+        
+        # 2. Class Distribution Analysis
+        plt.figure(figsize=(10, 6))
+        pd.Series(y_test_original).value_counts().plot(kind='bar')
+        plt.title('Distribution of Secondary Roles in Test Set')
+        plt.xlabel('Role')
+        plt.ylabel('Count')
+        plt.xticks(rotation=45)
+        st.pyplot(plt)
+        
+        # 3. Feature Importance for Each Class
+        feature_importance = pd.DataFrame({
+            'Feature': feature_names,
+            'Importance': model.feature_importances_
+        }).sort_values('Importance', ascending=False)
+        
+        plt.figure(figsize=(12, 6))
+        sns.barplot(data=feature_importance, x='Importance', y='Feature')
+        plt.title('Feature Importance for Secondary Role Prediction')
+        st.pyplot(plt)
+        
+        # 4. Model Performance Metrics
+        class_metrics = {}
+        for i, class_name in enumerate(class_names):
+            mask_actual = y_test_original == class_name
+            mask_pred = y_pred_original == class_name
+            
+            tp = np.sum(mask_actual & mask_pred)
+            fp = np.sum(~mask_actual & mask_pred)
+            fn = np.sum(mask_actual & ~mask_pred)
+            
+            precision = tp / (tp + fp) if (tp + fp) > 0 else 0
+            recall = tp / (tp + fn) if (tp + fn) > 0 else 0
+            f1 = 2 * precision * recall / (precision + recall) if (precision + recall) > 0 else 0
+            
+            class_metrics[class_name] = {
+                'Precision': precision,
+                'Recall': recall,
+                'F1-Score': f1
+            }
+        
+        metrics_df = pd.DataFrame(class_metrics).transpose()
+        st.write("Per-Class Performance Metrics:")
+        st.dataframe(metrics_df)
+    
+    # Add these evaluation calls to your machine learning section
+    if st.session_state.page_selection == 'machine_learning':
+        # ... [your existing code] ...
+        
+        # After training primary role classifier
+        st.subheader("Primary Role Classifier Evaluation")
+        evaluate_primary_role_classifier(
+            model=model,
+            X_test=X_test,
+            y_test=y_test,
+            feature_names=selected_features,
+            class_names=np.unique(y)
+        )
+        
+        # After training secondary role classifier
+        st.subheader("Secondary Role Classifier Evaluation")
+        evaluate_secondary_role_classifier(
+            model=model,
+            X_test=X_test,
+            y_test=y_test,
+            feature_names=selected_features,
+            le=le  # your LabelEncoder instance
+        )
 
 #PREDICTION
 elif st.session_state.page_selection == 'prediction':
