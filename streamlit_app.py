@@ -690,46 +690,49 @@ elif st.session_state.page_selection == 'machine_learning':
 elif st.session_state.page_selection == 'prediction':
     st.title("Prediction")
 
-    # Define input data
-    input_data = {
-        'Hp': 5000,                # 14.20%
-        'Hp_Regen': 50,            # 12.81%
-        'Mana': 2000,              # 5.42%
-        'Mana_Regen': 20,          # 11.32%
-        'Mag_Damage': 0,           # 0.00%
-        'Mag_Defence': 0,          # 0.00%
-        'Phy_Damage': 150,         # 9.59%
-        'Phy_Defence': 30,         # 16.57%
-        'Mov_Speed': 270,          # 12.72%
-        'Esport_Wins': 400,        # 9.20%
-        'Esport_Loss': 350         # 8.17%
+    # Sample input data for different roles
+    tank_sample = {
+        'Hp': 5000, 'Hp_Regen': 50, 'Mana': 2000, 'Mana_Regen': 20,
+        'Mag_Damage': 0, 'Mag_Defence': 0, 'Phy_Damage': 150,
+        'Phy_Defence': 30, 'Mov_Speed': 270, 'Esport_Wins': 400, 'Esport_Loss': 350
     }
 
-    # Ensure that selected features are defined in the correct order
-    selected_features = ['Hp', 'Hp_Regen', 'Mana', 'Mana_Regen', 'Mag_Damage', 'Mag_Defence', 
-                         'Phy_Damage', 'Phy_Defence', 'Mov_Speed', 'Esport_Wins', 'Esport_Loss']
+    mage_sample = {
+        'Hp': 3000, 'Hp_Regen': 30, 'Mana': 3500, 'Mana_Regen': 40,
+        'Mag_Damage': 200, 'Mag_Defence': 20, 'Phy_Damage': 50,
+        'Phy_Defence': 15, 'Mov_Speed': 260, 'Esport_Wins': 380, 'Esport_Loss': 320
+    }
 
-    # Scale the input data
-    input_data_scaled = scaler.transform([list(input_data.values())])
-    input_data_scaled = pd.DataFrame(input_data_scaled, columns=selected_features)
+    fighter_sample = {
+        'Hp': 4000, 'Hp_Regen': 40, 'Mana': 1800, 'Mana_Regen': 25,
+        'Mag_Damage': 50, 'Mag_Defence': 25, 'Phy_Damage': 180,
+        'Phy_Defence': 25, 'Mov_Speed': 275, 'Esport_Wins': 420, 'Esport_Loss': 330
+    }
 
-    # Make primary and secondary role predictions
-    primary_role_prediction = model.predict(input_data_scaled)[0]
-    secondary_role_prediction = dt_classifier.predict(input_data_scaled)[0]
+    # Create DataFrames for each sample
+    samples = {
+        'Tank': pd.DataFrame([tank_sample]),
+        'Mage': pd.DataFrame([mage_sample]),
+        'Fighter': pd.DataFrame([fighter_sample])
+    }
 
-    # Display the samples of predictions for each role
-    primary_role_samples = iris_df[iris_df["species"] == primary_role_prediction].head(5)
-    secondary_role_samples = iris_df[iris_df["species"] == classes_list[secondary_role_prediction]].head(5)
-
-    # Display the results
-    st.write(f"Predicted Primary Role: {primary_role_prediction}")
-    st.write("Sample Data for Predicted Primary Role:")
-    st.write(primary_role_samples)
-
-    st.write(f"Predicted Secondary Role: {classes_list[secondary_role_prediction]}")
-    st.write("Sample Data for Predicted Secondary Role:")
-    st.write(secondary_role_samples)
-
+    # Display predictions for each sample
+    for role, sample_df in samples.items():
+        st.write(f"\n{role} sample predictions:")
+        
+        # Scale the sample data
+        sample_scaled = scaler.transform(sample_df[selected_features])
+        sample_scaled_df = pd.DataFrame(sample_scaled, columns=selected_features)
+        
+        # Make predictions
+        primary_role = model.predict(sample_scaled_df)[0]
+        secondary_role = dt_classifier.predict(sample_scaled_df)[0]
+        
+        # Display results
+        st.write(f"Primary Role: {primary_role}")
+        st.write(f"Secondary Role: {classes_list[secondary_role]}")
+        st.write("Input features:", sample_df.to_dict('records')[0])
+        st.write("---")
 
 
 #CONCLUSION
