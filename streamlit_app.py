@@ -688,7 +688,6 @@ elif st.session_state.page_selection == 'machine_learning':
 
 
 elif st.session_state.page_selection == 'prediction':
-    elif st.session_state.page_selection == 'prediction':
     st.header("Prediction")
     st.write("This section allows you to predict the roles of MLBB heroes based on their features.")
 
